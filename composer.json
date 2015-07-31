@@ -1,0 +1,64 @@
+{
+    "name": "nfephp-org/sped-common",
+    "type": "library",
+    "description": "sped-common é parte do NFePHP.",
+    "keywords": [
+        "nfe",
+        "sped",
+        "nfephp"
+    ],
+    "homepage": "https://github.com/nfephp-org/sped-common",
+    "license": [
+        "GPL-3.0+",
+        "LGPL-3.0+"
+    ],
+    "authors": [
+        {
+            "name": "Roberto L. Machado",
+            "email": "linux.rlm@gmail.com.br",
+            "homepage": "http://www.nfephp.org",
+            "role": "Developer"
+        },
+        {
+            "name": "Comunidade NFePHP",
+            "homepage": "https://github.com/nfephp-org/nfephp/graphs/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "ext-dom": "*",
+        "ext-xml": "*",
+        "ext-libxml": "*",
+        "ext-xmlreader": "*",
+        "ext-curl": "*",
+        "ext-soap": "*",
+        "ext-openssl": "*",
+        "ext-zip": "*",
+        "ext-zlib": "*",
+        "ext-fileinfo": "*",
+        "ext-iconv": "*",
+        "ext-mbstring": "*",
+        "zendframework/zend-mail": "2.4.*@dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.7.7"
+    },
+    "autoload": {
+        "psr-4": {
+          "Sped\\Common\\": "src/" 
+        } 
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "4.0-dev",
+            "dev-develop": "4.1-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload-dev": {
+        "psr-4": {
+            "SpedTest\\Common\\": "test"
+        }
+    }
+}

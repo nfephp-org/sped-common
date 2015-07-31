@@ -1,9 +1,11 @@
 nbproject
 *~
-*.pfx
-*.pem
+*.log
 config.json
 vendor
+Vagrantfile
+.vagrant
+provision
 local
 /.DS_Store
 /.idea
@@ -11,5 +13,3 @@ local
 /.buildpath
 /.settings/
 /build
-/phpunit.xml
-/tests/folder
