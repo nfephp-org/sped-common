@@ -19,7 +19,7 @@ class Base
     /**
      * pem2Der
      * Transforma o certificado do formato PEM para o formato DER
-     * @param string $pem_data
+     * @param string $pemData
      * @return string
      */
     protected static function pem2Der($pemData)
@@ -52,7 +52,8 @@ class Base
         $partes = explode('.', $oid);
         $bun = 0;
         //para cada numero compor o valor asc do mesmo
-        for ($num = 0; $num < count($partes); $num++) {
+        $nTot = count($partes);
+        for ($num = 0; $num < $nTot; $num++) {
             if ($num == 0) {
                 $bun = 40 * $partes[$num];
             } elseif ($num == 1) {
@@ -105,7 +106,8 @@ class Base
     {
         $tabVal = array('0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F');
         $hex = '';
-        for ($i=0; $i<strlen($value); $i++) {
+        $nLen = strlen($value);
+        for ($i=0; $i < $nLen; $i++) {
             $lsig = ord(substr($value, $i, 1)) % 16;
             $msig = (ord(substr($value, $i, 1)) - $lsig) / 16;
             $lessSig = $tabVal[$lsig];
