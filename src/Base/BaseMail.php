@@ -6,11 +6,11 @@ namespace Sped\Common\Base;
  * Classe base para o envio de emails tanto para NFe, NFCe, CTe e MDFe
  *  
  * @category   NFePHP
- * @package    Sped\Common\Base\BaseMail
+ * @package    Sped\Common\Base
  * @copyright  Copyright (c) 2008-2015
  * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
  * @author     Roberto L. Machado <linux.rlm at gmail dot com>
- * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
+ * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
  */
 
 use Zend\Mail\Message;
@@ -57,7 +57,7 @@ class BaseMail
     /**
      * __construct
      * Método construtor configura o transporte do email
-     * @param type $aMailConf
+     * @param array $aMailConf
      * @throws Exception\InvalidArgumentException
      */
     public function __construct($aMailConf = array())
@@ -92,7 +92,7 @@ class BaseMail
     /**
      * setTemplate
      * Carrega o arquivo html do template do email em um parametro da classe
-     * @param type $pathFile
+     * @param string $pathFile
      */
     public function setTemplate($pathFile = '')
     {
@@ -134,7 +134,7 @@ class BaseMail
         $textPart = new MimePart($msgTxt);
         $textPart->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
         $textPart->type = "text/plain; charset=UTF-8";
-        //monatgem do conteúdo da mensagem
+        //montagem do conteúdo da mensagem
         $this->content = new MimeMessage();
         $this->content->addPart($textPart);
         $this->content->addPart($htmlPart);

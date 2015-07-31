@@ -7,16 +7,16 @@ namespace Sped\Common\Base;
  * tanto para NFe, NFCe, CTe e MDFe
  *  
  * @category   NFePHP
- * @package    Sped\Common\Base\BaseMake
+ * @package    Sped\Common\Base
  * @copyright  Copyright (c) 2008-2015
  * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
  * @author     Roberto L. Machado <linux.rlm at gmail dot com>
- * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
+ * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
  */
 
 use Sped\Common\Dom\Dom as Dom;
 use Sped\Common\Keys\Keys;
-use Sped\Common\Identify\Identify;
+use Sped\Common\Base\BaseIdentify;
 use Sped\Common\Files\FilesFolders;
 
 class BaseMake
@@ -49,7 +49,7 @@ class BaseMake
     /**
      * dom
      * Variável onde será montado o xml do documento fiscal
-     * @var \NFePHP\Common\Dom\Dom
+     * @var Sped\Common\Dom\Dom
      */
     public $dom;
     /**
@@ -104,8 +104,8 @@ class BaseMake
         }
         $aResp = array();
         $aList = array('NFe' => 'nfe','CTe' => 'cte','MDFe' => 'mdfe');
-        Identify::setListSchemesId($aList);
-        $schem = Identify::identificacao($this->xml, $aResp);
+        BaseIdentify::setListSchemesId($aList);
+        $schem = BaseIdentify::identificacao($this->xml, $aResp);
         if ($aResp['chave'] == '') {
             return false;
         }
@@ -133,7 +133,6 @@ class BaseMake
         }
         return true;
     }
-
     
     /**
      * montaChave

@@ -489,10 +489,6 @@ class Pkcs12
         if (! openssl_sign($cnSignedInfoNode, $signature, $objSSLPriKey)) {
             $msg = "Houve erro durante a assinatura digital.\n";
             $this->zGetOpenSSLError($msg);
-            //while ($erro = openssl_error_string()) {
-            //    $msg .= $erro . "\n";
-            //}
-            //throw new Exception\RuntimeException($msg);
         }
         //converte a assinatura em base64
         $signatureValue = base64_encode($signature);
@@ -583,10 +579,6 @@ class Pkcs12
         if ($objSSLPubKey === false) {
             $msg = "Ocorreram problemas ao carregar a chave pública. Certificado incorreto ou corrompido!!";
             $this->zGetOpenSSLError($msg);
-            //while ($erro = openssl_error_string()) {
-            //    $msg .= $erro . "\n";
-            //}
-            //throw new Exception\RuntimeException($msg);
         }
         //remontando conteudo que foi assinado
         $signContent = $dom->getElementsByTagName('SignedInfo')->item(0)->C14N(true, false, null, null);
@@ -597,10 +589,6 @@ class Pkcs12
         if ($resp != 1) {
             $msg = "Problema ({$resp}) ao verificar a assinatura do digital!!";
             $this->zGetOpenSSLError($msg);
-            //while ($erro = openssl_error_string()) {
-            //    $msg .= $erro . "\n";
-            //}
-            //throw new Exception\RuntimeException($msg);
         }
         return true;
     }

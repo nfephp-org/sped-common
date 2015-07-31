@@ -2,6 +2,17 @@
 
 namespace Sped\Common\Configure;
 
+/**
+ * Classe para auxilio na configuração do ambiente do NFePHP
+ * 
+ * @category   NFePHP
+ * @package    Sped\Common\Configure
+ * @copyright  Copyright (c) 2008-2015
+ * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
+ * @author     Roberto L. Machado <linux.rlm at gmail dot com>
+ * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
+ */
+
 use Sped\Common\Modules\Modules;
 use Sped\Common\Files\FilesFolders;
 use Sped\Common\Certificate\Pkcs12;

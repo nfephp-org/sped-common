@@ -9,15 +9,30 @@ namespace Sped\Common\Modules;
  * @copyright  Copyright (c) 2008-2015
  * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
  * @author     Roberto L. Machado <linux.rlm at gmail dot com>
- * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
+ * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
  */
 
 class Modules
 {
+    /**
+     * $list
+     * @var array
+     */
     protected $list;
+    /**
+     * $cRed
+     * @var string
+     */
     protected $cRed = '#FF0000';
+    /**
+     * $cGreen
+     * @var string
+     */
     protected $cGreen = '#00CC00';
 
+    /**
+     * Função construtora
+     */
     public function __construct()
     {
         ob_start();
