@@ -9,7 +9,7 @@ namespace Sped\Common\Soap;
  * @copyright  Copyright (c) 2008-2015
  * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
  * @author     Roberto L. Machado <linux dot rlm at gmail dot com>
- * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
+ * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
  */
 
 use Sped\Common\Strings\Strings;

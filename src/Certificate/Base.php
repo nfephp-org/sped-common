@@ -8,10 +8,10 @@ namespace Sped\Common\Certificate;
  * 
  * @category   NFePHP
  * @package    Sped\Common\Certificate
- * @copyright  Copyright (c) 2008-2014
+ * @copyright  Copyright (c) 2008-2015
  * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
  * @author     Roberto L. Machado <linux.rlm at gmail dot com>
- * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
+ * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
  */
 
 class Base
@@ -19,7 +19,6 @@ class Base
     /**
      * pem2Der
      * Transforma o certificado do formato PEM para o formato DER
-     * 
      * @param string $pem_data
      * @return string
      */

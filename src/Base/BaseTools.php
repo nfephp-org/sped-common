@@ -10,7 +10,7 @@ namespace Sped\Common\Base;
  * @copyright  Copyright (c) 2008-2015
  * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
  * @author     Roberto L. Machado <linux.rlm at gmail dot com>
- * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
+ * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
  */
 
 use Sped\Common\Certificate\Pkcs12;
@@ -376,11 +376,6 @@ class BaseTools
         $sxml = $this->oCertificate->signXML($xml, $tag);
         $dom = new Dom();
         $dom->loadXMLString($sxml);
-        //$versao = $dom->getElementsByTagName($tag)->item(0)->getAttribute('versao');
-        //if (! $this->zValidMessage($sxml, $tipo, $versao)) {
-        //$msg = "Falha na validação do $tipo. ".$this->error;
-        //  throw new Exception\RuntimeException($msg);
-        //}
         if ($saveFile && $tipo != '') {
             $dom = new Dom();
             $dom->loadXMLString($sxml);
@@ -448,7 +443,6 @@ class BaseTools
         }
         $this->urlcUF = $this->zGetcUF($siglaUF);
         $pathXmlUrlFile = $this->zGetXmlUrlPath($tipo);
-        
         if ($this->enableSVCAN) {
             $aURL = self::zLoadSEFAZ($pathXmlUrlFile, $tpAmb, 'SVCAN');
         } elseif ($this->enableSVCRS) {
@@ -492,13 +486,11 @@ class BaseTools
         } elseif ($tipo == 'cle') {
             $path = $this->aConfig['pathXmlUrlFileCLe'];
         }
-        
         $pathXmlUrlFile = NFEPHP_ROOT
             . DIRECTORY_SEPARATOR
             . 'config'
             . DIRECTORY_SEPARATOR
             . $path;
-        
         return $pathXmlUrlFile;
     }
     
@@ -542,7 +534,7 @@ class BaseTools
      * onde este é estruturado para os modelos 55 (NF-e) e 65 (NFC-e) já que
      * os endereços dos webservices podem ser diferentes.
      * @param string $pathXmlUrlFile
-     * @param  string $tpAmb Pode ser "2-homologacao" ou "1-producao"
+     * @param string $tpAmb Pode ser "2-homologacao" ou "1-producao"
      * @param string $siglaUF
      * @param strign $tipo nfe, mdfe ou cte
      * @return mixed false se houve erro ou array com os dados dos URLs da SEFAZ

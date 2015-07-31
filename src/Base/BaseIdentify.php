@@ -5,11 +5,11 @@ namespace Sped\Common\Base;
 /**
  * Classe auxiliar para a identificação dos documentos eletrônicos
  * @category   NFePHP
- * @package    Sped\Common\Base\BaseIdentify
+ * @package    Sped\Common\Base
  * @copyright  Copyright (c) 2008-2015
  * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
  * @author     Roberto L. Machado <linux.rlm at gmail dot com>
- * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
+ * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
  */
 
 use Sped\Common\Dom\Dom;
@@ -38,23 +38,21 @@ class BaseIdentify
     /**
      * identificacao
      * Identifica o documento 
-     * @param type $xml
+     * @param string $xml
      * @return string
      */
     public static function identificacao($xml = '', &$aResp = array())
     {
         if ($xml == '') {
             return '';
-        } elseif (is_file($xml)) {
+        }
+        if (is_file($xml)) {
             $xml = FilesFolders::readFile($xml);
         }
         $dom = new Dom('1.0', 'utf-8');
         $dom->loadXMLString($xml);
         $key = '';
         $schId = (string) self::zSearchNode($dom, $key);
-        if ($schId == '') {
-            return '';
-        }
         $chave = '';
         $tpAmb = '';
         $dhEmi = '';
