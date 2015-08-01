@@ -85,7 +85,6 @@ class NatSoap
      * @param string $certificateKey
      * @param string $pathWsdl
      * @param integer $timeout
-     * @return boolean
      */
     public function __construct($publicKey = '', $privateKey = '', $certificateKey = '', $pathWsdl = '', $timeout = 10)
     {
@@ -105,7 +104,6 @@ class NatSoap
             $this->soapTimeout = $timeout;
         } catch (Exception\RuntimeException $e) {
             $this->aError[] = $e->getMessage();
-            return false;
         }
     }
     
@@ -113,14 +111,13 @@ class NatSoap
      * Estabelece comunicaçao com servidor SOAP 1.1 ou 1.2 da SEFAZ,
      * usando as chaves publica e privada parametrizadas na contrução da classe.
      * Conforme Manual de Integração Versão 4.0.1 
-     * @param string $urlsefaz
+     * @param string $siglaUF
      * @param string $namespace
      * @param string $cabecalho
      * @param string $dados
      * @param string $metodo
-     * @param integer $ambiente  tipo de ambiente 1 - produção e 2 - homologação
-     * @param string $UF unidade da federação, necessário para diferenciar AM, MT e PR
-     * @return mixed false se houve falha ou o retorno em xml do SEFAZ
+     * @param integer $tpAmb  tipo de ambiente 1 - produção e 2 - homologação
+     * @return string vazio se houve falha ou o retorno em xml do SEFAZ
      */
     public function send(
         $siglaUF = '',
@@ -211,7 +208,7 @@ class NatSoap
             $this->soapDebug .= "\n" . $oSoapClient->__getLastResponse();
         } catch (Exception\RuntimeException $e) {
             $this->aError[] = $e->getMessage();
-            return false;
+            return '';
         }
         return $resposta;
     }

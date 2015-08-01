@@ -38,7 +38,7 @@ class Wsdl
     {
         $soap = new Soap\CurlSoap($priKeyPath, $pubKeyPath, $certKeyPath);
         $resposta = $soap->getWsdl($url);
-        if (!$resposta) {
+        if (empty($resposta)) {
             $this->soapDebug = $soap->soapDebug;
             return '';
         }

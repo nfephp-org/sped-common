@@ -126,7 +126,7 @@ class Modules
     public function getModuleSetting($moduleName, $setting = '')
     {
         //verifica se o modulo está carregado antes de continuar
-        if ($this->isLoaded($moduleName)==false) {
+        if ($this->isLoaded($moduleName) === false) {
             return 'Modulo não carregado';
         }
         if ($this->list[$moduleName][$setting]) {
