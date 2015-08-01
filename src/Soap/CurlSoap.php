@@ -134,6 +134,7 @@ class CurlSoap
      */
     public function getProxy()
     {
+        $aProxy = array();
         $aProxy['ip'] = $this->proxyIP;
         $aProxy['port'] = $this->proxyPORT;
         $aProxy['username'] = $this->proxyUSER;
@@ -143,7 +144,7 @@ class CurlSoap
     
     /**
      * Envia mensagem ao webservice
-     * @param string $urlsevice
+     * @param string $urlservice
      * @param string $namespace
      * @param string $header
      * @param string $body
@@ -172,7 +173,7 @@ class CurlSoap
         //solicita comunicação via cURL
         $resposta = $this->zCommCurl($urlservice, $data, $parametros);
         if (empty($resposta)) {
-            $msg = "Não houve retorno do Curl.\n $this->errorCurl";
+            $msg = "Não houve retorno do Curl.\n $namespace $this->errorCurl";
             throw new Exception\RuntimeException($msg);
         }
         //obtem o bloco html da resposta
@@ -212,8 +213,8 @@ class CurlSoap
     /**
      * getWsdl
      * Baixa o arquivo wsdl do webservice
-     * @param string $urlsefaz
-     * @return boolean|string
+     * @param string $urlservice
+     * @return string
      */
     public function getWsdl($urlservice)
     {
@@ -229,7 +230,7 @@ class CurlSoap
         }
         if ($nPos === false) {
             //não retornou um wsdl
-            return false;
+            return '';
         }
         $wsdl = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n".trim(substr($resposta, $nPos));
         return $wsdl;

@@ -84,6 +84,7 @@ class BaseIdentify
     /**
      * zSearchNode
      * @param DOMDocument $dom
+     * @param string $dom
      * @return string
      */
     protected static function zSearchNode($dom, &$key)
