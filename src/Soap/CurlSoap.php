@@ -148,7 +148,7 @@ class CurlSoap
      * @param string $header
      * @param string $body
      * @param string $method
-     * @return boolean|string
+     * @return string
      */
     public function send($urlservice, $namespace, $header, $body, $method)
     {
