@@ -556,8 +556,7 @@ class Pkcs12
         }
         $dom = new Dom();
         $dom->loadXMLString($xml);
-        $flag = $this->zDigCheck($dom, $tagid);
-        $flag = $this->zSignCheck($dom);
+        $flag = $this->zDigCheck($dom, $tagid) && $this->zSignCheck($dom);
         return $flag;
     }
     

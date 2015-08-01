@@ -154,13 +154,15 @@ class FilesFolders
                 "O diretório não existe $folder !!!"
             );
         }
-        $aList = array();
         $search = $folder;
         if (substr($folder, -1) == DIRECTORY_SEPARATOR) {
             $search = substr($folder, 0, strlen($folder)-1);
         }
         $searchmatch = $search.DIRECTORY_SEPARATOR.$fileMatch;
         $aGlob = glob($searchmatch);
+        if ($aGlob === false) {
+            return array();
+        }
         $aList = $aGlob;
         if (! $retpath && ! empty($aGlob)) {
             $aList = array();
