@@ -115,8 +115,7 @@ class CurlSoapTest extends \PHPUnit_Framework_TestCase
         //busca resposta
         $urlservice = 'https://homologacao.nfe.fazenda.sp.gov.br/ws/nfestatusservico2.asmx';
         $wsdl = $soap->getWsdl($urlservice);
-        
-        $this->assertFalse($wsdl);
+        $this->assertEquals($wsdl, '');
     }
     
     /**
