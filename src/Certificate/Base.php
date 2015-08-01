@@ -78,7 +78,7 @@ class Base
      * @param array $abIn
      * @param integer $qIn 
      * @param boolean $flag
-     * @return integer
+     * @return array
      */
     protected static function xBase128($abIn, $qIn, $flag)
     {

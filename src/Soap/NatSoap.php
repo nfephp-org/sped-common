@@ -85,7 +85,6 @@ class NatSoap
      * @param string $certificateKey
      * @param string $pathWsdl
      * @param integer $timeout
-     * @return boolean
      */
     public function __construct($publicKey = '', $privateKey = '', $certificateKey = '', $pathWsdl = '', $timeout = 10)
     {
@@ -105,7 +104,6 @@ class NatSoap
             $this->soapTimeout = $timeout;
         } catch (Exception\RuntimeException $e) {
             $this->aError[] = $e->getMessage();
-            return false;
         }
     }
     
