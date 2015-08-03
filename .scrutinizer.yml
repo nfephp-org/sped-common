@@ -29,6 +29,7 @@ checks:
 
 tools:
     external_code_coverage:
+        enabled: false
         timeout: 600
         runs: 3
         filter:
