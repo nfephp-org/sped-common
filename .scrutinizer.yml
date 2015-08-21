@@ -8,15 +8,36 @@ build:
 before_commands:
     - "composer install --prefer-source"
 
+filter:
+    excluded_paths: [test/*]
+
+checks:
+    php:
+        remove_extra_empty_lines: true
+        remove_php_closing_tag: true
+        remove_trailing_whitespace: true
+        fix_use_statements:
+            remove_unused: true
+            preserve_multiple: false
+            preserve_blanklines: true
+            order_alphabetically: true
+        fix_php_opening_tag: true
+        fix_linefeed: true
+        fix_line_ending: true
+        fix_identation_4spaces: true
+        fix_doc_comments: true
+
 tools:
     external_code_coverage:
         enabled: false
-        timeout: 300
+        timeout: 600
+        runs: 3
         filter:
             excluded_paths:
                 - 'test/*'
                 - 'vendor/*'
-
+    
+    # Code Coverage
     php_code_coverage:
         enabled: true
         filter:
@@ -24,6 +45,7 @@ tools:
                 - 'test/*'
                 - 'vendor/*'
 
+    # Code Sniffer            
     php_code_sniffer:
         enabled: true
         config:
@@ -71,7 +93,7 @@ tools:
                 - naming
                 - design
             naming_rules:
-                short_variable: { minimum: 2 }
+                short_variable: { minimum: 3 }
         filter:
             excluded_paths:
                 - 'test/*'
@@ -105,4 +127,4 @@ tools:
                 - 'vendor/*'
 
     # Security Advisory Checker
-    sensiolabs_security_checker: true
+    sensiolabs_security_checker: true                
