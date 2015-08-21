@@ -83,7 +83,7 @@ class BaseIdentify
     
     /**
      * zSearchNode
-     * @param DOMDocument $dom
+     * @param Sped\Common\Dom\Dom $dom
      * @param string $dom
      * @return string
      */
