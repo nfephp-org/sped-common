@@ -102,13 +102,16 @@ class Dom extends DOMDocument
      */
     public function getChave($nodeName = 'infNFe')
     {
-        $node = $this->getElementsByTagName($nodeName)->item(0);
-        if (! empty($node)) {
-            $chaveId = $node->getAttribute("Id");
-            $chave =  preg_replace('/[^0-9]/', '', $chaveId);
-            return $chave;
+        if ($nodeName === '') {
+            return '';
         }
-        return '';
+        $node = $this->getElementsByTagName($nodeName)->item(0);
+        if (empty($node)) {
+            return '';
+        }
+        $chaveId = $node->getAttribute("Id");
+        $chave =  preg_replace('/[^0-9]/', '', $chaveId);
+        return $chave;
     }
     
     /**

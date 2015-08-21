@@ -56,6 +56,7 @@ class BaseIdentify
         $chave = '';
         $tpAmb = '';
         $dhEmi = '';
+        $tag = '';
         if ($schId == 'nfe' || $schId == 'cte' || $schId == 'mdfe') {
             switch ($schId) {
                 case 'nfe':
