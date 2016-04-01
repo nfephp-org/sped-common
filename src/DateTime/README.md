@@ -7,7 +7,7 @@ Esta classe auxiliar provê três funções básicas para o tratamento de datas 
 Namespace
 =============
 ```php
-Sped\Common\DateTime;
+Common/DateTime;
 ```
 
 Métodos

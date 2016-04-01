@@ -1,29 +1,18 @@
 <?php
 
-namespace Sped\Common\Configure;
+namespace NFePHP\Common\Configure;
 
-/**
- * Classe para auxilio na configuração do ambiente do NFePHP
- * 
- * @category   NFePHP
- * @package    Sped\Common\Configure
- * @copyright  Copyright (c) 2008-2015
- * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
- * @author     Roberto L. Machado <linux.rlm at gmail dot com>
- * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
- */
-
-use Sped\Common\Modules\Modules;
-use Sped\Common\Files\FilesFolders;
-use Sped\Common\Certificate\Pkcs12;
-use Sped\Common\Exception\InvalidArgumentException;
-use Sped\Common\Exception\RuntimeException;
+use NFePHP\Common\Modules\Modules;
+use NFePHP\Common\Files\FilesFolders;
+use NFePHP\Common\Certificate\Pkcs12;
+use NFePHP\Common\Exception\InvalidArgumentException;
+use NFePHP\Common\Exception\RuntimeException;
 
 class Configure
 {
     /**
      * $cRed
-     * @var hex 
+     * @var hex
      */
     protected static $cRed = '#FF0000';
     

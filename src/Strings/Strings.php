@@ -1,15 +1,15 @@
 <?php
 
-namespace Sped\Common\Strings;
+namespace NFePHP\Common\Strings;
 
 /**
  * Classe auxiliar para o tratamento de strings
  * @category   NFePHP
- * @package    Sped\Common\Strings
+ * @package    NFePHP\Common\Strings
  * @copyright  Copyright (c) 2008-2015
  * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
  * @author     Roberto L. Machado <linux dot rlm at gmail dot com>
- * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
+ * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
  */
 
 class Strings
@@ -18,7 +18,7 @@ class Strings
      * cleanString
      * Remove todos dos caracteres especiais do texto e os acentos
      * @param string $texto
-     * @return string Texto sem caractere especiais
+     * @return  string Texto sem caractere especiais
      */
     public static function cleanString($texto = '')
     {
@@ -34,7 +34,7 @@ class Strings
     
     /**
      * clearXml
-     * Remove \r \n \s \t 
+     * Remove \r \n \s \t
      * @param string $xml
      * @param boolean $remEnc remover encoding do xml
      * @return string

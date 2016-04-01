@@ -1,38 +1,23 @@
 <?php
 
-namespace Sped\Common\Modules;
+namespace NFePHP\Common\Modules;
 
 /**
  * Classe auxiliar para obter informações dos modulos instalados no PHP
  * @category   NFePHP
- * @package    Sped\Common\Modules
- * @copyright  Copyright (c) 2008-2015
+ * @package    NFePHP\Common\Modules
+ * @copyright  Copyright (c) 2008-2014
  * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
  * @author     Roberto L. Machado <linux.rlm at gmail dot com>
- * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
+ * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
  */
 
 class Modules
 {
-    /**
-     * $list
-     * @var array
-     */
     protected $list;
-    /**
-     * $cRed
-     * @var string
-     */
     protected $cRed = '#FF0000';
-    /**
-     * $cGreen
-     * @var string
-     */
     protected $cGreen = '#00CC00';
 
-    /**
-     * Função construtora
-     */
     public function __construct()
     {
         ob_start();
@@ -117,7 +102,7 @@ class Modules
 
     /**
      * Obtêm os parâmetros do modulo carregado
-     * Pode ser uma simples configuração especificada por $setting 
+     * Pode ser uma simples configuração especificada por $setting
      * ou todos os valores caso nada seja passado no parâmetro
      * @param string $moduleName
      * @param string $setting
@@ -126,7 +111,7 @@ class Modules
     public function getModuleSetting($moduleName, $setting = '')
     {
         //verifica se o modulo está carregado antes de continuar
-        if ($this->isLoaded($moduleName) === false) {
+        if ($this->isLoaded($moduleName)==false) {
             return 'Modulo não carregado';
         }
         if ($this->list[$moduleName][$setting]) {
@@ -138,7 +123,7 @@ class Modules
     }
     
     /**
-     * Lista todos os modulos php instalados sem seus 
+     * Lista todos os modulos php instalados sem seus
      * parametros
      * @return array
      */
@@ -151,7 +136,7 @@ class Modules
     }
     
     /**
-     * Função para padronização do numero de versões de 2.7.2 para 020702 
+     * Função para padronização do numero de versões de 2.7.2 para 020702
      * @param string $ver
      * @return string
      */
@@ -187,7 +172,7 @@ class Modules
     }
     
     /**
-     * Rotina de teste dos molulos instalados 
+     * Rotina de teste dos molulos instalados
      * se a versão é suficiente e se estão habilitados
      * @param string $name
      * @param string $alias

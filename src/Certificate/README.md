@@ -7,7 +7,7 @@ NÃO É POSSÍVEL USAR CERTIFICADOS MODELO A3 COM O PHP
 Namespace
 =========
 ```php
-Sped\Common\Certificate;
+Common/Certificate;
 ```
 
 Class Pkcs12

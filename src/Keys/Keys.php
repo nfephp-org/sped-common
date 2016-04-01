@@ -1,23 +1,24 @@
 <?php
 
-namespace Sped\Common\Keys;
+namespace NFePHP\Common\Keys;
 
 /**
- * Classe auxiliar para criar as chaves de identificação dos documentos fiscais
+ * Classe auxiliar para criar, listar e testar os diretórios utilizados pela API
  * @category   NFePHP
- * @package    Sped\Common\Keys
+ * @package    NFePHP\Common\Keys
  * @copyright  Copyright (c) 2008-2015
  * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
  * @author     Roberto L. Machado <linux.rlm at gmail dot com>
- * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
+ * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
  */
+
 
 class Keys
 {
     /**
      * buildKey
      * Monta as chaves de 44 digitos para NFe, NFCe, CTe e MDFe
-     * 
+     *
      * @param string $cUF
      * @param string $ano
      * @param string $mes
@@ -53,7 +54,7 @@ class Keys
     /**
      * testaChave
      * Testa a chave com o digito verificador no final
-     * 
+     *
      * @param string $chave
      * @return boolean
      */
@@ -73,9 +74,9 @@ class Keys
     /**
      * calculaDV
      * Função para o calculo o digito verificador da chave da NFe
-     * 
+     *
      * @param string $chave43
-     * @return string 
+     * @return string
      */
     public static function calculaDV($chave43)
     {

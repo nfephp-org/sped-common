@@ -25,7 +25,7 @@
         }
     ],
     "require": {
-        "php": ">=5.4.0",
+        "php" : "~5.5|~7.0",
         "ext-dom": "*",
         "ext-xml": "*",
         "ext-libxml": "*",
@@ -38,27 +38,23 @@
         "ext-fileinfo": "*",
         "ext-iconv": "*",
         "ext-mbstring": "*",
-        "zendframework/zend-mail": "2.4.*@dev"
+        "zendframework/zend-servicemanager": "^2.5",
+        "zendframework/zend-mail": "^2.5"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.7.7"
+        "phpunit/phpunit": "4.*",
+        "scrutinizer/ocular": "~1.1",
+        "squizlabs/php_codesniffer": "~2.3"
     },
     "autoload": {
         "psr-4": {
-          "Sped\\Common\\": "src/" 
+          "NFePHP\\Common\\": "src/" 
         } 
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "4.1-dev",
-            "dev-develop": "4.2-dev"
+            "dev-master": "4.1-dev"
         }
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "autoload-dev": {
-        "psr-4": {
-            "SpedTest\\Common\\": "test"
-        }
-    }
+    "minimum-stability": "dev"
 }

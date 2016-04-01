@@ -1,15 +1,15 @@
 <?php
 
-namespace Sped\Common\Dom;
+namespace NFePHP\Common\Dom;
 
 /**
  * Classe auxiliar para validar documentos XML com o seu respecitvo XSD
  * @category   NFePHP
- * @package    Sped\Common\Dom
+ * @package    NFePHP\Common\Dom\ValidXsd
  * @copyright  Copyright (c) 2008-2015
  * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
  * @author     Roberto L. Machado <linux.rlm at gmail dot com>
- * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
+ * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
  */
 
 use \DOMDocument;

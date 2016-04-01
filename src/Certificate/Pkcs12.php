@@ -1,27 +1,27 @@
 <?php
 
-namespace Sped\Common\Certificate;
+namespace NFePHP\Common\Certificate;
 
 /**
  * Classe para tratamento e uso dos certificados digitais modelo A1 (PKCS12)
- * 
+ *
  * @category   NFePHP
- * @package    Sped\Common\Certificate
+ * @package    NFePHP\Common\Certificate
  * @copyright  Copyright (c) 2008-2014
  * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
  * @author     Roberto L. Machado <linux.rlm at gmail dot com>
  * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
  */
 
-use Sped\Common\Certificate\Asn;
-use Sped\Common\Exception;
-use Sped\Common\Dom\Dom;
+use NFePHP\Common\Certificate\Asn;
+use NFePHP\Common\Exception;
+use NFePHP\Common\Dom\Dom;
 
 class Pkcs12
 {
     /**
      * Path para o diretorio onde o arquivo pfx está localizado
-     * @var string 
+     * @var string
      */
     public $pathCerts = '';
     
@@ -45,7 +45,7 @@ class Pkcs12
     
     /**
      * String que contêm a chave publica em formato PEM
-     * @var string 
+     * @var string
      */
     public $pubKey = '';
     
@@ -65,7 +65,7 @@ class Pkcs12
     /**
      * Flag para ignorar testes de validade do certificado
      * isso é usado apenas para fins de testes
-     * @var boolean 
+     * @var boolean
      */
     public $ignoreValidCert = false;
     
@@ -101,7 +101,7 @@ class Pkcs12
     
     /**
      * Id do docimento sendo assinado
-     * @var string 
+     * @var string
      */
     public $docId = '';
 
@@ -113,7 +113,7 @@ class Pkcs12
      * @param string $priKey Chave privada em formato PEM, não o path mas a chave em si
      * @param string $certKey Certificado em formato PEM, não o path mas a chave em si
      * @param bool $ignoreValidCert
-     * @paran boolean $ignoreValidCert Ignora a validade do certificado, mais usado para fins de teste
+     * @param boolean $ignoreValidCert Ignora a validade do certificado, mais usado para fins de teste
      */
     public function __construct(
         $pathCerts = '',
@@ -156,13 +156,13 @@ class Pkcs12
     
     /**
      * zInit
-     * Método de inicialização da classe irá verificar 
+     * Método de inicialização da classe irá verificar
      * os parâmetros, arquivos e validade dos mesmos
      * Em caso de erro o motivo da falha será indicada na parâmetro
-     * error da classe, os outros parâmetros serão limpos e os 
+     * error da classe, os outros parâmetros serão limpos e os
      * arquivos inválidos serão removidos da pasta
      * @param boolean $flagCert indica que as chaves já foram passas como strings
-     * @return boolean 
+     * @return boolean
      */
     private function zInit($flagCert = false)
     {
@@ -230,7 +230,10 @@ class Pkcs12
      * pelo menos uma vez por ano, uma vez que a validade do certificado
      * é anual.
      * Será verificado também se o certificado pertence realmente ao CNPJ
-     * indicado na instanciação da classe, se não for um erro irá ocorrer e
+     * Essa verificação checa apenas se o certificado pertence a matriz ou filial
+     * comparando apenas os primeiros 8 digitos do CNPJ, dessa forma ambas a
+     * matriz e as filiais poderão usar o mesmo certificado indicado na instanciação
+     * da classe, se não for um erro irá ocorrer e
      * o certificado não será convertido para o formato PEM.
      * Em caso de erros, será retornado false e o motivo será indicado no
      * parâmetro error da classe.
@@ -270,7 +273,7 @@ class Pkcs12
         }
         if (!$ignoreOwner) {
             $cnpjCert = Asn::getCNPJCert($x509certdata['cert']);
-            if ($this->cnpj != $cnpjCert) {
+            if (substr($this->cnpj, 0, 8) != substr($cnpjCert, 0, 8)) {
                 throw new Exception\InvalidArgumentException(
                     "O Certificado fornecido pertence a outro CNPJ!!"
                 );
@@ -324,7 +327,7 @@ class Pkcs12
      * aadChain
      * @param array $aCerts Array com os caminhos completos para cada certificado da cadeia
      *                     ou um array com o conteúdo desses certificados
-     * @return void 
+     * @return void
      */
     public function aadChain($aCerts = array())
     {
@@ -358,7 +361,7 @@ class Pkcs12
             $msg = "As chaves não estão disponíveis.";
             throw new Exception\InvalidArgumentException($msg);
         }
-        //caso não seja informada a taga a ser assinada cai fora
+        //caso não seja informada a tag a ser assinada cai fora
         if ($tagid == '') {
             $msg = "A tag a ser assinada deve ser indicada.";
             throw new Exception\InvalidArgumentException($msg);
@@ -482,13 +485,17 @@ class Pkcs12
         $referenceNode->appendChild($digestValueNode);
         //extrai node <SignedInfo> para uma string na sua forma canonica
         $cnSignedInfoNode = $signedInfoNode->C14N(true, false, null, null);
-        //cria uma variavel vasia que receberá a assinatura
+        //cria uma variavel vazia que receberá a assinatura
         $signature = '';
         //calcula a assinatura do node canonizado <SignedInfo>
         //usando a chave privada em formato PEM
         if (! openssl_sign($cnSignedInfoNode, $signature, $objSSLPriKey)) {
             $msg = "Houve erro durante a assinatura digital.\n";
             $this->zGetOpenSSLError($msg);
+            //while ($erro = openssl_error_string()) {
+            //    $msg .= $erro . "\n";
+            //}
+            //throw new Exception\RuntimeException($msg);
         }
         //converte a assinatura em base64
         $signatureValue = base64_encode($signature);
@@ -556,7 +563,8 @@ class Pkcs12
         }
         $dom = new Dom();
         $dom->loadXMLString($xml);
-        $flag = $this->zDigCheck($dom, $tagid) && $this->zSignCheck($dom);
+        $flag = $this->zDigCheck($dom, $tagid);
+        $flag = $this->zSignCheck($dom);
         return $flag;
     }
     
@@ -578,6 +586,10 @@ class Pkcs12
         if ($objSSLPubKey === false) {
             $msg = "Ocorreram problemas ao carregar a chave pública. Certificado incorreto ou corrompido!!";
             $this->zGetOpenSSLError($msg);
+            //while ($erro = openssl_error_string()) {
+            //    $msg .= $erro . "\n";
+            //}
+            //throw new Exception\RuntimeException($msg);
         }
         //remontando conteudo que foi assinado
         $signContent = $dom->getElementsByTagName('SignedInfo')->item(0)->C14N(true, false, null, null);
@@ -588,6 +600,10 @@ class Pkcs12
         if ($resp != 1) {
             $msg = "Problema ({$resp}) ao verificar a assinatura do digital!!";
             $this->zGetOpenSSLError($msg);
+            //while ($erro = openssl_error_string()) {
+            //    $msg .= $erro . "\n";
+            //}
+            //throw new Exception\RuntimeException($msg);
         }
         return true;
     }
@@ -670,7 +686,7 @@ class Pkcs12
     
     /**
      * zCleanPubKey
-     * Remove a informação de inicio e fim do certificado 
+     * Remove a informação de inicio e fim do certificado
      * contido no formato PEM, deixando o certificado (chave publica) pronta para ser
      * anexada ao xml da NFe
      * @return string contendo o certificado limpo
@@ -699,7 +715,7 @@ class Pkcs12
      * Divide a string do certificado publico em linhas
      * com 76 caracteres (padrão original)
      * @param string $cntIn certificado
-     * @return string certificado reformatado 
+     * @return string certificado reformatado
      */
     protected function zSplitLines($cntIn = '')
     {
