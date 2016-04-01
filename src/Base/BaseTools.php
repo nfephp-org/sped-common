@@ -1,24 +1,24 @@
 <?php
 
-namespace Sped\Common\Base;
+namespace NFePHP\Common\Base;
 
 /**
  * Classe base das classes principais para a comunicação com a SEFAZ
- * 
+ *
  * @category   NFePHP
  * @package    NFePHP\Common\Base
  * @copyright  Copyright (c) 2008-2015
  * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
  * @author     Roberto L. Machado <linux.rlm at gmail dot com>
- * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
+ * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
  */
 
-use Sped\Common\Certificate\Pkcs12;
-use Sped\Common\DateTime\DateTime;
-use Sped\Common\Dom\Dom;
-use Sped\Common\Soap\CurlSoap;
-use Sped\Common\Files;
-use Sped\Common\Exception;
+use NFePHP\Common\Certificate\Pkcs12;
+use NFePHP\Common\DateTime\DateTime;
+use NFePHP\Common\Dom\Dom;
+use NFePHP\Common\Soap\CurlSoap;
+use NFePHP\Common\Files;
+use NFePHP\Common\Exception;
 
 if (!defined('NFEPHP_ROOT')) {
     define('NFEPHP_ROOT', dirname(dirname(dirname(__FILE__))));
@@ -47,7 +47,7 @@ class BaseTools
     /**
      * motivoContingencia
      * Motivo por ter entrado em Contingencia
-     * @var string 
+     * @var string
      */
     public $motivoContingencia = '';
     /**
@@ -59,7 +59,7 @@ class BaseTools
     /**
      * verAplic
      * Versão da aplicação
-     * @var string 
+     * @var string
      */
     public $verAplic = '';
     /**
@@ -96,12 +96,12 @@ class BaseTools
     protected $oCertificate;
     /**
      * oSoap
-     * @var Object Class  
+     * @var Object Class
      */
     protected $oSoap;
     /**
      * aDocFormat
-     * @var array 
+     * @var array
      */
     protected $aDocFormat = array();
     /**
@@ -122,17 +122,17 @@ class BaseTools
     protected $urlPortal = '';
     /**
      * urlcUF
-     * @var string 
+     * @var string
      */
     protected $urlcUF = '';
     /**
      * urlVersion
-     * @var string 
+     * @var string
      */
     protected $urlVersion = '';
     /**
      * urlService
-     * @var string 
+     * @var string
      */
     protected $urlService = '';
     /**
@@ -142,17 +142,17 @@ class BaseTools
     protected $urlMethod = '';
     /**
      * urlOperation
-     * @var string 
+     * @var string
      */
     protected $urlOperation = '';
     /**
      * urlNamespace
-     * @var string 
+     * @var string
      */
     protected $urlNamespace = '';
     /**
      * urlHeader
-     * @var string 
+     * @var string
      */
     protected $urlHeader = '';
     /**
@@ -208,7 +208,7 @@ class BaseTools
         if ($configJson == '') {
             $msg = 'O arquivo de configuração no formato JSON deve ser passado para a classe.';
             throw new Exception\InvalidArgumentException($msg);
-        }    
+        }
         if (is_file($configJson)) {
             $configJson = Files\FilesFolders::readFile($configJson);
         }
@@ -239,7 +239,7 @@ class BaseTools
         $this->certExpireTimestamp = $this->oCertificate->expireTimestamp;
         $this->zLoadSoapClass();
         //verifica se a contingência está ativada
-        $pathContingencia = NFEPHP_ROOT.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'contingencia.json';
+        $pathContingencia = NFEPHP_ROOT.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.$this->aConfig['cnpj'].'_contingencia.json';
         if (is_file($pathContingencia)) {
             $contJson = Files\FilesFolders::readFile($pathContingencia);
             if (! empty($contJson)) {
@@ -358,7 +358,7 @@ class BaseTools
      * assinaDoc
      * @param string $xml
      * @param string $tipo nfe, cte, ou mdfe
-     * @param string $tag Nome da tag a ser assinada 
+     * @param string $tag Nome da tag a ser assinada
      * @param boolean $saveFile APENAS para salvar NFe, CTe ou MDFe
      * @return string
      * @throws Exception\InvalidArgumentException
@@ -376,6 +376,11 @@ class BaseTools
         $sxml = $this->oCertificate->signXML($xml, $tag);
         $dom = new Dom();
         $dom->loadXMLString($sxml);
+        //$versao = $dom->getElementsByTagName($tag)->item(0)->getAttribute('versao');
+        //if (! $this->zValidMessage($sxml, $tipo, $versao)) {
+        //$msg = "Falha na validação do $tipo. ".$this->error;
+        //  throw new Exception\RuntimeException($msg);
+        //}
         if ($saveFile && $tipo != '') {
             $dom = new Dom();
             $dom->loadXMLString($sxml);
@@ -441,8 +446,9 @@ class BaseTools
             $this->urlHeader = '';
             return false;
         }
-        $this->urlcUF = $this->zGetcUF($siglaUF);
+        $this->urlcUF = $this->getcUF($siglaUF);
         $pathXmlUrlFile = $this->zGetXmlUrlPath($tipo);
+        
         if ($this->enableSVCAN) {
             $aURL = self::zLoadSEFAZ($pathXmlUrlFile, $tpAmb, 'SVCAN');
         } elseif ($this->enableSVCRS) {
@@ -486,11 +492,13 @@ class BaseTools
         } elseif ($tipo == 'cle') {
             $path = $this->aConfig['pathXmlUrlFileCLe'];
         }
+        
         $pathXmlUrlFile = NFEPHP_ROOT
             . DIRECTORY_SEPARATOR
             . 'config'
             . DIRECTORY_SEPARATOR
             . $path;
+        
         return $pathXmlUrlFile;
     }
     
@@ -534,7 +542,7 @@ class BaseTools
      * onde este é estruturado para os modelos 55 (NF-e) e 65 (NFC-e) já que
      * os endereços dos webservices podem ser diferentes.
      * @param string $pathXmlUrlFile
-     * @param string $tpAmb Pode ser "2-homologacao" ou "1-producao"
+     * @param  string $tpAmb Pode ser "2-homologacao" ou "1-producao"
      * @param string $siglaUF
      * @param strign $tipo nfe, mdfe ou cte
      * @return mixed false se houve erro ou array com os dados dos URLs da SEFAZ
@@ -677,8 +685,8 @@ class BaseTools
      * @param string $tpAmb ambiente
      * @param string $filename nome do arquivo
      * @param string $data dados a serem salvos
-     * @param string $subFolder 
-     * @param string $anomes 
+     * @param string $subFolder
+     * @param string $anomes
      * @throws Exception\RuntimeException
      */
     protected function zGravaFile(
@@ -709,11 +717,11 @@ class BaseTools
     }
 
     /**
-     * zGetcUF
+     * getcUF
      * @param string $siglaUF
      * @return string numero cUF
      */
-    protected function zGetcUF($siglaUF = '')
+    public function getcUF($siglaUF = '')
     {
         return $this->cUFlist[$siglaUF];
     }

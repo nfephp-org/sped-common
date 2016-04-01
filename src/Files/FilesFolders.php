@@ -1,18 +1,18 @@
 <?php
 
-namespace Sped\Common\Files;
+namespace NFePHP\Common\Files;
 
 /**
  * Classe auxiliar para criar, listar e testar os diretórios utilizados pela API
  * @category   NFePHP
- * @package    Sped\Common\Files
+ * @package    NFePHP\Common\Files
  * @copyright  Copyright (c) 2008-2015
  * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
  * @author     Roberto L. Machado <linux.rlm at gmail dot com>
- * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
+ * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
  */
 
-use Sped\Common\Exception;
+use NFePHP\Common\Exception;
 
 class FilesFolders
 {
@@ -77,7 +77,7 @@ class FilesFolders
     
     /**
      * createFolders
-     * Cria a estrutura de diretorios para a guarda dos arquivos 
+     * Cria a estrutura de diretorios para a guarda dos arquivos
      * @param string $dirPath path do diretorio a ser criado
      * @return boolean
      * @throws Exception\RuntimeException
@@ -154,15 +154,13 @@ class FilesFolders
                 "O diretório não existe $folder !!!"
             );
         }
+        $aList = array();
         $search = $folder;
         if (substr($folder, -1) == DIRECTORY_SEPARATOR) {
             $search = substr($folder, 0, strlen($folder)-1);
         }
         $searchmatch = $search.DIRECTORY_SEPARATOR.$fileMatch;
         $aGlob = glob($searchmatch);
-        if ($aGlob === false) {
-            return array();
-        }
         $aList = $aGlob;
         if (! $retpath && ! empty($aGlob)) {
             $aList = array();
@@ -255,5 +253,18 @@ class FilesFolders
             throw new Exception\RuntimeException($msg);
         }
         return file_get_contents($pathFile);
+    }
+    
+    /**
+     * removeFile
+     * @param string $pathFile
+     * @return boolean
+     */
+    public static function removeFile($pathFile = '')
+    {
+        if ($pathFile == '' || !is_file($pathFile)) {
+            return true;
+        }
+        return unlink($pathFile);
     }
 }

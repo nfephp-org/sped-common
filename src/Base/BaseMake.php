@@ -1,23 +1,23 @@
 <?php
 
-namespace Sped\Common\Base;
+namespace NFePHP\Common\Base;
 
 /**
  * Classe base para a criação das classes construtoras dos XML
  * tanto para NFe, NFCe, CTe e MDFe
- *  
+ *
  * @category   NFePHP
- * @package    Sped\Common\Base
+ * @package    NFePHP\Common\Base\BaseMake
  * @copyright  Copyright (c) 2008-2015
  * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
  * @author     Roberto L. Machado <linux.rlm at gmail dot com>
- * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
+ * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
  */
 
-use Sped\Common\Dom\Dom as Dom;
-use Sped\Common\Keys\Keys;
-use Sped\Common\Base\BaseIdentify;
-use Sped\Common\Files\FilesFolders;
+use NFePHP\Common\Dom\Dom as Dom;
+use NFePHP\Common\Keys\Keys;
+use NFePHP\Common\Identify\Identify;
+use NFePHP\Common\Files\FilesFolders;
 
 class BaseMake
 {
@@ -49,12 +49,12 @@ class BaseMake
     /**
      * dom
      * Variável onde será montado o xml do documento fiscal
-     * @var Sped\Common\Dom\Dom
+     * @var \NFePHP\Common\Dom\Dom
      */
     public $dom;
     /**
      * tpAmb
-     * tipo de ambiente 
+     * tipo de ambiente
      * @var string
      */
     public $tpAmb = '2';
@@ -81,7 +81,7 @@ class BaseMake
     
     /**
      * gravaXML
-     * grava o xml do documento fiscal na estrutura de pastas 
+     * grava o xml do documento fiscal na estrutura de pastas
      * em path indicar por exemplo /var/www/nfe ou /dados/cte ou /arquivo/mdfe
      * ou seja as pastas principais onde guardar os arquivos
      * Esse método itá colocar na subpastas [producao] ou [homologacao]
@@ -104,8 +104,8 @@ class BaseMake
         }
         $aResp = array();
         $aList = array('NFe' => 'nfe','CTe' => 'cte','MDFe' => 'mdfe');
-        BaseIdentify::setListSchemesId($aList);
-        $schem = BaseIdentify::identificacao($this->xml, $aResp);
+        Identify::setListSchemesId($aList);
+        $schem = Identify::identificacao($this->xml, $aResp);
         if ($aResp['chave'] == '') {
             return false;
         }
@@ -133,11 +133,12 @@ class BaseMake
         }
         return true;
     }
+
     
     /**
      * montaChave
      * Monta a chave do documento fiscal
-     * 
+     *
      * @param string $cUF
      * @param string $ano
      * @param string $mes

@@ -1,17 +1,17 @@
 <?php
 
-namespace Sped\Common\Certificate;
+namespace NFePHP\Common\Certificate;
 
 /**
  * Classe auxiliar para obter informações dos certificados digitais A1 (PKCS12)
  * Base para a classe ASN
- * 
+ *
  * @category   NFePHP
- * @package    Sped\Common\Certificate
- * @copyright  Copyright (c) 2008-2015
+ * @package    NFePHP\Common\Certificate
+ * @copyright  Copyright (c) 2008-2014
  * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
  * @author     Roberto L. Machado <linux.rlm at gmail dot com>
- * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
+ * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
  */
 
 class Base
@@ -19,7 +19,8 @@ class Base
     /**
      * pem2Der
      * Transforma o certificado do formato PEM para o formato DER
-     * @param string $pemData
+     *
+     * @param string $pem_data
      * @return string
      */
     protected static function pem2Der($pemData)
@@ -38,9 +39,9 @@ class Base
      * oidtoHex
      * Converte o numero de identificação do OID em uma representação asc,
      * coerente com o formato do certificado
-     * 
+     *
      * @param string $oid numero OID (com os pontos de separação)
-     * @return string sequencia em hexadecimal 
+     * @return string sequencia em hexadecimal
      */
     protected static function oidtoHex($oid)
     {
@@ -52,8 +53,7 @@ class Base
         $partes = explode('.', $oid);
         $bun = 0;
         //para cada numero compor o valor asc do mesmo
-        $nTot = count($partes);
-        for ($num = 0; $num < $nTot; $num++) {
+        for ($num = 0; $num < count($partes); $num++) {
             if ($num == 0) {
                 $bun = 40 * $partes[$num];
             } elseif ($num == 1) {
@@ -74,11 +74,11 @@ class Base
     /**
      * xBase128
      * Retorna o dado convertido em asc
-     * 
+     *
      * @param array $abIn
-     * @param integer $qIn 
+     * @param integer $qIn
      * @param boolean $flag
-     * @return array
+     * @return integer
      */
     protected static function xBase128($abIn, $qIn, $flag)
     {
@@ -97,8 +97,8 @@ class Base
     
     /**
      * Retorna o valor em caracteres hexadecimais
-     * 
-     * @param string $value 
+     *
+     * @param string $value
      * @return string
      * @return void
      */
@@ -106,8 +106,7 @@ class Base
     {
         $tabVal = array('0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F');
         $hex = '';
-        $nLen = strlen($value);
-        for ($i=0; $i < $nLen; $i++) {
+        for ($i=0; $i<strlen($value); $i++) {
             $lsig = ord(substr($value, $i, 1)) % 16;
             $msig = (ord(substr($value, $i, 1)) - $lsig) / 16;
             $lessSig = $tabVal[$lsig];
@@ -119,10 +118,10 @@ class Base
     
     /**
      * Obtêm o comprimento do conteúdo de uma sequência de dados do certificado
-     * 
+     *
      * @param integer $len variável passada por referência
      * @param integer $bytes variável passada por referência
-     * @param string $data campo a 
+     * @param string $data campo a
      * @return void
      */
     protected static function getLength(&$len, &$bytes, $data)

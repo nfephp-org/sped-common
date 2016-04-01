@@ -1,19 +1,19 @@
 <?php
 
-namespace Sped\Common\Soap;
+namespace NFePHP\Common\Soap;
 
 /**
  * Classe auxiliar para envio das mensagens SOAP usando cURL
  * @category   NFePHP
- * @package    Sped\Common\Soap
+ * @package    NFePHP\Common\Soap
  * @copyright  Copyright (c) 2008-2015
  * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
  * @author     Roberto L. Machado <linux dot rlm at gmail dot com>
- * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
+ * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
  */
 
-use Sped\Common\Strings\Strings;
-use Sped\Common\Exception;
+use NFePHP\Common\Strings\Strings;
+use NFePHP\Common\Exception;
 
 class CurlSoap
 {
@@ -45,7 +45,7 @@ class CurlSoap
     protected $infoCurl = array();
     /**
      * pubKeyPath
-     * @var string 
+     * @var string
      */
     private $pubKeyPath = '';
     /**
@@ -75,23 +75,23 @@ class CurlSoap
     private $proxyUSER = '';
     /**
      * proxyPASS
-     * @var string 
+     * @var string
      */
     private $proxyPASS = '';
     /**
      * sslProtocol
-     * @var integer 
+     * @var integer
      */
     private $sslProtocol = 0;
     
     /**
      * __construct
-     * 
+     *
      * @param string $priKeyPath path para a chave privada
      * @param string $pubKeyPath path para a chave publica
      * @param string $certKeyPath path para o certificado
      * @param string $timeout tempo de espera da resposta do webservice
-     * @param integer $sslProtocol 
+     * @param integer $sslProtocol
      */
     public function __construct($priKeyPath = '', $pubKeyPath = '', $certKeyPath = '', $timeout = 10, $sslProtocol = 0)
     {
@@ -125,7 +125,7 @@ class CurlSoap
         $this->proxyPORT = $port;
         $this->proxyUSER = $user;
         $this->proxyPASS = $pass;
-    }
+    }//fim setProxy
     
     /**
      * getProxy
@@ -134,7 +134,6 @@ class CurlSoap
      */
     public function getProxy()
     {
-        $aProxy = array();
         $aProxy['ip'] = $this->proxyIP;
         $aProxy['port'] = $this->proxyPORT;
         $aProxy['username'] = $this->proxyUSER;
@@ -144,12 +143,12 @@ class CurlSoap
     
     /**
      * Envia mensagem ao webservice
-     * @param string $urlservice
+     * @param string $urlsevice
      * @param string $namespace
      * @param string $header
      * @param string $body
      * @param string $method
-     * @return string
+     * @return boolean|string
      */
     public function send($urlservice, $namespace, $header, $body, $method)
     {
@@ -166,6 +165,10 @@ class CurlSoap
         //tamanho da mensagem
         $tamanho = strlen($data);
         //estabelecimento dos parametros da mensagem
+        //$parametros = array(
+        //    'Content-Type: application/soap+xml;charset=utf-8;action="'.$namespace."/".$method.'"',
+        //    'SOAPAction: "'.$method.'"',
+        //    "Content-length: $tamanho");
         $parametros = array(
             'Content-Type: application/soap+xml;charset=utf-8',
             'SOAPAction: "'.$method.'"',
@@ -173,7 +176,7 @@ class CurlSoap
         //solicita comunicação via cURL
         $resposta = $this->zCommCurl($urlservice, $data, $parametros);
         if (empty($resposta)) {
-            $msg = "Não houve retorno do Curl.\n $namespace $this->errorCurl";
+            $msg = "Não houve retorno do Curl.\n $this->errorCurl";
             throw new Exception\RuntimeException($msg);
         }
         //obtem o bloco html da resposta
@@ -208,13 +211,13 @@ class CurlSoap
             $xml = '<?xml version="1.0" encoding="utf-8"?>'.$xml;
         }
         return $xml;
-    }
+    } //fim send
 
     /**
      * getWsdl
      * Baixa o arquivo wsdl do webservice
-     * @param string $urlservice
-     * @return string
+     * @param string $urlsefaz
+     * @return boolean|string
      */
     public function getWsdl($urlservice)
     {
@@ -230,7 +233,7 @@ class CurlSoap
         }
         if ($nPos === false) {
             //não retornou um wsdl
-            return '';
+            return false;
         }
         $wsdl = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n".trim(substr($resposta, $nPos));
         return $wsdl;
@@ -356,7 +359,7 @@ class CurlSoap
     
     /**
      * getIBPTProd
-     * Consulta o serviço do IBPT para obter os impostos ao consumidor 
+     * Consulta o serviço do IBPT para obter os impostos ao consumidor
      * conforme Lei 12.741/2012
      * @param string $cnpj
      * @param string $tokenIBPT

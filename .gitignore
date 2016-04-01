@@ -13,3 +13,5 @@ local
 /.buildpath
 /.settings/
 /build
+composer.lock
+docs

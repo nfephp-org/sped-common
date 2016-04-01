@@ -1,20 +1,20 @@
 <?php
 
-namespace Sped\Common\Dom;
+namespace NFePHP\Common\Dom;
 
 /**
  * Classe auxiliar com funções de DOM extendidas
  * @category   NFePHP
- * @package    Sped\Common\Dom
+ * @package    NFePHP\Common\DomDocument
  * @copyright  Copyright (c) 2008-2015
  * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
  * @author     Roberto L. Machado <linux.rlm at gmail dot com>
- * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
+ * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
  */
 
 use \DOMDocument;
-use Sped\Common\Files\FilesFolders;
-use Sped\Common\Exception;
+use NFePHP\Common\Files\FilesFolders;
+use NFePHP\Common\Exception;
 
 class Dom extends DOMDocument
 {
@@ -102,16 +102,13 @@ class Dom extends DOMDocument
      */
     public function getChave($nodeName = 'infNFe')
     {
-        if ($nodeName === '') {
-            return '';
-        }
         $node = $this->getElementsByTagName($nodeName)->item(0);
-        if (empty($node)) {
-            return '';
+        if (! empty($node)) {
+            $chaveId = $node->getAttribute("Id");
+            $chave =  preg_replace('/[^0-9]/', '', $chaveId);
+            return $chave;
         }
-        $chaveId = $node->getAttribute("Id");
-        $chave =  preg_replace('/[^0-9]/', '', $chaveId);
-        return $chave;
+        return '';
     }
     
     /**

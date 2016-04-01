@@ -1,22 +1,22 @@
 <?php
 
-namespace Sped\Common\DateTime;
+namespace NFePHP\Common\DateTime;
 
 /**
  * Classe auxiliar para tratar datas
  * @category   NFePHP
- * @package    Sped\Common\DateTime
+ * @package    NFePHP\Common\DateTime
  * @copyright  Copyright (c) 2008-2015
  * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
  * @author     Roberto L. Machado <linux.rlm at gmail dot com>
- * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
+ * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
  */
 
 class DateTime
 {
     /**
      * tzdBR
-     * Para esta função funcionar corretamente é importante 
+     * Para esta função funcionar corretamente é importante
      * que os pacotes referentes ao Horario de verão estejam
      * atualizados instalados e ativos no sistema operacional
      * @param string $siglaUF
@@ -67,7 +67,7 @@ class DateTime
     /**
      * convertSefazTimeToTimestamp
      * Converte a imformação de data e tempo contida na NFe
-     * 
+     *
      * @param string $DH Informação de data e tempo extraida da NFe
      * @return timestamp UNIX Para uso com a funçao date do php
      */
@@ -97,10 +97,11 @@ class DateTime
      * @param int $timestamp
      * @return string
      */
-    public static function convertTimestampToSefazTime($timestamp = 0)
+    public static function convertTimestampToSefazTime($timestamp = 0, \DateTime $dateTime = null)
     {
         if ($timestamp == 0) {
-            return (string) str_replace(' ', 'T', date('Y-m-d H:i:sP'));
+            return (string) str_replace(' ', 'T', $dateTime->format('Y-m-d H:i:sP'));
+            //return (string) $dateTime->format(\DateTime::W3C);
         }
         return (string) str_replace(' ', 'T', date('Y-m-d H:i:sP', $timestamp));
     }
