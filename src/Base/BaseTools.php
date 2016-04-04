@@ -239,7 +239,8 @@ class BaseTools
         $this->certExpireTimestamp = $this->oCertificate->expireTimestamp;
         $this->zLoadSoapClass();
         //verifica se a contingência está ativada
-        $pathContingencia = NFEPHP_ROOT.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.$this->aConfig['cnpj'].'_contingencia.json';
+        $pathContingencia = NFEPHP_ROOT.DIRECTORY_SEPARATOR.'config'.
+            DIRECTORY_SEPARATOR.$this->aConfig['cnpj'].'_contingencia.json';
         if (is_file($pathContingencia)) {
             $contJson = Files\FilesFolders::readFile($pathContingencia);
             if (! empty($contJson)) {

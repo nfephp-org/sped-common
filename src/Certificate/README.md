@@ -132,7 +132,7 @@ array com os paths ou os conteúdos dos certificados da cadeia de certificação
 signXML
 --------
 ```php
-string $oCertificate->signXML(string $docxml, string $tagid)
+string $oCertificate->signXML(string $docxml, string $tagid, string $marcador)
 ```
 Esta função executa a assinatura digital de um documento xml de acordo com os parâmetros estabelecidos pelas SEFAZ para NFe, CTe, MDFe, e CLe.
 Esta função irá retornar o xml assinado na forma de uma string ou um Exception caso não esteja previamente estabelecido o certificado digital, se houver falha no carregamento do chave privada ou se algums dos parametro não for passado.
@@ -145,6 +145,11 @@ string com o path para o xml ou o conteúdo do próprio xml
 <b>tagid</b> 
 
 string com o nome da TAG a ser assinada. 
+
+<b>marcador</b> 
+
+string com marcador usado como URI da TAG a ser assinada, normalmente "Id". 
+
 
 verifySignature
 --------

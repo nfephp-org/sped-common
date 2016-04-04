@@ -350,11 +350,12 @@ class Pkcs12
      * signXML
      * @param string $docxml
      * @param string $tagid
+     * @param string $marcador
      * @return string xml assinado
      * @throws Exception\InvalidArgumentException
      * @throws Exception\RuntimeException
      */
-    public function signXML($docxml, $tagid = '')
+    public function signXML($docxml, $tagid = '', $marcador = 'Id')
     {
         //caso não tenha as chaves cai fora
         if ($this->pubKey == '' || $this->priKey == '') {
@@ -394,11 +395,11 @@ class Pkcs12
                 "A tag < $tagid > não existe no XML!!"
             );
         }
-        $this->docId = $node->getAttribute('Id');
+        $this->docId = $node->getAttribute($marcador);
         $xmlResp = $xml;
         if (! $this->zSignatureExists($xmldoc)) {
             //executa a assinatura
-            $xmlResp = $this->zSignXML($xmldoc, $root, $node, $objSSLPriKey);
+            $xmlResp = $this->zSignXML($xmldoc, $root, $node, $objSSLPriKey, $marcador);
         }
         //libera a chave privada
         openssl_free_key($objSSLPriKey);
@@ -412,10 +413,11 @@ class Pkcs12
      * @param DOMElement $root
      * @param DOMElement $node
      * @param resource $objSSLPriKey
+     * @param string $marcador
      * @return string xml assinado
      * @internal param DOMDocument $xmlDoc
      */
-    private function zSignXML($xmldoc, $root, $node, $objSSLPriKey)
+    private function zSignXML($xmldoc, $root, $node, $objSSLPriKey, $marcador)
     {
         $nsDSIG = 'http://www.w3.org/2000/09/xmldsig#';
         $nsCannonMethod = 'http://www.w3.org/TR/2001/REC-xml-c14n-20010315';
@@ -424,7 +426,7 @@ class Pkcs12
         $nsTransformMethod2 = 'http://www.w3.org/TR/2001/REC-xml-c14n-20010315';
         $nsDigestMethod = 'http://www.w3.org/2000/09/xmldsig#sha1';
         //pega o atributo id do node a ser assinado
-        $idSigned = trim($node->getAttribute("Id"));
+        $idSigned = trim($node->getAttribute($marcador));
         //extrai os dados da tag para uma string na forma canonica
         $dados = $node->C14N(true, false, null, null);
         //calcular o hash dos dados
