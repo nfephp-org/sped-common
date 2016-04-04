@@ -33,7 +33,7 @@ class Dom extends DOMDocument
     public function loadXMLString($xmlString = '')
     {
         $msg = "O arquivo indicado não é um XML!";
-        if (substr($xmlString, 0, 1) != '<' ) {
+        if (substr($xmlString, 0, 1) != '<') {
             throw new Exception\InvalidArgumentException($msg);
         }
         if (! $this->loadXML($xmlString, LIBXML_NOBLANKS | LIBXML_NOEMPTYTAG)) {
