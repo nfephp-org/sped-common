@@ -22,9 +22,6 @@ class DomTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * @expectedException PHPUnit_Framework_Error_Warning
-     * @expectedExceptionMessage DOMDocument::loadXML(): Start tag expected, '<' not found in Entity, line: 1
-     * 
      * @expectedException NFePHP\Common\Exception\InvalidArgumentException
      */
     public function testFailLoadXMLString()
@@ -33,7 +30,7 @@ class DomTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * @expectedException PHPUnit_Framework_Error_Warning
+     * @expectedException NFePHP\Common\Exception\InvalidArgumentException
      */
     public function testFailLoadXMLFile()
     {
