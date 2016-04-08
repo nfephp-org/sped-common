@@ -166,6 +166,29 @@ class Dom extends DOMDocument
     }
     
     /**
+     * appChildBefore
+     * Acrescenta DOMElement a pai DOMElement
+     * Caso o pai esteja vazio retorna uma exception com a mensagem
+     * O parametro "child" pode ser vazio
+     * @param \DOMNode $parent
+     * @param \DOMNode $child
+     * @param string $before
+     * @param string $msg
+     * @return void
+     * @throws Exception\InvalidArgumentException
+     */
+    public function appChildBefore(&$parent, $child, $before, $msg = '')
+    {
+        if (empty($parent)) {
+            throw new Exception\InvalidArgumentException($msg);
+        }
+        $bnode = $parent->getElementsByTagName($before)->item(0);
+        if (!empty($child) && !empty($bnode)) {
+            $parent->insertBefore($child, $bnode);
+        }
+    }
+    
+    /**
      * addArrayChild
      * Adiciona a um DOMNode parent, outros elementos passados em um array de DOMElements
      * @param DOMElement $parent
