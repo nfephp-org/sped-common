@@ -351,11 +351,12 @@ class Pkcs12
      * @param string $docxml
      * @param string $tagid
      * @param string $marcador
+     * @param string $algorithm
      * @return string xml assinado
      * @throws Exception\InvalidArgumentException
      * @throws Exception\RuntimeException
      */
-    public function signXML($docxml, $tagid = '', $marcador = 'Id')
+    public function signXML($docxml, $tagid = '', $marcador = 'Id', $algorithm = 'SHA1')
     {
         //caso não tenha as chaves cai fora
         if ($this->pubKey == '' || $this->priKey == '') {
@@ -399,7 +400,7 @@ class Pkcs12
         $xmlResp = $xml;
         if (! $this->zSignatureExists($xmldoc)) {
             //executa a assinatura
-            $xmlResp = $this->zSignXML($xmldoc, $root, $node, $objSSLPriKey, $marcador);
+            $xmlResp = $this->zSignXML($xmldoc, $root, $node, $objSSLPriKey, $marcador, $algorithm);
         }
         //libera a chave privada
         openssl_free_key($objSSLPriKey);
@@ -414,14 +415,20 @@ class Pkcs12
      * @param DOMElement $node
      * @param resource $objSSLPriKey
      * @param string $marcador
+     * @param string $algorithm
      * @return string xml assinado
      * @internal param DOMDocument $xmlDoc
      */
-    private function zSignXML($xmldoc, $root, $node, $objSSLPriKey, $marcador)
+    private function zSignXML($xmldoc, $root, $node, $objSSLPriKey, $marcador, $algorithm = 'SHA1')
     {
         $nsDSIG = 'http://www.w3.org/2000/09/xmldsig#';
         $nsCannonMethod = 'http://www.w3.org/TR/2001/REC-xml-c14n-20010315';
         $nsSignatureMethod = 'http://www.w3.org/2000/09/xmldsig#rsa-sha1';
+        $signAlgorithm = OPENSSL_ALGO_SHA1;
+        if ($algorithm == 'SHA256') {
+            $signAlgorithm = OPENSSL_ALGO_SHA256;
+            $nsSignatureMethod = 'http://www.w3.org/2000/09/xmldsig#rsa-sha256';
+        }
         $nsTransformMethod1 ='http://www.w3.org/2000/09/xmldsig#enveloped-signature';
         $nsTransformMethod2 = 'http://www.w3.org/TR/2001/REC-xml-c14n-20010315';
         $nsDigestMethod = 'http://www.w3.org/2000/09/xmldsig#sha1';
@@ -431,6 +438,9 @@ class Pkcs12
         $dados = $node->C14N(true, false, null, null);
         //calcular o hash dos dados
         $hashValue = hash('sha1', $dados, true);
+        if ($algorithm == 'SHA256') {
+            $hashValue = hash('sha256', $dados, true);
+        }
         //converter o hash para base64
         $digValue = base64_encode($hashValue);
         //cria o node <Signature>
@@ -491,7 +501,7 @@ class Pkcs12
         $signature = '';
         //calcula a assinatura do node canonizado <SignedInfo>
         //usando a chave privada em formato PEM
-        if (! openssl_sign($cnSignedInfoNode, $signature, $objSSLPriKey)) {
+        if (! openssl_sign($cnSignedInfoNode, $signature, $objSSLPriKey, $signAlgorithm)) {
             $msg = "Houve erro durante a assinatura digital.\n";
             $this->zGetOpenSSLError($msg);
             //while ($erro = openssl_error_string()) {
@@ -588,10 +598,6 @@ class Pkcs12
         if ($objSSLPubKey === false) {
             $msg = "Ocorreram problemas ao carregar a chave pública. Certificado incorreto ou corrompido!!";
             $this->zGetOpenSSLError($msg);
-            //while ($erro = openssl_error_string()) {
-            //    $msg .= $erro . "\n";
-            //}
-            //throw new Exception\RuntimeException($msg);
         }
         //remontando conteudo que foi assinado
         $signContent = $dom->getElementsByTagName('SignedInfo')->item(0)->C14N(true, false, null, null);
@@ -602,10 +608,6 @@ class Pkcs12
         if ($resp != 1) {
             $msg = "Problema ({$resp}) ao verificar a assinatura do digital!!";
             $this->zGetOpenSSLError($msg);
-            //while ($erro = openssl_error_string()) {
-            //    $msg .= $erro . "\n";
-            //}
-            //throw new Exception\RuntimeException($msg);
         }
         return true;
     }
