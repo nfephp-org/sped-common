@@ -441,7 +441,7 @@ class Pkcs12
         if ($algorithm == 'SHA256') {
             $hashValue = hash('sha256', $dados, true);
         } else {
-            $hashValue = hash('sha1', $dados, true);    
+            $hashValue = hash('sha1', $dados, true);
         }
         //converter o hash para base64
         $digValue = base64_encode($hashValue);
