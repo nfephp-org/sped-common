@@ -424,22 +424,24 @@ class Pkcs12
         $nsDSIG = 'http://www.w3.org/2000/09/xmldsig#';
         $nsCannonMethod = 'http://www.w3.org/TR/2001/REC-xml-c14n-20010315';
         $nsSignatureMethod = 'http://www.w3.org/2000/09/xmldsig#rsa-sha1';
+        $nsDigestMethod = 'http://www.w3.org/2000/09/xmldsig#sha1';
         $signAlgorithm = OPENSSL_ALGO_SHA1;
         if ($algorithm == 'SHA256') {
             $signAlgorithm = OPENSSL_ALGO_SHA256;
             $nsSignatureMethod = 'http://www.w3.org/2000/09/xmldsig#rsa-sha256';
+            $nsDigestMethod = 'http://www.w3.org/2000/09/xmldsig#sha256';
         }
         $nsTransformMethod1 ='http://www.w3.org/2000/09/xmldsig#enveloped-signature';
         $nsTransformMethod2 = 'http://www.w3.org/TR/2001/REC-xml-c14n-20010315';
-        $nsDigestMethod = 'http://www.w3.org/2000/09/xmldsig#sha1';
         //pega o atributo id do node a ser assinado
         $idSigned = trim($node->getAttribute($marcador));
         //extrai os dados da tag para uma string na forma canonica
         $dados = $node->C14N(true, false, null, null);
         //calcular o hash dos dados
-        $hashValue = hash('sha1', $dados, true);
         if ($algorithm == 'SHA256') {
             $hashValue = hash('sha256', $dados, true);
+        } else {
+            $hashValue = hash('sha1', $dados, true);    
         }
         //converter o hash para base64
         $digValue = base64_encode($hashValue);
