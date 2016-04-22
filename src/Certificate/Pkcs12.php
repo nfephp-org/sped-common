@@ -426,10 +426,11 @@ class Pkcs12
         $nsSignatureMethod = 'http://www.w3.org/2000/09/xmldsig#rsa-sha1';
         $nsDigestMethod = 'http://www.w3.org/2000/09/xmldsig#sha1';
         $signAlgorithm = OPENSSL_ALGO_SHA1;
+        //incluido para atender requisitos de assinatura do sped-efinanceira
         if ($algorithm == 'SHA256') {
             $signAlgorithm = OPENSSL_ALGO_SHA256;
-            $nsSignatureMethod = 'http://www.w3.org/2000/09/xmldsig#rsa-sha256';
-            $nsDigestMethod = 'http://www.w3.org/2000/09/xmldsig#sha256';
+            $nsSignatureMethod = 'http://www.w3.org/2000/09/xmldsig-more#rsa-sha256';
+            $nsDigestMethod = 'http://www.w3.org/2001/04/xmlenc#sha256';
         }
         $nsTransformMethod1 ='http://www.w3.org/2000/09/xmldsig#enveloped-signature';
         $nsTransformMethod2 = 'http://www.w3.org/TR/2001/REC-xml-c14n-20010315';
@@ -590,6 +591,14 @@ class Pkcs12
      */
     private function zSignCheck($dom)
     {
+        //SignatureMethod attribute Algorithm
+        //<SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+        $sigMethAlgo = $dom->getNodeValue('SignatureMethod')->item(0)->getAttribute('Algorithm');
+        if ($sigMethAlgo == 'http://www.w3.org/2000/09/xmldsig#rsa-sha1') {
+            $signAlgorithm = OPENSSL_ALGO_SHA1;
+        } else {
+            $signAlgorithm = OPENSSL_ALGO_SHA256;
+        }
         // Obter e remontar a chave publica do xml
         $x509Certificate = $dom->getNodeValue('X509Certificate');
         $x509Certificate =  "-----BEGIN CERTIFICATE-----\n"
@@ -606,7 +615,7 @@ class Pkcs12
         // validando assinatura do conteudo
         $signatureValueXML = $dom->getElementsByTagName('SignatureValue')->item(0)->nodeValue;
         $decodedSignature = base64_decode(str_replace(array("\r", "\n"), '', $signatureValueXML));
-        $resp = openssl_verify($signContent, $decodedSignature, $objSSLPubKey);
+        $resp = openssl_verify($signContent, $decodedSignature, $objSSLPubKey, $signAlgorithm);
         if ($resp != 1) {
             $msg = "Problema ({$resp}) ao verificar a assinatura do digital!!";
             $this->zGetOpenSSLError($msg);
