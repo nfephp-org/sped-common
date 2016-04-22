@@ -593,7 +593,7 @@ class Pkcs12
     {
         //SignatureMethod attribute Algorithm
         //<SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
-        $sigMethAlgo = $dom->getNodeValue('SignatureMethod')->item(0)->getAttribute('Algorithm');
+        $sigMethAlgo = $dom->getNode('SignatureMethod', 0)->getAttribute('Algorithm');
         if ($sigMethAlgo == 'http://www.w3.org/2000/09/xmldsig#rsa-sha1') {
             $signAlgorithm = OPENSSL_ALGO_SHA1;
         } else {
