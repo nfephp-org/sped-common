@@ -32,7 +32,7 @@ class Dom extends DOMDocument
 
     public function loadXMLString($xmlString = '')
     {
-        $msg = "O arquivo indicado não é um XML!";
+        $msg = "O arquivo indicado não é um XML ou contêm B.O.M. no inicio do arquivo !";
         if (substr($xmlString, 0, 1) != '<') {
             throw new Exception\InvalidArgumentException($msg);
         }
