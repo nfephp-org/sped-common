@@ -642,10 +642,16 @@ class Pkcs12
             $msg = "O xml não contêm nenhuma assinatura para ser verificada.";
             throw new Exception\RuntimeException($msg);
         }
+        $sigMethAlgo = $dom->getNode('SignatureMethod', 0)->getAttribute('Algorithm');
+        if ($sigMethAlgo == 'http://www.w3.org/2000/09/xmldsig#rsa-sha1') {
+            $hashAlgorithm = 'sha1';
+        } else {
+            $hashAlgorithm = 'sha256';
+        }
         //carregar o node em sua forma canonica
         $tagInf = $node->C14N(true, false, null, null);
         //calcular o hash sha1
-        $hashValue = hash('sha1', $tagInf, true);
+        $hashValue = hash($hashAlgorithm, $tagInf, true);
         //converter o hash para base64 para obter o digest do node
         $digestCalculado = base64_encode($hashValue);
         //pegar o digest informado no xml
