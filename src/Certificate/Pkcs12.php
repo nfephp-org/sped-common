@@ -430,7 +430,6 @@ class Pkcs12
         if ($algorithm == 'SHA256') {
             $signAlgorithm = OPENSSL_ALGO_SHA256;
             $nsSignatureMethod = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
-            //$nsSignatureMethod = 'http://www.w3.org/2000/09/xmldsig-more#rsa-sha256';
             $nsDigestMethod = 'http://www.w3.org/2001/04/xmlenc#sha256';
         }
         $nsTransformMethod1 ='http://www.w3.org/2000/09/xmldsig#enveloped-signature';
