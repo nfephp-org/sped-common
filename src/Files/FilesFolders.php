@@ -105,7 +105,7 @@ class FilesFolders
     public static function createFolder($folder = '')
     {
         if (! is_dir($folder)) {
-            if (! mkdir($folder, 0777)) {
+            if (! mkdir($folder, 0777, true)) {
                 throw new Exception\RuntimeException(
                     "Não foi possivel criar o diretorio $folder. Verifique as permissões"
                 );
