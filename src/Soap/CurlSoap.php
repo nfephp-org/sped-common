@@ -37,12 +37,12 @@ class CurlSoap
      * errorCurl
      * @var string
      */
-    private $errorCurl = '';
+    public $errorCurl = '';
     /**
      * infoCurl
      * @var array
      */
-    protected $infoCurl = array();
+    public $infoCurl = array();
     /**
      * pubKeyPath
      * @var string
