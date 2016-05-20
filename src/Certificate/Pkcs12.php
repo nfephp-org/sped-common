@@ -358,7 +358,7 @@ class Pkcs12
             } else {
                 if (trim($cert) != '') {
                     $certificate .= "\r\n" . $cert;
-                }    
+                }
             }
         }
         $this->certKey = $certificate;
