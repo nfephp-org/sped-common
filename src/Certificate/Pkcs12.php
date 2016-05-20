@@ -94,13 +94,19 @@ class Pkcs12
     public $expireTimestamp = 0;
     
     /**
+     * CNPJ do certificado
+     * @var string
+     */
+    public $cnpjCert = '';
+    
+    /**
      * Mensagem de erro da classe
      * @var string
      */
     public $error = '';
     
     /**
-     * Id do docimento sendo assinado
+     * Id do documento sendo assinado
      * @var string
      */
     public $docId = '';
@@ -148,7 +154,7 @@ class Pkcs12
         if ($certKey != '') {
             $this->certKey = $certKey;
         }
-        $this->cnpj = $ncnpj;
+        $this->cnpj = $cnpj;
         if (! $this->zInit($flagCert)) {
             throw new Exception\RuntimeException($this->error);
         }
@@ -170,9 +176,7 @@ class Pkcs12
         if ($flagCert) {
             //já que o certificado existe, verificar seu prazo de validade
             //o certificado será removido se estiver vencido
-            if (!$this->ignoreValidCert) {
-                return $this->zValidCerts($this->pubKey);
-            }
+            return $this->zValidCerts($this->pubKey);
         } else {
             if (substr($this->pathCerts, -1) !== DIRECTORY_SEPARATOR) {
                 $this->pathCerts .= DIRECTORY_SEPARATOR;
@@ -190,13 +194,11 @@ class Pkcs12
                 $this->priKey = file_get_contents($this->priKeyFile);
                 $this->certKey = file_get_contents($this->certKeyFile);
                 //já que o certificado existe, verificar seu prazo de validade
-                if (! $this->ignoreValidCert) {
-                    return $this->zValidCerts($this->pubKey);
-                }
+                return $this->zValidCerts($this->pubKey);
             }
         }
         return true;
-    }//fim init
+    }
 
     /**
      * loadPfxFile
@@ -252,6 +254,7 @@ class Pkcs12
         $ignoreValidity = false,
         $ignoreOwner = false
     ) {
+        $this->ignoreValidCert = $ignoreValidity;
         if ($password == '') {
             throw new Exception\InvalidArgumentException(
                 "A senha de acesso para o certificado pfx não pode ser vazia."
@@ -265,15 +268,13 @@ class Pkcs12
             );
         }
         $this->pfxCert = $pfxContent;
-        if (!$ignoreValidity) {
-            //verifica sua data de validade
-            if (! $this->zValidCerts($x509certdata['cert'])) {
-                throw new Exception\RuntimeException($this->error);
-            }
+        //verifica sua data de validade
+        if (! $this->zValidCerts($x509certdata['cert'])) {
+            throw new Exception\RuntimeException($this->error);
         }
+        $this->cnpjCert = Asn::getCNPJCert($x509certdata['cert']);
         if (!$ignoreOwner) {
-            $cnpjCert = Asn::getCNPJCert($x509certdata['cert']);
-            if (substr($this->cnpj, 0, 8) != substr($cnpjCert, 0, 8)) {
+            if (substr($this->cnpj, 0, 8) != substr($this->cnpjCert, 0, 8)) {
                 throw new Exception\InvalidArgumentException(
                     "O Certificado fornecido pertence a outro CNPJ!!"
                 );
@@ -324,6 +325,24 @@ class Pkcs12
     }
     
     /**
+     * Retorna o timestamp da validade do certificado
+     * @return int
+     */
+    public function getValidate()
+    {
+        return $this->expireTimestamp;
+    }
+    
+    /**
+     * Retorna o CNPJ do certificado
+     * @return string
+     */
+    public function getCNPJCert()
+    {
+        return $this->cnpjCert;
+    }
+    
+    /**
      * aadChain
      * @param array $aCerts Array com os caminhos completos para cada certificado da cadeia
      *                     ou um array com o conteúdo desses certificados
@@ -337,7 +356,9 @@ class Pkcs12
                 $dados = file_get_contents($cert);
                 $certificate .= "\r\n" . $dados;
             } else {
-                $certificate .= "\r\n" . $cert;
+                if (trim($cert) != '') {
+                    $certificate .= "\r\n" . $cert;
+                }    
             }
         }
         $this->certKey = $certificate;
@@ -373,10 +394,6 @@ class Pkcs12
         if ($objSSLPriKey === false) {
             $msg = "Houve erro no carregamento da chave privada.";
             $this->zGetOpenSSLError($msg);
-            //while ($erro = openssl_error_string()) {
-            //    $msg .= $erro . "\n";
-            //}
-            //throw new Exception\RuntimeException($msg);
         }
         $xml = $docxml;
         if (is_file($docxml)) {
@@ -507,10 +524,6 @@ class Pkcs12
         if (! openssl_sign($cnSignedInfoNode, $signature, $objSSLPriKey, $signAlgorithm)) {
             $msg = "Houve erro durante a assinatura digital.\n";
             $this->zGetOpenSSLError($msg);
-            //while ($erro = openssl_error_string()) {
-            //    $msg .= $erro . "\n";
-            //}
-            //throw new Exception\RuntimeException($msg);
         }
         //converte a assinatura em base64
         $signatureValue = base64_encode($signature);
@@ -680,7 +693,6 @@ class Pkcs12
         if (! $data = openssl_x509_read($pubKey)) {
                 //o dado não é uma chave válida
                 $this->zRemovePemFiles();
-                $this->zLeaveParam();
                 $this->error = "A chave passada está corrompida ou não é uma chave. Obtenha s chaves corretas!!";
                 return false;
         }
@@ -697,10 +709,9 @@ class Pkcs12
         $this->expireTimestamp = $dValid;
         if ($dHoje > $dValid) {
             $this->zRemovePemFiles();
-            $this->zLeaveParam();
             $msg = "Data de validade vencida! [Valido até $dia/$mes/$ano]";
             $this->error = $msg;
-            return false;
+            return $this->ignoreValidCert;
         }
         return true;
     }
@@ -765,22 +776,6 @@ class Pkcs12
         if (is_file($this->certKeyFile)) {
             unlink($this->certKeyFile);
         }
-    }
-    
-    /**
-     * zLeaveParam
-     * Limpa os parametros da classe
-     */
-    private function zLeaveParam()
-    {
-        $this->pfxCert='';
-        $this->pubKey='';
-        $this->priKey='';
-        $this->certKey='';
-        $this->pubKeyFile='';
-        $this->priKeyFile='';
-        $this->certKeyFile='';
-        $this->expireTimestamp='';
     }
     
     /**
