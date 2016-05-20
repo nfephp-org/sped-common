@@ -276,7 +276,7 @@ class Pkcs12
         if (!$ignoreOwner) {
             if (substr($this->cnpj, 0, 8) != substr($this->cnpjCert, 0, 8)) {
                 throw new Exception\InvalidArgumentException(
-                    "O Certificado fornecido pertence a outro CNPJ " . $this->cnpjCert
+                    "O Certificado fornecido pertence a outro CNPJ!!"
                 );
             }
         }
@@ -693,7 +693,6 @@ class Pkcs12
         if (! $data = openssl_x509_read($pubKey)) {
                 //o dado não é uma chave válida
                 $this->zRemovePemFiles();
-                $this->zLeaveParam();
                 $this->error = "A chave passada está corrompida ou não é uma chave. Obtenha s chaves corretas!!";
                 return false;
         }
@@ -710,7 +709,6 @@ class Pkcs12
         $this->expireTimestamp = $dValid;
         if ($dHoje > $dValid) {
             $this->zRemovePemFiles();
-            $this->zLeaveParam();
             $msg = "Data de validade vencida! [Valido até $dia/$mes/$ano]";
             $this->error = $msg;
             return $this->ignoreValidCert;
@@ -778,21 +776,6 @@ class Pkcs12
         if (is_file($this->certKeyFile)) {
             unlink($this->certKeyFile);
         }
-    }
-    
-    /**
-     * zLeaveParam
-     * Limpa os parametros da classe
-     */
-    private function zLeaveParam()
-    {
-        $this->pfxCert='';
-        $this->pubKey='';
-        $this->priKey='';
-        $this->certKey='';
-        $this->pubKeyFile='';
-        $this->priKeyFile='';
-        $this->certKeyFile='';
     }
     
     /**
