@@ -55,7 +55,7 @@ class Certificate
 
         $detail = openssl_x509_parse($resource, false);
 
-        $this->companyName = $detail['subject']['organizationName'];
+        $this->companyName = $detail['subject']['commonName'];
         $this->validFrom = \DateTime::createFromFormat('ymdHis\Z', $detail['validFrom']);
         $this->validTo = \DateTime::createFromFormat('ymdHis\Z', $detail['validTo']);
     }
