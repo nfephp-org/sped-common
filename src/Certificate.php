@@ -6,6 +6,7 @@ use NFePHP\Common\Exception\CertificateException;
 
 class Certificate
 {
+
     /**
      * @var string
      */
@@ -34,7 +35,6 @@ class Certificate
     public function __construct($content, $password = '')
     {
         $this->read($content, $password);
-        $this->load();
     }
 
     private function read($content, $password)
@@ -43,17 +43,7 @@ class Certificate
         if (!openssl_pkcs12_read($content, $certs, $password)) {
             throw CertificateException::unableToRead();
         }
-        $this->privateKey = $certs['pkey'];
-        $this->publicKey = $certs['cert'];
-    }
-    
-    /**
-     * Load info from certificate
-     * @throws CertificateException
-     */
-    private function load()
-    {
-        if (!$resource = openssl_x509_read($this->publicKey)) {
+        if (!$resource = openssl_x509_read($certs['cert'])) {
             throw CertificateException::unableToOpen();
         }
 
@@ -61,6 +51,8 @@ class Certificate
         $this->companyName = $detail['subject']['commonName'];
         $this->validFrom = \DateTime::createFromFormat('ymdHis\Z', $detail['validFrom']);
         $this->validTo = \DateTime::createFromFormat('ymdHis\Z', $detail['validTo']);
+        $this->privateKey = $certs['pkey'];
+        $this->publicKey = $certs['cert'];
     }
 
     /**
@@ -70,9 +62,13 @@ class Certificate
     public function isExpired()
     {
         $now = new \DateTime('now');
-        return $this->validFrom <= $now && $this->validTo >= $now;
+        return $this->validTo < $now;
     }
 
+    /**
+     * @see http://php.net/manual/pt_BR/function.openssl-sign.php for detail
+     * @throws NFePHP\Common\Exception\CertificateException
+     */
     public function sign($content, $algorithm = OPENSSL_ALGO_SHA1)
     {
         if (!$privateResource = openssl_pkey_get_private($this->privateKey)) {
