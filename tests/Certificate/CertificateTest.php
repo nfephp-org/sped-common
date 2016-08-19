@@ -12,10 +12,10 @@ class CertificateTest extends \PHPUnit_Framework_TestCase
     {
         $certificate = new Certificate(file_get_contents(__DIR__ . self::TEST_CERTIFICATE_FILE), 'associacao');
         $this->assertInstanceOf(Certificate::class, $certificate);
-        $this->assertEquals('Teste Projeto NFe RS', $certificate->companyName);
+        $this->assertEquals('NFe - Associacao NF-e:99999090910270', $certificate->companyName);
         $this->assertEquals(new \DateTime('2009-05-22 17:07:03'), $certificate->validFrom);
         $this->assertEquals(new \DateTime('2010-10-02 17:07:03'), $certificate->validTo);
         $this->assertFalse($certificate->isExpired());
-        $this->assertNotEmpty($certificate->encrypt('nfe'));
+        $this->assertNotEmpty($certificate->sign('nfe'));
     }
 }
