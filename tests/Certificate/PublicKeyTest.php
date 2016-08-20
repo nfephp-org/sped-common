@@ -14,6 +14,6 @@ class PublicKeyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('NFe - Associacao NF-e:99999090910270', $key->commonName);
         $this->assertEquals(new \DateTime('2009-05-22 17:07:03'), $key->validFrom);
         $this->assertEquals(new \DateTime('2010-10-02 17:07:03'), $key->validTo);
-        $this->assertFalse($key->isExpired());
+        $this->assertTrue($key->isExpired());
     }
 }

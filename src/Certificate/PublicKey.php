@@ -81,7 +81,7 @@ class PublicKey implements VerificationInterface
      */
     public function isExpired()
     {
-        return new \DateTime('now') <= $this->validTo;
+        return new \DateTime('now') > $this->validTo;
     }
 
     public function __toString()
