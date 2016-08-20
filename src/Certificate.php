@@ -2,39 +2,27 @@
 
 namespace NFePHP\Common;
 
+use NFePHP\Common\Certificate\PrivateKey;
+use NFePHP\Common\Certificate\PublicKey;
+use NFePHP\Common\Certificate\SignatureInterface;
+use NFePHP\Common\Certificate\VerificationInterface;
 use NFePHP\Common\Exception\CertificateException;
 
-class Certificate
+class Certificate implements SignatureInterface, VerificationInterface
 {
     /**
-     * @var string
-     */
-    public $companyName;
-
-    /**
-     * @var string
+     * @var PrivateKey
      */
     public $privateKey;
 
     /**
-     * @var string
+     * @var PublicKey
      */
     public $publicKey;
-
-    /**
-     * @var \DateTime
-     */
-    public $validFrom;
-
-    /**
-     * @var \DateTime
-     */
-    public $validTo;
 
     public function __construct($content, $password = '')
     {
         $this->read($content, $password);
-        $this->load();
     }
 
     private function read($content, $password)
@@ -43,24 +31,35 @@ class Certificate
         if (!openssl_pkcs12_read($content, $certs, $password)) {
             throw CertificateException::unableToRead();
         }
-        $this->privateKey = $certs['pkey'];
-        $this->publicKey = $certs['cert'];
+        $this->privateKey = new PrivateKey($certs['pkey']);
+        $this->publicKey = new PublicKey($certs['cert']);
     }
-    
-    /**
-     * Load info from certificate
-     * @throws CertificateException
-     */
-    private function load()
-    {
-        if (!$resource = openssl_x509_read($this->publicKey)) {
-            throw CertificateException::unableToOpen();
-        }
 
-        $detail = openssl_x509_parse($resource, false);
-        $this->companyName = $detail['subject']['commonName'];
-        $this->validFrom = \DateTime::createFromFormat('ymdHis\Z', $detail['validFrom']);
-        $this->validTo = \DateTime::createFromFormat('ymdHis\Z', $detail['validTo']);
+    /**
+     * Gets company name.
+     * @return string
+     */
+    public function getCompanyName()
+    {
+        return $this->publicKey->commonName;
+    }
+
+    /**
+     * Gets start date.
+     * @return \DateTime Returns start date.
+     */
+    public function getValidFrom()
+    {
+        return $this->publicKey->validFrom;
+    }
+
+    /**
+     * Gets end date.
+     * @return \DateTime Returns end date.
+     */
+    public function getValidTo()
+    {
+        return $this->publicKey->validTo;
     }
 
     /**
@@ -69,20 +68,22 @@ class Certificate
      */
     public function isExpired()
     {
-        $now = new \DateTime('now');
-        return $this->validFrom <= $now && $this->validTo >= $now;
+        return $this->publicKey->isExpired();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function sign($content, $algorithm = OPENSSL_ALGO_SHA1)
     {
-        if (!$privateResource = openssl_pkey_get_private($this->privateKey)) {
-            throw CertificateException::getPrivateKey();
-        }
+        return $this->privateKey->sign($content, $algorithm);
+    }
 
-        $encryptedData = '';
-        if (!openssl_sign($content, $encryptedData, $privateResource, $algorithm)) {
-            throw CertificateException::signContent();
-        }
-        return $encryptedData;
+    /**
+     * {@inheritdoc}
+     */
+    public function verify($data, $signature, $algorithm = OPENSSL_ALGO_SHA1)
+    {
+        return $this->publicKey->verify($data, $signature, $algorithm);
     }
 }
