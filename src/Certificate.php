@@ -20,19 +20,19 @@ class Certificate implements SignatureInterface, VerificationInterface
      */
     public $publicKey;
 
-    public function __construct($content, $password = '')
+    public function __construct(PrivateKey $privateKey, PublicKey $publicKey)
     {
-        $this->read($content, $password);
+        $this->privateKey = $privateKey;
+        $this->publicKey = $publicKey;
     }
 
-    private function read($content, $password)
+    public static function readPfx($content, $password)
     {
         $certs = [];
         if (!openssl_pkcs12_read($content, $certs, $password)) {
             throw CertificateException::unableToRead();
         }
-        $this->privateKey = new PrivateKey($certs['pkey']);
-        $this->publicKey = new PublicKey($certs['cert']);
+        return new static(new PrivateKey($certs['pkey']), new PublicKey($certs['cert']));
     }
 
     /**
