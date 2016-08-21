@@ -488,6 +488,9 @@ class Pkcs12
         //adiciona o node <Reference> ao node <SignedInfo>
         $signedInfoNode->appendChild($referenceNode);
         //seta o atributo URI a node <Reference>
+        if (!empty($idSigned)) {
+            $idSigned = "#$idSigned";
+        }
         $referenceNode->setAttribute('URI', '#'.$idSigned);
         //cria o node <Transforms>
         $transformsNode = $xmldoc->createElement('Transforms');
