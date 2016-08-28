@@ -48,7 +48,6 @@ class PublicKey implements VerificationInterface
         if (!$resource = openssl_x509_read($this->rawKey)) {
             throw CertificateException::unableToOpen();
         }
-
         $detail = openssl_x509_parse($resource, false);
         $this->commonName = $detail['subject']['commonName'];
         $this->validFrom = \DateTime::createFromFormat('ymdHis\Z', $detail['validFrom']);
@@ -67,11 +66,9 @@ class PublicKey implements VerificationInterface
     public function verify($data, $signature, $algorithm = OPENSSL_ALGO_SHA1)
     {
         $verified = openssl_verify($data, $signature, $this->rawKey, $algorithm);
-
         if ($verified === static::SIGNATURE_ERROR) {
             throw CertificateException::signatureFailed();
         }
-
         return $verified === static::SIGNATURE_CORRECT;
     }
 
@@ -84,6 +81,27 @@ class PublicKey implements VerificationInterface
         return new \DateTime('now') > $this->validTo;
     }
 
+    /**
+     * Returns raw public key without markers and LF's
+     * @return string
+     */
+    public function unFormat()
+    {
+        $data = '';
+        $arCert = explode("\n", $this->rawKey);
+        foreach ($arCert as $curData) {
+            if (strncmp($curData, '-----BEGIN CERTIFICATE', 22) != 0 &&
+                strncmp($curData, '-----END CERTIFICATE', 20) != 0 ) {
+                $data .= trim($curData);
+            }
+        }
+        return $data;
+    }
+    
+    /**
+     * Returns raw public key
+     * @return string
+     */
     public function __toString()
     {
         return $this->rawKey;
