@@ -8,12 +8,10 @@ use NFePHP\Common\Exception\CertificateException;
 class CertificateTest extends \PHPUnit_Framework_TestCase
 {
     const TEST_PFX_FILE = '/../fixtures/certs/certificado_teste.pfx';
-
     const TEST_PRIVATE_KEY = '/../fixtures/certs/x99999090910270_priKEY.pem';
-
     const TEST_PUBLIC_KEY = '/../fixtures/certs/x99999090910270_pubKEY.pem';
-    
     const TEST_CHAIN_KEYS = '/../fixtures/certs/chain.pem';
+    const TEST_EXPECTED_CHAIN = '/../fixtures/certs/certwithchain.pem';
 
     public function testShouldLoadPfxCertificate()
     {
@@ -52,11 +50,10 @@ class CertificateTest extends \PHPUnit_Framework_TestCase
         $certificate = new Certificate(
             new Certificate\PrivateKey(file_get_contents(__DIR__ . self::TEST_PRIVATE_KEY)),
             new Certificate\PublicKey(file_get_contents(__DIR__ . self::TEST_PUBLIC_KEY)),
-            new Certificate\ChainKeys(file_get_contents(__DIR__ . self::TEST_CHAIN_KEYS))    
+            new Certificate\CertificationChain(file_get_contents(__DIR__ . self::TEST_CHAIN_KEYS))    
         );
-        $expected = file_get_contents(__DIR__ . '/../fixtures/certs/certwithchain.pem');
-        $actual = $certificate->getCertWithChain();
-        //file_put_contents(__DIR__ . '/../fixtures/certs/certwithchain.pem', $actual);
+        $expected = file_get_contents(__DIR__ . self::TEST_EXPECTED_CHAIN);
+        $actual = "{$certificate}";
         $this->assertEquals($expected, $actual);
     }
 }

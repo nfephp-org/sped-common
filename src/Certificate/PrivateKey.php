@@ -20,7 +20,7 @@ class PrivateKey implements SignatureInterface
      * PublicKey constructor.
      * @param string $privateKey Content of private key file
      */
-    public function __construct($privateKey = '')
+    public function __construct($privateKey)
     {
         $this->rawKey = $privateKey;
         $this->read();

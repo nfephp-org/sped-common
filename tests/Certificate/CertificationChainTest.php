@@ -2,19 +2,20 @@
 
 namespace NFePHP\Common\Tests\Certificate;
 
-use NFePHP\Common\Certificate\ChainKeys;
+use NFePHP\Common\Certificate\CertificationChain;
 
-class ChainKeysTest extends \PHPUnit_Framework_TestCase
+class CertificationChainTest extends \PHPUnit_Framework_TestCase
 {
     const TEST_CHAIN_KEYS = '/../fixtures/certs/chain.pem';
     
     public function testShouldInstantiate()
     {
-        $chain = new ChainKeys();
-        $this->assertInstanceOf(ChainKeys::class, $chain);
+        $chain = new CertificationChain();
+        $this->assertInstanceOf(CertificationChain::class, $chain);
         $chain->add(file_get_contents(__DIR__ . '/../fixtures/certs/ACCertisignG6_v2.cer'));
         $list = $chain->listChain();
-        $this->assertEquals('2021-09-20', $list['AC Certisign G6']['validTo']);
+        $publickey = $list['AC Certisign G6'];
+        $this->assertEquals('2021-09-20', $publickey->validTo->format('Y-m-d'));
         $chain->add(file_get_contents(__DIR__ . '/../fixtures/certs/ACCertisignMultiplaG5.cer'));
         $chain->add(file_get_contents(__DIR__ . '/../fixtures/certs/ACRaizBrasileira_v2.cer'));
         $list = $chain->listChain();
@@ -23,8 +24,8 @@ class ChainKeysTest extends \PHPUnit_Framework_TestCase
     
     public function testShouldInstantiateConstruct()
     {
-        $chain = new ChainKeys(file_get_contents(__DIR__ . self::TEST_CHAIN_KEYS));
-        $this->assertInstanceOf(ChainKeys::class, $chain);
+        $chain = new CertificationChain(file_get_contents(__DIR__ . self::TEST_CHAIN_KEYS));
+        $this->assertInstanceOf(CertificationChain::class, $chain);
         $list = $chain->listChain();
         $this->assertEquals(3, count($list));
     }

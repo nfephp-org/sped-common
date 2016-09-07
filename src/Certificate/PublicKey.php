@@ -85,17 +85,9 @@ class PublicKey implements VerificationInterface
      * Returns raw public key without markers and LF's
      * @return string
      */
-    public function unFormat()
+    public function unFormated()
     {
-        $data = '';
-        $arCert = explode("\n", $this->rawKey);
-        foreach ($arCert as $curData) {
-            if (strncmp($curData, '-----BEGIN CERTIFICATE', 22) != 0 &&
-                strncmp($curData, '-----END CERTIFICATE', 20) != 0 ) {
-                $data .= trim($curData);
-            }
-        }
-        return $data;
+        return preg_replace('/-----.*[\n]?/', '', $this->rawKey);
     }
     
     /**

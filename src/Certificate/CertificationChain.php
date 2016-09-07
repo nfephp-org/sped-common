@@ -4,46 +4,46 @@ namespace NFePHP\Common\Certificate;
 
 use NFePHP\Common\Certificate\PublicKey;
 
-class ChainKeys
+class CertificationChain
 {
     /**
      * @var string
      */
-    private $rawKey;
+    private $rawKey = '';
     /**
      * @var array
      */
-    public $chainKeys = [];
+    private $chainKeys = [];
     
     /**
      * Certification Chain Keys constructor
-     * @param string $certstring
+     * @param string $chainkeysstring
      */
-    public function __construct($chainstring = '')
+    public function __construct($chainkeysstring = '')
     {
-        $this->rawKey = $chainstring;
+        $this->rawKey = $chainkeysstring;
         $this->loadListChain();
     }
     
     /**
      * Add new certificate to certification chain
      * @param string $cert Certificate in CER or PEM format
-     * @return string
+     * @return array
      */
-    public function add($cert)
+    public function add($certificate)
     {
-        $commonName = $this->loadList($cert);
-        return $commonName;
+        return $this->loadList($certificate);
     }
     
     /**
      * Remove certificate from certification chain by there common name
-     * @param string $key
      */
-    public function remove($key = '')
+    public function removeExiredCertificates()
     {
-        if (key_exists($key, $this->chainKeys)) {
-            unset($this->chainKeys[$key]);
+        foreach ($this->chainKeys as $key => $publickey) {
+            if ($publickey->isExpired()) {
+                unset($this->chainKeys[$key]);
+            }
         }
     }
     
@@ -56,12 +56,19 @@ class ChainKeys
         return $this->chainKeys;
     }
     
+    /**
+     * Retuns all certificates in chain as string
+     * @return string
+     */
     public function __toString()
     {
         $this->rawString();
         return $this->rawKey;
     }
     
+    /**
+     *
+     */
     private function loadListChain()
     {
         $arr = explode("-----END CERTIFICATE-----", $this->rawKey);
@@ -73,27 +80,18 @@ class ChainKeys
         }
     }
     
-    private function loadList($cert)
+    private function loadList($certificate)
     {
-        $pk = new PublicKey($cert);
-        $this->chainKeys[$pk->commonName] = [
-            'commonName' => $pk->commonName,
-            'validTo' => $pk->validTo->format('Y-m-d'),
-            'content' => $cert
-        ];
-        return $pk->commonName;
+        $publickey = new PublicKey($certificate);
+        $this->chainKeys[$publickey->commonName] = $publickey;
+        return $this->chainKeys;
     }
     
     private function rawString()
     {
         $this->rawKey = '';
-        foreach ($this->chainKeys as $cert) {
-            $this->rawKey .= $cert['content'];
+        foreach ($this->chainKeys as $publickey) {
+            $this->rawKey .= "{$publickey}";
         }
-        $this->rawKey = str_replace(
-            "-----END CERTIFICATE-----\n",
-            "-----END CERTIFICATE-----",
-            $this->rawKey
-        );
     }
 }

@@ -4,7 +4,7 @@ namespace NFePHP\Common;
 
 use NFePHP\Common\Certificate\PrivateKey;
 use NFePHP\Common\Certificate\PublicKey;
-use NFePHP\Common\Certificate\ChainKeys;
+use NFePHP\Common\Certificate\CertificationChain;
 use NFePHP\Common\Certificate\SignatureInterface;
 use NFePHP\Common\Certificate\VerificationInterface;
 use NFePHP\Common\Exception\CertificateException;
@@ -26,7 +26,7 @@ class Certificate implements SignatureInterface, VerificationInterface
      */
     public $chainKeys;
 
-    public function __construct(PrivateKey $privateKey, PublicKey $publicKey, ChainKeys $chainKeys = null)
+    public function __construct(PrivateKey $privateKey, PublicKey $publicKey, CertificationChain $chainKeys = null)
     {
         $this->privateKey = $privateKey;
         $this->publicKey = $publicKey;
@@ -94,13 +94,12 @@ class Certificate implements SignatureInterface, VerificationInterface
         return $this->publicKey->verify($data, $signature, $algorithm);
     }
     
-    public function getCertWithChain(ChainKeys $chainKeys = null)
+    public function __toString()
     {
-        if (!is_null($chainKeys)) {
-            $this->chainKeys = $chainKeys;
+        $chainKeys = '';
+        if ($this->chainKeys != null) {
+            $chainKeys = "{$this->chainKeys}";
         }
-        $cert = (string) $this->publicKey;
-        $cert .= (string) $this->chainKeys;
-        return (string) $cert;
+        return "{$this->publicKey}{$chainKeys}";
     }
 }
