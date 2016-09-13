@@ -129,14 +129,14 @@ class Dom extends DOMDocument
      */
     public function addChild(&$parent, $name, $content = '', $obrigatorio = false, $descricao = "", $force = false)
     {
-        if ($obrigatorio && $content === '' && !$force) {
+        if ($obrigatorio && trim($content) === '' && !$force) {
             $this->erros[] = array(
                 "tag" => $name,
                 "desc" => $descricao,
                 "erro" => "Preenchimento Obrigatório!"
             );
         }
-        if ($obrigatorio || $content !== '') {
+        if ($obrigatorio || trim($content) !== '') {
             $content = trim($content);
             $content = htmlspecialchars($content, ENT_QUOTES);
             $temp = $this->createElement($name, $content);
