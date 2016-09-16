@@ -87,7 +87,8 @@ class PublicKey implements VerificationInterface
      */
     public function unFormated()
     {
-        return preg_replace('/-----.*[\n]?/', '', $this->rawKey);
+        $ret = preg_replace('/-----.*[\n]?/', '', $this->rawKey);
+        return preg_replace('/[\n\r]/', '', $ret);
     }
     
     /**
