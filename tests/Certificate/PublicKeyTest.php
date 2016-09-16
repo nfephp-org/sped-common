@@ -28,6 +28,7 @@ class PublicKeyTest extends \PHPUnit_Framework_TestCase
     {
         $actual = $this->key->unFormated();
         $expected  = preg_replace('/-----.*[\n]?/', '', file_get_contents(__DIR__ . self::TEST_PUBLIC_KEY));
+        $expected  = preg_replace('/[\n\r]/', '', $expected);
         $this->assertEquals($expected, $actual);
     }
 }
