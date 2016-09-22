@@ -38,7 +38,7 @@ class SoapCurl extends SoapBase implements SoapInterface
         $operation = '',
         $action = '',
         $soapver = SOAP_1_2,
-        $parameters = [],    
+        $parameters = [],
         $namespaces = [],
         $withcdata = false
     ) {

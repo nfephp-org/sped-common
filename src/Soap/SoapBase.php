@@ -162,13 +162,13 @@ abstract class SoapBase implements SoapInterface
             $prefix = 'soapenv';
         }
         $envelope = "<$prefix:Envelope";
-        foreach($namespaces as $key => $value) {
+        foreach ($namespaces as $key => $value) {
             $envelope .= " $key=\"$value\"";
         }
         $envelope .= "><$prefix:Body>$request</$prefix:Body>"
                 . "</$prefix:Envelope>";
         return $envelope;
-    }    
+    }
     
     /**
      * Temporarily saves the certificate keys for use cURL or SoapClient

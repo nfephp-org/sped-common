@@ -31,7 +31,7 @@ interface SoapInterface
     const SSL_TLSV1_2 = 6; //TLSv1.2
     
     /**
-     * 
+     *
      * @param Certificate $certificate
      */
     public function loadCertificate(Certificate $certificate);

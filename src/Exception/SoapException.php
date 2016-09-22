@@ -11,7 +11,7 @@ namespace NFePHP\Common\Exception;
  * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
  */
 
-class SoapException  extends \RuntimeException implements ExceptionInterface
+class SoapException extends \RuntimeException implements ExceptionInterface
 {
     public static function unableToLoadCurl()
     {
