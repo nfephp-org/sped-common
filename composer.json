@@ -38,6 +38,7 @@
         "ext-fileinfo": "*",
         "ext-iconv": "*",
         "ext-mbstring": "*",
+        "psr/log": "^1.0",
         "zendframework/zend-servicemanager": "^2.5",
         "zendframework/zend-mail": "^2.5"
     },
