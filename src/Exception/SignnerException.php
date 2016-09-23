@@ -17,8 +17,8 @@ class SignnerException extends \RuntimeException implements ExceptionInterface
         return new static('The XML content does not match the Digest Value.');
     }
     
-    public static function tagNotFound()
+    public static function tagNotFound($tag)
     {
-        return new static('The specified tag was not found in xml');
+        return new static("The specified tag <$tag> was not found in xml.");
     }
 }

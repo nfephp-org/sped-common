@@ -29,7 +29,6 @@ class SoapCurl extends SoapBase implements SoapInterface
      * @param int $soapver
      * @param array $parameters
      * @param array $namespaces
-     * @param boolean $withcdata
      * @return string
      * @throws \NFePHP\Common\Exception\SoapException
      */
@@ -39,8 +38,7 @@ class SoapCurl extends SoapBase implements SoapInterface
         $action = '',
         $soapver = SOAP_1_2,
         $parameters = [],
-        $namespaces = [],
-        $withcdata = false
+        $namespaces = []
     ) {
         $aSoapInfo = array();
         $soaperror = '';
@@ -78,7 +76,6 @@ class SoapCurl extends SoapBase implements SoapInterface
                 curl_setopt($oCurl, CURLOPT_HTTPHEADER, $parameters);
             }
             $response = curl_exec($oCurl);
-            $aSoapInfo = curl_getinfo($oCurl); //this is a array
             $soaperror = curl_error($oCurl);
             $headsize = curl_getinfo($oCurl, CURLINFO_HEADER_SIZE);
             $httpcode = curl_getinfo($oCurl, CURLINFO_HTTP_CODE);
@@ -86,7 +83,7 @@ class SoapCurl extends SoapBase implements SoapInterface
             $this->responseHead = trim(substr($response, 0, $headsize));
             $this->responseBody = trim(substr($response, $headsize));
         } catch (Exception $e) {
-            throw SoapException::unableToLoadCurl();
+            throw SoapException::unableToLoadCurl($e->getMessage());
         }
         if ($soaperror != '') {
             throw SoapException::soapFault($soaperror);

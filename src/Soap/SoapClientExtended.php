@@ -30,9 +30,13 @@ class SoapClientExtended extends SoapClient
      */
     public function __doRequest($request, $location, $action, $version, $oneWay = 0)
     {
-        $aFind = array(":ns1","ns1:","\n","\r");
-        $sReplace = '';
-        $newrequest = str_replace($aFind, $sReplace, $request);
-        return parent::__doRequest($newrequest, $location, $action, $version, $oneWay);
+        $search = [":ns1","ns1:","\n","\r"];
+        return parent::__doRequest(
+            str_replace($search, '', $request),
+            $location,
+            $action,
+            $version,
+            $oneWay
+        );
     }
 }

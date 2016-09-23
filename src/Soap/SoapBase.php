@@ -120,25 +120,20 @@ abstract class SoapBase implements SoapInterface
         $action = '',
         $soapver = SOAP_1_2,
         $parameters = [],
-        $namespaces = [],
-        $withcadata = false
+        $namespaces = []
     );
     
     /**
      * Mount soap request
      * @param string $operation
      * @param array $parameters
-     * @param boolean $withcdata
      * @return string
      */
-    protected function makeRequest($operation, $parameters, $withcdata = false)
+    protected function makeRequest($operation, $parameters)
     {
         $tag = $operation . "Request";
         $request = "<$tag>";
         foreach ($parameters as $key => $value) {
-            if ($key == 'MensagemXML' && $withcdata) {
-                $value = htmlentities($value, ENT_NOQUOTES);
-            }
             $request .= "<$key>$value</$key>";
         }
         $request .= "</$tag>";

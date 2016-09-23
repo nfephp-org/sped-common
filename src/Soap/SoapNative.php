@@ -39,8 +39,7 @@ class SoapNative extends SoapBase implements SoapInterface
         $action = '',
         $soapver = SOAP_1_2,
         $parameters = [],
-        $namespaces = [],
-        $withcdata = false
+        $namespaces = []
     ) {
         $this->prepare($url, $soapver);
         try {
