@@ -43,7 +43,7 @@ class SoapCurl extends SoapBase implements SoapInterface
         $aSoapInfo = array();
         $soaperror = '';
         $response = '';
-        $request = $this->makeRequest($operation, $parameters, $withcdata);
+        $request = $this->makeRequest($operation, $parameters);
         $envelope = $this->makeEnvelopeSoap($request, $operation, $namespaces, $soapver);
         $msgSize = strlen($envelope);
         $parameters = [
