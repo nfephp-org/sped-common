@@ -40,15 +40,17 @@ class SoapCurl extends SoapBase implements SoapInterface
         $parameters = [],
         $namespaces = []
     ) {
-        $aSoapInfo = array();
         $soaperror = '';
         $response = '';
-        $request = $this->makeRequest($operation, $parameters);
-        $envelope = $this->makeEnvelopeSoap($request, $operation, $namespaces, $soapver);
+        $envelope = $this->makeEnvelopeSoap(
+            $this->makeRequest($operation, $parameters),
+            $operation,
+            $namespaces,
+            $soapver
+        );
         $msgSize = strlen($envelope);
         $parameters = [
-            "Content-Type: application/soap+xml;"
-                . "charset=utf-8;",
+            "Content-Type: application/soap+xml;charset=utf-8;",
             "Content-length: $msgSize"
         ];
         if (!empty($action)) {
