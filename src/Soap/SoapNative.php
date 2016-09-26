@@ -39,14 +39,15 @@ class SoapNative extends SoapBase implements SoapInterface
         $action = '',
         $soapver = SOAP_1_2,
         $parameters = [],
-        $namespaces = []
+        $namespaces = [],
+        $request = ''
     ) {
         $this->prepare($url, $soapver);
         try {
             $response = $this->connection->$operation($parameters);
             $this->requestHead = $this->connection->__getLastRequestHeaders();
             $this->requestBody = $this->makeEnvelopeSoap(
-                $this->makeRequest($operation, $parameters),
+                $request,
                 $operation,
                 $namespaces,
                 $soapver

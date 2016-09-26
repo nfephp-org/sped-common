@@ -38,12 +38,13 @@ class SoapCurl extends SoapBase implements SoapInterface
         $action = '',
         $soapver = SOAP_1_2,
         $parameters = [],
-        $namespaces = []
+        $namespaces = [],
+        $request = ''
     ) {
         $soaperror = '';
         $response = '';
         $envelope = $this->makeEnvelopeSoap(
-            $this->makeRequest($operation, $parameters),
+            $request,
             $operation,
             $namespaces,
             $soapver

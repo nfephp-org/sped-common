@@ -120,25 +120,9 @@ abstract class SoapBase implements SoapInterface
         $action = '',
         $soapver = SOAP_1_2,
         $parameters = [],
-        $namespaces = []
+        $namespaces = [],
+        $request = ''
     );
-    
-    /**
-     * Mount soap request
-     * @param string $operation
-     * @param array $parameters
-     * @return string
-     */
-    protected function makeRequest($operation, $parameters)
-    {
-        $tag = $operation . "Request";
-        $request = "<$tag>";
-        foreach ($parameters as $key => $value) {
-            $request .= "<$key>$value</$key>";
-        }
-        $request .= "</$tag>";
-        return $request;
-    }
     
     /**
      * Mount soap envelope
