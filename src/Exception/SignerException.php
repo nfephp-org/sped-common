@@ -10,7 +10,7 @@ namespace NFePHP\Common\Exception;
  * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
  */
 
-class SignnerException extends \RuntimeException implements ExceptionInterface
+class SignerException extends \RuntimeException implements ExceptionInterface
 {
     public static function digestComparisonFailed()
     {
