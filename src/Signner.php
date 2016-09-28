@@ -210,8 +210,8 @@ class Signner
         } else {
             $algorithm = OPENSSL_ALGO_SHA256;
         }
-        $unformatedkey = $signature->getElementsByTagName('X509Certificate')->item(0)->nodeValue;
-        $publicKey = new Certificate\PublicKeyFactory($unformatedkey);
+        $certificateContent = $signature->getElementsByTagName('X509Certificate')->item(0)->nodeValue;
+        $publicKey = PublicKey::createFromContent($certificateContent);
         $signContent = $signature->getElementsByTagName('SignedInfo')->item(0)->C14N(true, false, null, null);
         $signatureValue = $signature->getElementsByTagName('SignatureValue')->item(0)->nodeValue;
         $decodedSignature = base64_decode(str_replace(array("\r", "\n"), '', $signatureValue));

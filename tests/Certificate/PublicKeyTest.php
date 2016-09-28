@@ -8,13 +8,14 @@ use NFePHP\Common\Certificate\VerificationInterface;
 class PublicKeyTest extends \PHPUnit_Framework_TestCase
 {
     const TEST_PUBLIC_KEY = '/../fixtures/certs/x99999090910270_pubKEY.pem';
+
     protected $key;
-    
-    public function __construct()
+
+    public function setUp()
     {
         $this->key = new PublicKey(file_get_contents(__DIR__ . self::TEST_PUBLIC_KEY));
     }
-    
+
     public function testShouldInstantiate()
     {
         $this->assertInstanceOf(VerificationInterface::class, $this->key);
@@ -23,12 +24,19 @@ class PublicKeyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(new \DateTime('2010-10-02 17:07:03'), $this->key->validTo);
         $this->assertTrue($this->key->isExpired());
     }
-    
-    public function testUnFormated()
+
+    public function testUnFormatted()
     {
         $actual = $this->key->unFormated();
-        $expected  = preg_replace('/-----.*[\n]?/', '', file_get_contents(__DIR__ . self::TEST_PUBLIC_KEY));
-        $expected  = preg_replace('/[\n\r]/', '', $expected);
+        $expected = preg_replace('/-----.*[\n]?/', '', file_get_contents(__DIR__ . self::TEST_PUBLIC_KEY));
+        $expected = preg_replace('/[\n\r]/', '', $expected);
         $this->assertEquals($expected, $actual);
+    }
+
+    public function testShouldCreateFromContent()
+    {
+        $content = preg_replace('/-----.*[\n]?/', '', file_get_contents(__DIR__ . self::TEST_PUBLIC_KEY));
+        $key = PublicKey::createFromContent($content);
+        $this->assertEquals($key, $this->key);
     }
 }
