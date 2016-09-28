@@ -22,7 +22,7 @@ class Certificate implements SignatureInterface, VerificationInterface
     public $publicKey;
     
     /**
-     * @var ChainKeys
+     * @var CertificationChain
      */
     public $chainKeys;
 
