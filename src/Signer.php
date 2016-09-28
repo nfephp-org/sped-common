@@ -13,7 +13,7 @@ namespace NFePHP\Common;
  *     e sped-esfinge
  *
  * @category  NFePHP
- * @package   NFePHP\Common\Signner
+ * @package   NFePHP\Common\Signer
  * @copyright NFePHP Copyright (c) 2016
  * @license   http://www.gnu.org/licenses/lgpl.txt LGPLv3+
  * @license   https://opensource.org/licenses/MIT MIT
@@ -28,7 +28,7 @@ use NFePHP\Common\Exception\SignnerException;
 use DOMDocument;
 use DOMElement;
 
-class Signner
+class Signer
 {
     /**
      * Make Signature tag
@@ -65,8 +65,7 @@ class Signner
         $root = $dom->documentElement;
         $node = $dom->getElementsByTagName($tagname)->item(0);
         if (empty($node)) {
-            throw SignnerException::tagNotFound($tagname);
-            ;
+            throw SignerException::tagNotFound($tagname);
         }
         if (! self::existsSignature($dom)) {
             $xml = self::createSignature(
@@ -198,8 +197,6 @@ class Signner
      * Verify signature value
      * @param \DOMDocument $dom
      * @return boolean
-     * @throws \NFePHP\Common\Exception\SignnerException
-     * @throws \NFePHP\Common\Exception\CertificateException
      */
     private static function signatureCheck(DOMDocument $dom)
     {
@@ -224,7 +221,7 @@ class Signner
      * @param string $content
      * @param string $tagid
      * @return boolean
-     * @throws \NFePHP\Common\Exception\SignnerException
+     * @throws \NFePHP\Common\Exception\SignerException
      */
     private static function digestCheck(DOMDocument $dom, $tagname = '')
     {
@@ -251,7 +248,7 @@ class Signner
         $calculatedDigest = self::makeDigest($node, $algorithm);
         $informedDigest = $signature->getElementsByTagName('DigestValue')->item(0)->nodeValue;
         if ($calculatedDigest != $informedDigest) {
-            throw SignnerException::digestComparisonFailed();
+            throw SignerException::digestComparisonFailed();
         }
         return true;
     }

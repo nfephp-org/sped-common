@@ -4,9 +4,9 @@ namespace NFePHP\Common\Tests\Certificate;
 
 use NFePHP\Common\Certificate;
 use NFePHP\Common\Exception\CertificateException;
-use NFePHP\Common\Signner;
+use NFePHP\Common\Signer;
 
-class SignnerTest extends \PHPUnit_Framework_TestCase
+class SignerTest extends \PHPUnit_Framework_TestCase
 {
     const TEST_PFX_FILE = '/../fixtures/certs/certificado_teste.pfx';
     
@@ -16,6 +16,6 @@ class SignnerTest extends \PHPUnit_Framework_TestCase
         $content = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR  . '../fixtures/xml/NFe/35101158716523000119550010000000011003000000-nfe.xml');
         $tagname = 'infNFe';
         $mark = 'Id';
-        $actual = Signner::sign($certificate, $content, $tagname, $mark);
+        $actual = Signer::sign($certificate, $content, $tagname, $mark);
     }
 }
