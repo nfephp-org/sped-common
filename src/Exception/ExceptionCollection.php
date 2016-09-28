@@ -84,7 +84,7 @@ class ExceptionCollection extends \Exception implements ExceptionInterface, Iter
             foreach ($e as $ee) {
                 $message .= "\n" . $this->getExceptionMessage($ee, $depth + 1);
             }
-        }  else {
+        } else {
             $message .= "\n{$prefix}{$sp}" . str_replace("\n", "\n{$prefix}{$sp}", $e->getMessage()) . "\n";
             $message .= "\n{$prefix}{$sp}" . str_replace("\n", "\n{$prefix}{$sp}", $e->getTraceAsString()) . "\n";
         }
