@@ -13,7 +13,7 @@ namespace NFePHP\Common\Exception;
 
 class ValidatorException extends \RuntimeException implements ExceptionInterface
 {
-    public static function errorsFound($errors)
+    public static function xmlErrors($errors)
     {
         foreach ($errors as $error) {
             $msg .= $error."\n";

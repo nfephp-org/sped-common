@@ -35,13 +35,13 @@ class ExceptionCollection extends \Exception implements ExceptionInterface, Iter
      * @param ExceptionCollection|\Exception $e Exception to add
      * @return ExceptionCollection;
      */
-    public function add($e)
+    public function add(\Exception $exception)
     {
         $this->exceptions[] = $e;
         if ($this->message) {
             $this->message .= "\n";
         }
-        $this->message .= $this->getExceptionMessage($e, 0);
+        $this->message .= $this->__toString($exception);
         return $this;
     }
     
@@ -72,22 +72,11 @@ class ExceptionCollection extends \Exception implements ExceptionInterface, Iter
         return $this->exceptions ? $this->exceptions[0] : null;
     }
     
-    private function getExceptionMessage(\Exception $e, $depth = 0)
+    private function __toString(\Exception $exception)
     {
-        static $sp = '    ';
-        $prefix = $depth ? str_repeat($sp, $depth) : '';
-        $message = "{$prefix}(" . get_class($e) . ') ' . $e->getFile() . ' line ' . $e->getLine() . "\n";
-        if ($e instanceof self) {
-            if ($e->shortMessage) {
-                $message .= "\n{$prefix}{$sp}" . str_replace("\n", "\n{$prefix}{$sp}", $e->shortMessage) . "\n";
-            }
-            foreach ($e as $ee) {
-                $message .= "\n" . $this->getExceptionMessage($ee, $depth + 1);
-            }
-        } else {
-            $message .= "\n{$prefix}{$sp}" . str_replace("\n", "\n{$prefix}{$sp}", $e->getMessage()) . "\n";
-            $message .= "\n{$prefix}{$sp}" . str_replace("\n", "\n{$prefix}{$sp}", $e->getTraceAsString()) . "\n";
-        }
-        return str_replace(getcwd(), '.', $message);
+        $messages = array_map(function (\Exception $exception) {
+            return $exception->getMessage();
+        }, $this->exceptions);
+        return implode(PHP_EOL, $messages);
     }
 }

@@ -10,7 +10,7 @@
          processIsolation="false"
          stopOnFailure="false">
     <testsuites>
-        <testsuite name="Posprint Test Suite">
+        <testsuite name="sped-common Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
