@@ -37,7 +37,7 @@ class ExceptionCollection extends \Exception implements ExceptionInterface, Iter
      */
     public function add(\Exception $exception)
     {
-        $this->exceptions[] = $e;
+        $this->exceptions[] = $exception;
         if ($this->message) {
             $this->message .= "\n";
         }

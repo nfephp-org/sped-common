@@ -34,7 +34,7 @@ class Validator
         libxml_clear_errors();
         $errors = [];
         if (! $dom->schemaValidate($xsd)) {
-            throw ValidatorException::errorsFound(libxml_get_errors());
+            throw ValidatorException::xmlErrors(libxml_get_errors());
         }
         return true;
     }
