@@ -38,10 +38,7 @@ class ExceptionCollection extends \Exception implements ExceptionInterface, Iter
     public function add(\Exception $exception)
     {
         $this->exceptions[] = $exception;
-        if ($this->message) {
-            $this->message .= "\n";
-        }
-        $this->message .= $this->__toString($exception);
+        $this->message = $this->__toString();
         return $this;
     }
     
@@ -72,7 +69,7 @@ class ExceptionCollection extends \Exception implements ExceptionInterface, Iter
         return $this->exceptions ? $this->exceptions[0] : null;
     }
     
-    private function __toString(\Exception $exception)
+    public function __toString()
     {
         $messages = array_map(function (\Exception $exception) {
             return $exception->getMessage();
