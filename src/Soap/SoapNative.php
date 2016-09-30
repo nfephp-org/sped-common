@@ -30,6 +30,7 @@ class SoapNative extends SoapBase implements SoapInterface
      * @param int $soapver
      * @param array $parameters
      * @param array $namespaces
+     * @param string $request
      * @return string
      * @throws \NFePHP\Common\Exception\SoapException
      */
