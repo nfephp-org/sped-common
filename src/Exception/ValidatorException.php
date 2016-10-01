@@ -15,8 +15,9 @@ class ValidatorException extends \RuntimeException implements ExceptionInterface
 {
     public static function xmlErrors(array $errors)
     {
+        $msg = '';
         foreach ($errors as $error) {
-            $msg .= $error."\n";
+            $msg .= $error->message."\n";
         }
         return new static('This XML is not valid. '.$msg);
     }
