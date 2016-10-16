@@ -18,13 +18,13 @@ class Keys
     /**
      * Build 44 digits keys to NFe, NFCe, CTe and MDFe
      * @param string $cUF UF number
-     * @param string $ano year 
+     * @param string $ano year
      * @param string $mes month
-     * @param string $cnpj 
+     * @param string $cnpj
      * @param string $mod model of document 55, 65, 57 etc
-     * @param string $serie 
+     * @param string $serie
      * @param string $numero document number
-     * @param string $tpEmis emission type 
+     * @param string $tpEmis emission type
      * @param string $codigo random number or document number
      * @return string
      */
