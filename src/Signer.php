@@ -187,7 +187,7 @@ class Signer
     private static function existsSignature(DOMDocument $dom)
     {
         $signature = $dom->getElementsByTagName('Signature')->item(0);
-        if (! isset($signature)) {
+        if (!isset($signature)) {
             return false;
         }
         return true;
