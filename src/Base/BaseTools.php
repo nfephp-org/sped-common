@@ -640,6 +640,41 @@ class BaseTools
             'SVCAN'=>'SVCAN',
             'SVCRS'=>'SVCRS'
         );
+
+        $autorizadores['57'] = array(
+            'AC'=>'SVRS',
+            'AL'=>'SVRS',
+            'AM'=>'AM',
+            'AN'=>'AN',
+            'AP'=>'SVRS',
+            'BA'=>'SVRS',
+            'CE'=>'CE',
+            'DF'=>'SVRS',
+            'ES'=>'SVRS',
+            'GO'=>'SVRS',
+            'MA'=>'SVRS',
+            'MG'=>'MG',
+            'MS'=>'MS',
+            'MT'=>'MT',
+            'PA'=>'SVRS',
+            'PB'=>'SVRS',
+            'PE'=>'PE',
+            'PI'=>'SVRS',
+            'PR'=>'PR',
+            'RJ'=>'SVRS',
+            'RN'=>'SVRS',
+            'RO'=>'SVRS',
+            'RR'=>'SVRS',
+            'RS'=>'RS',
+            'SC'=>'SVRS',
+            'SE'=>'SVRS',
+            'SP'=>'SP',
+            'TO'=>'SVRS',
+            'SVAN'=>'SVAN',
+            'SVRS'=>'SVRS',
+            'SVCAN'=>'SVCAN',
+        );
+
         //variável de retorno do método
         $aUrl = array();
         //testa parametro tpAmb
