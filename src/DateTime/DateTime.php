@@ -55,8 +55,7 @@ class DateTime
             'SE'=>'America/Maceio',
             'SP'=>'America/Sao_Paulo',
             'TO'=>'America/Araguaina');
-
-        if (! isset($tzUFlist[$siglaUF])) {
+        if (!isset($tzUFlist[$siglaUF])) {
             return '';
         }
         //seta a zona de tempo
@@ -101,7 +100,6 @@ class DateTime
     {
         if ($timestamp == 0) {
             return (string) str_replace(' ', 'T', $dateTime->format('Y-m-d H:i:sP'));
-            //return (string) $dateTime->format(\DateTime::W3C);
         }
         return (string) str_replace(' ', 'T', date('Y-m-d H:i:sP', $timestamp));
     }
