@@ -69,8 +69,8 @@ class Signer
             $root = $dom->getElementsByTagName($rootname)->item(0);
         }
         $node = $dom->getElementsByTagName($tagname)->item(0);
-        if (empty($node)) {
-            throw SignerException::tagNotFound($tagname);
+        if (empty($node) || empty($root)) {
+            throw SignerException::tagNotFound($tagname . ' ' . $rootname);
         }
         if (! self::existsSignature($dom)) {
             $xml = self::createSignature(
