@@ -35,9 +35,9 @@ class Asn1
 
     /**
      * Recovers information regarding the OID contained in the certificate
-     * this method assumes that the OID is embedded within a structure of
-     * type "sequence", as the first element of the structure
-     * @param $publickeyUnformated
+     * method assumes that the OID is embedded within a structure of
+     * type "sequence", as the first element of the structure
+     * @param string $publickeyUnformated
      * @param string $oidNumber OID formated number
      * @return array
      */
