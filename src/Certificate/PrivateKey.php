@@ -2,6 +2,16 @@
 
 namespace NFePHP\Common\Certificate;
 
+/**
+ * Class for management and use of digital certificates A1 (PKCS # 12)
+ * @category   NFePHP
+ * @package    NFePHP\Common\ProvateKey
+ * @copyright  Copyright (c) 2008-2016
+ * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
+ * @author     Antonio Spinelli <tonicospinelli85 at gmail dot com>
+ * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
+ */
+
 use NFePHP\Common\Exception\CertificateException;
 
 class PrivateKey implements SignatureInterface

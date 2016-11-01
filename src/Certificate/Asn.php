@@ -47,7 +47,7 @@ class Asn extends Base
      * @param string $oidNumber
      * @return array
      */
-    protected static function getOIDdata($certDer, $oidNumber)
+    public static function getOIDdata($certDer, $oidNumber)
     {
         //converte onumero OTD de texto para hexadecimal
         $oidHexa = self::oidtoHex((string) $oidNumber);
@@ -375,6 +375,9 @@ class Asn extends Base
     {
         // Object identifier type
         $data = self::parseCommon($data, $oidData);
+        if (empty($oidData)) {
+            return;
+        }
         // Unpack the OID
         $plain  = floor(ord($oidData[0]) / 40);
         $plain .= '.' . ord($oidData[0]) % 40;

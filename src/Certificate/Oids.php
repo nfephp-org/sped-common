@@ -5,26 +5,30 @@ namespace NFePHP\Common\Certificate;
 class Oids
 {
     private static $oidsTable = array();
-    
-    /**
-     * Construtor carrga a tabela de Oids do arquivo json
-     */
-    public function __construct()
-    {
-        $json = file_get_contents('oids.json');
-        self::$oidsTable = json_decode($json, true);
-    }
             
     /**
-     * getOid
-     * @param type $key
+     * Return Oid name
+     * @param type $key formated OID numeric key
      * @return mixed
      */
     public static function getOid($key)
     {
-        if (isset(self::$oidsTable[$key])) {
+        self::loadOids();
+        if (array_key_exists($key, self::$oidsTable)) {
             return self::$oidsTable[$key];
         }
         return false;
+    }
+    
+    public static function listOids()
+    {
+        self::loadOids();
+        return self::$oidsTable;
+    }
+    
+    private static function loadOids()
+    {
+        $json = file_get_contents(__DIR__ .'/oids.json');
+        self::$oidsTable = (array) json_decode($json, true);
     }
 }
