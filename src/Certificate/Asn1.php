@@ -3,12 +3,12 @@
 namespace NFePHP\Common\Certificate;
 
 /**
- * Class to obtain the encrypted data contained in a digital 
+ * Class to obtain the encrypted data contained in a digital
  * certificate PKCS #12.
- * See Abstract Syntax Notation One (ASN.1) 
+ * See Abstract Syntax Notation One (ASN.1)
  * for Distinguished Encoding Rules (DER)
- * This data may be formatted and encoded into multiple data formats, so to 
- * extracted it is necessary to identify which format was inserted then 
+ * This data may be formatted and encoded into multiple data formats, so to
+ * extracted it is necessary to identify which format was inserted then
  * it can be decrypted in a readable structure
  * @category   NFePHP
  * @package    NFePHP\Common\Asn1
@@ -23,7 +23,7 @@ use NFePHP\Common\Certificate;
 class Asn1
 {
     /**
-     * Get CNPJ owner number from digital certificate 
+     * Get CNPJ owner number from digital certificate
      * (more specifically, from public key)
      * @param $publickeyUnformated
      * @return string CNPJ
@@ -38,7 +38,7 @@ class Asn1
      * this method assumes that the OID is embedded within a structure of
      * type "sequence", as the first element of the structure
      * @param $publickeyUnformated
-     * @param string $oidNumber OID formated number 
+     * @param string $oidNumber OID formated number
      * @return array
      */
     public static function getOIDdata($oidNumber, $publickeyUnformated)
@@ -46,20 +46,20 @@ class Asn1
         $certder = base64_decode($publickeyUnformated);
         //converts the OID number from text to hexadecimal
         $oidMarker = self::oidHexMarker($oidNumber);
-        //Divide the certificate using the OID as a marker, 
-        //geting the first part before the OID marker and 
+        //Divide the certificate using the OID as a marker,
+        //geting the first part before the OID marker and
         //the other containing the OID data and so own.
         //Usually the certificate will be divided into only two parts,
-        //because there are usually only one OID of each type in 
-        //the certificate, but can be more. In this case only 
+        //because there are usually only one OID of each type in
+        //the certificate, but can be more. In this case only
         //first occurency will be returned.
         $partes = explode($oidMarker, $certder);
         $ret = '';
         //if count($partes) > 1 so OID was located
         $tot = count($partes);
         if ($tot > 1) {
-            //The beginning of the sequence that interests us, can be 3 or 2 
-            //digits before the start of OID, it depends on the number of 
+            //The beginning of the sequence that interests us, can be 3 or 2
+            //digits before the start of OID, it depends on the number of
             //bytes used to identify the size of this data sequence,and before
             //len digits exists a separator digit like 0x30
             $xcv4 = substr($partes[0], -4);
@@ -88,9 +88,9 @@ class Asn1
     
     /**
      * Get length of data field of a sequency from certifcate
-     * @param integer $len 
-     * @param integer $bytes 
-     * @param string $data 
+     * @param integer $len
+     * @param integer $bytes
+     * @param string $data
      * @return void
      */
     protected static function getLength($data)
@@ -110,7 +110,7 @@ class Asn1
     }
     
     /**
-     * Convert number OID in ASC Hex representation includes 
+     * Convert number OID in ASC Hex representation includes
      * in DER format certificate
      * @param string $oid OID formated number
      * @return string hexadecimal representation
