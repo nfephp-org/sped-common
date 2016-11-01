@@ -64,7 +64,7 @@ class Identify
                     $tag = 'infNFe';
                     break;
                 case 'cte':
-                    $tag = 'infCTe';
+                    $tag = 'infCte';
                     break;
                 case 'mdfe':
                     $tag = 'infMDFe';

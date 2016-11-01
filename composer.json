@@ -25,7 +25,7 @@
         }
     ],
     "require": {
-        "php" : "~5.5|~7.0",
+        "php": "~5.5|~7.0",
         "ext-dom": "*",
         "ext-xml": "*",
         "ext-libxml": "*",
@@ -38,6 +38,7 @@
         "ext-fileinfo": "*",
         "ext-iconv": "*",
         "ext-mbstring": "*",
+        "psr/log": "^1.0",
         "zendframework/zend-servicemanager": "^2.5",
         "zendframework/zend-mail": "^2.5"
     },
@@ -48,13 +49,22 @@
     },
     "autoload": {
         "psr-4": {
-          "NFePHP\\Common\\": "src/" 
-        } 
+            "NFePHP\\Common\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "NFePHP\\Common\\Tests\\": "tests/"
+        }
     },
     "extra": {
         "branch-alias": {
             "dev-master": "4.1-dev"
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "scripts": {
+        "test": "phpunit -c phpunit.xml.dist",
+        "cs": "phpcs --standard=PSR2 src"
+    }
 }

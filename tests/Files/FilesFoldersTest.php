@@ -36,6 +36,8 @@ class FilesFoldersTest extends PHPUnit_Framework_TestCase
     {
         $files = array(
             dirname(dirname(__FILE__)) . '/fixtures/certs/certificado_pubKEY.pem',
+            dirname(dirname(__FILE__)) . '/fixtures/certs/certwithchain.pem',
+            dirname(dirname(__FILE__)) . '/fixtures/certs/chain.pem',
             dirname(dirname(__FILE__)) . '/fixtures/certs/x99999090910270_certKEY.pem',
             dirname(dirname(__FILE__)) . '/fixtures/certs/x99999090910270_priKEY.pem',
             dirname(dirname(__FILE__)) . '/fixtures/certs/x99999090910270_pubKEY.pem'
