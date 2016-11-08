@@ -104,10 +104,10 @@ class Configure
             $flag = $cert->loadPfxFile($pathCertsFiles.$certPfxName, $certPassword);
         } catch (InvalidArgumentException $exc) {
             $flag = false;
-            $msg = $exc->getMessage();
+            $msg .= $exc->getMessage();
         } catch (RuntimeException $exc) {
             $flag = false;
-            $msg = $exc->getMessage();
+            $msg .= $exc->getMessage();
         }
         if ($msg == '') {
             $msg = 'Certificado Validado, arquivos PEM criados na pasta.';
