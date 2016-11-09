@@ -30,6 +30,7 @@ abstract class SoapBase implements SoapInterface
     protected $proxyPort = '';
     protected $proxyUser = '';
     protected $proxyPass = '';
+    protected $prefixes = [1 => 'soapenv', 2 => 'soap'];
     //certificat parameters
     protected $certificate;
     protected $tempdir = '';
@@ -97,6 +98,11 @@ abstract class SoapBase implements SoapInterface
     public function protocol($protocol = self::SSL_DEFAULT)
     {
         $this->soapprotocol = $protocol;
+    }
+    
+    public function setSoapPrefix($prefixes)
+    {
+        $this->prefixes = $prefixes;
     }
     
     /**
