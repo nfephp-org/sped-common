@@ -146,10 +146,7 @@ abstract class SoapBase implements SoapInterface
         $soapver = SOAP_1_2,
         $header = null
     ) {
-        $prefix = 'soap';
-        if ($soapver == SOAP_1_1) {
-            $prefix = 'soapenv';
-        }
+        $prefix = $this->prefixes[SOAP_1_1];
         $envelope = "<$prefix:Envelope";
         foreach ($namespaces as $key => $value) {
             $envelope .= " $key=\"$value\"";
