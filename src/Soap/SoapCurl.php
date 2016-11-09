@@ -30,6 +30,7 @@ class SoapCurl extends SoapBase implements SoapInterface
      * @param array $parameters
      * @param array $namespaces
      * @param string $request
+     * @param \SOAPHeader $soapheader
      * @return string
      * @throws \NFePHP\Common\Exception\SoapException
      */
@@ -40,7 +41,8 @@ class SoapCurl extends SoapBase implements SoapInterface
         $soapver = SOAP_1_2,
         $parameters = [],
         $namespaces = [],
-        $request = ''
+        $request = '',
+        $soapheader = null
     ) {
         $soaperror = '';
         $response = '';
@@ -48,7 +50,8 @@ class SoapCurl extends SoapBase implements SoapInterface
             $request,
             $operation,
             $namespaces,
-            $soapver
+            $soapver,
+            $soapheader
         );
         $msgSize = strlen($envelope);
         $parameters = [

@@ -121,7 +121,8 @@ abstract class SoapBase implements SoapInterface
         $soapver = SOAP_1_2,
         $parameters = [],
         $namespaces = [],
-        $request = ''
+        $request = '',
+        $soapheader = null
     );
     
     /**
@@ -129,13 +130,16 @@ abstract class SoapBase implements SoapInterface
      * @param string $request
      * @param string $operation
      * @param array $namespaces
+     * @param \SOAPHeader $header
      * @return string
      */
-    protected function makeEnvelopeSoap($request, $operation, $namespaces, $soapver = SOAP_1_2)
-    {
-        if (empty($operation)) {
-            return '';
-        }
+    protected function makeEnvelopeSoap(
+        $request,
+        $operation,
+        $namespaces,
+        $soapver = SOAP_1_2,
+        $header = null
+    ) {
         $prefix = 'soap';
         if ($soapver == SOAP_1_1) {
             $prefix = 'soapenv';
@@ -144,8 +148,19 @@ abstract class SoapBase implements SoapInterface
         foreach ($namespaces as $key => $value) {
             $envelope .= " $key=\"$value\"";
         }
-        $envelope .= "><$prefix:Body>$request</$prefix:Body>"
-                . "</$prefix:Envelope>";
+        $envelope .= ">";
+        if (!empty($header)) {
+            $ns = !empty($header->namespace) ? $header->namespace : '';
+            $name = $header->name;
+            $envelope .= "<$prefix:Header>";
+            $envelope .= "<$name xmlns=\"$ns\">";
+            foreach ($header->data as $key => $value) {
+                $envelope .= "<$key>$value</$key>";
+            }
+            $envelope .= "</$name></$prefix:Header>";
+        }
+        $envelope .= "<$prefix:Body>$request</$prefix:Body>"
+            . "</$prefix:Envelope>";
         return $envelope;
     }
     
