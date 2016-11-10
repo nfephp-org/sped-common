@@ -38,10 +38,12 @@ abstract class SoapBase implements SoapInterface
     protected $pubfile = '';
     protected $certfile = '';
     //log info
-    protected $responseHead = '';
-    protected $responseBody = '';
-    protected $requestHead = '';
-    protected $requestBody = '';
+    public $responseHead = '';
+    public $responseBody = '';
+    public $requestHead = '';
+    public $requestBody = '';
+    public $soaperror = '';
+    public $soapinfo = [];
     
     /**
      * Constructor
@@ -146,22 +148,24 @@ abstract class SoapBase implements SoapInterface
         $soapver = SOAP_1_2,
         $header = null
     ) {
-        $prefix = $this->prefixes[SOAP_1_1];
+        $prefix = $this->prefixes[$soapver];
         $envelope = "<$prefix:Envelope";
         foreach ($namespaces as $key => $value) {
             $envelope .= " $key=\"$value\"";
         }
         $envelope .= ">";
+        $soapheader = "<$prefix:Header/>";
         if (!empty($header)) {
             $ns = !empty($header->namespace) ? $header->namespace : '';
             $name = $header->name;
-            $envelope .= "<$prefix:Header>";
-            $envelope .= "<$name xmlns=\"$ns\">";
+            $soapheader = "<$prefix:Header>";
+            $soapheader .= "<$name xmlns=\"$ns\">";
             foreach ($header->data as $key => $value) {
-                $envelope .= "<$key>$value</$key>";
+                $soapheader .= "<$key>$value</$key>";
             }
-            $envelope .= "</$name></$prefix:Header>";
+            $soapheader .= "</$name></$prefix:Header>";
         }
+        $envelope .= $soapheader;
         $envelope .= "<$prefix:Body>$request</$prefix:Body>"
             . "</$prefix:Envelope>";
         return $envelope;
