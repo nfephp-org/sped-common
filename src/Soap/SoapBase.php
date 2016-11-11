@@ -44,6 +44,7 @@ abstract class SoapBase implements SoapInterface
     public $requestBody = '';
     public $soaperror = '';
     public $soapinfo = [];
+    public $debugmode = false;
     
     /**
      * Constructor
@@ -63,6 +64,15 @@ abstract class SoapBase implements SoapInterface
     public function __destruct()
     {
         $this->removeTemporarilyKeyFiles();
+    }
+    
+    /**
+     * Set debug mode, this mode will save soap envelopes in temporary directory
+     * @param bool $value
+     */
+    public function setDebugMode($value = false)
+    {
+        $this->debugmode = $value;
     }
     
     /**
@@ -201,5 +211,29 @@ abstract class SoapBase implements SoapInterface
         unlink(substr($this->prifile, 0, strlen($this->prifile)-4));
         unlink(substr($this->pubfile, 0, strlen($this->pubfile)-4));
         unlink(substr($this->certfile, 0, strlen($this->certfile)-4));
+    }
+    
+    /**
+     * Save request envelope and response for debug reasons
+     * @param string $operation
+     * @param string $request
+     * @param string $response
+     * @return void
+     */
+    protected function saveDebugFiles($operation, $request, $response)
+    {
+        if (!$this->debugmode) {
+            return;
+        }
+        $tempdir = sys_get_temp_dir()
+            . DIRECTORY_SEPARATOR
+            . 'soap'
+            . DIRECTORY_SEPARATOR;
+        if (! is_dir($tempdir)) {
+            mkdir($tempdir);
+        }
+        $num = date('mdHis');
+        file_put_contents($tempdir . "req_$operation_$num.txt", $request);
+        file_put_contents($tempdir . "res_$operation_$num.txt", $response);
     }
 }

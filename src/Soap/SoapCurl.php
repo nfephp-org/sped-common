@@ -63,6 +63,7 @@ class SoapCurl extends SoapBase implements SoapInterface
         }
         $this->requestHead = implode("\n", $parameters);
         $this->requestBody = $envelope;
+        
         try {
             $oCurl = curl_init();
             $this->setCurlProxy($oCurl);
@@ -90,6 +91,11 @@ class SoapCurl extends SoapBase implements SoapInterface
             curl_close($oCurl);
             $this->responseHead = trim(substr($response, 0, $headsize));
             $this->responseBody = trim(substr($response, $headsize));
+            $this->saveDebugFiles(
+                $operation,
+                $this->requestHead . "\n" . $this->requestBody,
+                $this->responseHead . "\n" . $this->responseBody
+            );
         } catch (Exception $e) {
             throw SoapException::unableToLoadCurl($e->getMessage());
         }
