@@ -19,7 +19,7 @@ namespace NFePHP\Common;
  * @license   https://opensource.org/licenses/MIT MIT
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @author    Roberto L. Machado <linux.rlm at gmail dot com>
- * @link      http://github.com/nfephp-org/sped-nfse for the canonical source repository
+ * @link      http://github.com/nfephp-org/sped-common for the canonical source repository
  */
 
 use NFePHP\Common\Certificate;
@@ -37,6 +37,7 @@ class Signer
      * @param string $marker for URI
      * @param string $algorithm
      * @param array $canonical parameters to format node for signature
+     * @param string $rootname name of tag to insert signature block
      * @return string
      * @throws \NFePHP\Common\Exception\SignnerException
      */
@@ -46,7 +47,8 @@ class Signer
         $tagname = '',
         $mark = 'Id',
         $algorithm = OPENSSL_ALGO_SHA1,
-        $canonical = [false,false,null,null]
+        $canonical = [false,false,null,null],
+        $rootname = ''
     ) {
         $content = str_replace(
             [
@@ -63,9 +65,12 @@ class Signer
         $dom->preserveWhiteSpace = false;
         $dom->formatOutput = false;
         $root = $dom->documentElement;
+        if (!empty($rootname)) {
+            $root = $dom->getElementsByTagName($rootname)->item(0);
+        }
         $node = $dom->getElementsByTagName($tagname)->item(0);
-        if (empty($node)) {
-            throw SignerException::tagNotFound($tagname);
+        if (empty($node) || empty($root)) {
+            throw SignerException::tagNotFound($tagname . ' ' . $rootname);
         }
         if (! self::existsSignature($dom)) {
             $xml = self::createSignature(

@@ -3,6 +3,8 @@
 namespace NFePHP\Common;
 
 /**
+ * Validation class of XML structures with respect to its established and defined structure
+ * in an XSD file
  * @category   NFePHP
  * @package    NFePHP\Common\Validator
  * @copyright  Copyright (c) 2008-2016

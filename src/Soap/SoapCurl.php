@@ -30,6 +30,7 @@ class SoapCurl extends SoapBase implements SoapInterface
      * @param array $parameters
      * @param array $namespaces
      * @param string $request
+     * @param \SOAPHeader $soapheader
      * @return string
      * @throws \NFePHP\Common\Exception\SoapException
      */
@@ -40,7 +41,8 @@ class SoapCurl extends SoapBase implements SoapInterface
         $soapver = SOAP_1_2,
         $parameters = [],
         $namespaces = [],
-        $request = ''
+        $request = '',
+        $soapheader = null
     ) {
         $soaperror = '';
         $response = '';
@@ -48,7 +50,8 @@ class SoapCurl extends SoapBase implements SoapInterface
             $request,
             $operation,
             $namespaces,
-            $soapver
+            $soapver,
+            $soapheader
         );
         $msgSize = strlen($envelope);
         $parameters = [
@@ -60,6 +63,7 @@ class SoapCurl extends SoapBase implements SoapInterface
         }
         $this->requestHead = implode("\n", $parameters);
         $this->requestBody = $envelope;
+        
         try {
             $oCurl = curl_init();
             $this->setCurlProxy($oCurl);
@@ -80,17 +84,23 @@ class SoapCurl extends SoapBase implements SoapInterface
                 curl_setopt($oCurl, CURLOPT_HTTPHEADER, $parameters);
             }
             $response = curl_exec($oCurl);
-            $soaperror = curl_error($oCurl);
+            $this->soaperror = curl_error($oCurl);
+            $this->soapinfo = curl_getinfo($oCurl);
             $headsize = curl_getinfo($oCurl, CURLINFO_HEADER_SIZE);
             $httpcode = curl_getinfo($oCurl, CURLINFO_HTTP_CODE);
             curl_close($oCurl);
             $this->responseHead = trim(substr($response, 0, $headsize));
             $this->responseBody = trim(substr($response, $headsize));
+            $this->saveDebugFiles(
+                $operation,
+                $this->requestHead . "\n" . $this->requestBody,
+                $this->responseHead . "\n" . $this->responseBody
+            );
         } catch (Exception $e) {
             throw SoapException::unableToLoadCurl($e->getMessage());
         }
         if ($soaperror != '') {
-            throw SoapException::soapFault($soaperror);
+            throw SoapException::soapFault($this->soaperror);
         }
         if ($httpcode != 200) {
             throw SoapException::soapFault($this->responseHead);
