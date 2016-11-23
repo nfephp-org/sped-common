@@ -2,6 +2,13 @@
 
 namespace NFePHP\Common\Base;
 
+use NFePHP\Common\Certificate\Pkcs12;
+use NFePHP\Common\DateTime\DateTime;
+use NFePHP\Common\Dom\Dom;
+use NFePHP\Common\Exception;
+use NFePHP\Common\Files;
+use NFePHP\Common\Soap\CurlSoap;
+
 /**
  * Classe base das classes principais para a comunicação com a SEFAZ
  *
@@ -12,18 +19,6 @@ namespace NFePHP\Common\Base;
  * @author     Roberto L. Machado <linux.rlm at gmail dot com>
  * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
  */
-
-use NFePHP\Common\Certificate\Pkcs12;
-use NFePHP\Common\DateTime\DateTime;
-use NFePHP\Common\Dom\Dom;
-use NFePHP\Common\Soap\CurlSoap;
-use NFePHP\Common\Files;
-use NFePHP\Common\Exception;
-
-if (!defined('NFEPHP_ROOT')) {
-    define('NFEPHP_ROOT', dirname(dirname(dirname(__FILE__))));
-}
-
 class BaseTools
 {
     /**
@@ -160,43 +155,46 @@ class BaseTools
      * @var string
      */
     protected $modelo = '55';
-    
     /**
      * cUFlist
      * @var array
      */
     protected $cUFlist = array(
-        'AC'=>'12',
-        'AL'=>'27',
-        'AM'=>'13',
-        'AN'=>'91',
-        'AP'=>'16',
-        'BA'=>'29',
-        'CE'=>'23',
-        'DF'=>'53',
-        'ES'=>'32',
-        'GO'=>'52',
-        'MA'=>'21',
-        'MG'=>'31',
-        'MS'=>'50',
-        'MT'=>'51',
-        'PA'=>'15',
-        'PB'=>'25',
-        'PE'=>'26',
-        'PI'=>'22',
-        'PR'=>'41',
-        'RJ'=>'33',
-        'RN'=>'24',
-        'RO'=>'11',
-        'RR'=>'14',
-        'RS'=>'43',
-        'SC'=>'42',
-        'SE'=>'28',
-        'SP'=>'35',
-        'TO'=>'17',
+        'AC' => '12',
+        'AL' => '27',
+        'AM' => '13',
+        'AN' => '91',
+        'AP' => '16',
+        'BA' => '29',
+        'CE' => '23',
+        'DF' => '53',
+        'ES' => '32',
+        'GO' => '52',
+        'MA' => '21',
+        'MG' => '31',
+        'MS' => '50',
+        'MT' => '51',
+        'PA' => '15',
+        'PB' => '25',
+        'PE' => '26',
+        'PI' => '22',
+        'PR' => '41',
+        'RJ' => '33',
+        'RN' => '24',
+        'RO' => '11',
+        'RR' => '14',
+        'RS' => '43',
+        'SC' => '42',
+        'SE' => '28',
+        'SP' => '35',
+        'TO' => '17',
         'SVAN' => '91'
     );
-    
+    /**
+     * @var string
+     */
+    protected $rootDir;
+
     /**
      * __construct
      * @param string $configJson
@@ -245,17 +243,18 @@ class BaseTools
         $this->setAmbiente($this->aConfig['tpAmb']);
         $this->certExpireTimestamp = $this->oCertificate->expireTimestamp;
         $this->zLoadSoapClass();
+        $this->rootDir = dirname(dirname(dirname(__FILE__)));
         //verifica se a contingência está ativada
-        $pathContingencia = NFEPHP_ROOT.DIRECTORY_SEPARATOR.'config'.
+        $pathContingencia = $this->rootDir.DIRECTORY_SEPARATOR.'config'.
             DIRECTORY_SEPARATOR.$this->aConfig['cnpj'].'_contingencia.json';
         if (is_file($pathContingencia)) {
             $contJson = Files\FilesFolders::readFile($pathContingencia);
             if (! empty($contJson)) {
-                 $aCont = (array) json_decode($contJson);
-                 $this->motivoContingencia = $aCont['motivo'];
-                 $this->tsContingencia = $aCont['ts'];
-                 $this->enableSVCAN = $aCont['SVCAN'];
-                 $this->enableSVCRS = $aCont['SVCRS'];
+                $aCont = (array) json_decode($contJson);
+                $this->motivoContingencia = $aCont['motivo'];
+                $this->tsContingencia = $aCont['ts'];
+                $this->enableSVCAN = $aCont['SVCAN'];
+                $this->enableSVCRS = $aCont['SVCRS'];
             }
         }
     }
@@ -500,8 +499,8 @@ class BaseTools
         } elseif ($tipo == 'cle') {
             $path = $this->aConfig['pathXmlUrlFileCLe'];
         }
-        
-        $pathXmlUrlFile = NFEPHP_ROOT
+
+        $pathXmlUrlFile = $this->rootDir
             . DIRECTORY_SEPARATOR
             . 'config'
             . DIRECTORY_SEPARATOR
@@ -640,6 +639,41 @@ class BaseTools
             'SVCAN'=>'SVCAN',
             'SVCRS'=>'SVCRS'
         );
+
+        $autorizadores['57'] = array(
+            'AC'=>'SVRS',
+            'AL'=>'SVRS',
+            'AM'=>'AM',
+            'AN'=>'AN',
+            'AP'=>'SVRS',
+            'BA'=>'SVRS',
+            'CE'=>'CE',
+            'DF'=>'SVRS',
+            'ES'=>'SVRS',
+            'GO'=>'SVRS',
+            'MA'=>'SVRS',
+            'MG'=>'MG',
+            'MS'=>'MS',
+            'MT'=>'MT',
+            'PA'=>'SVRS',
+            'PB'=>'SVRS',
+            'PE'=>'PE',
+            'PI'=>'SVRS',
+            'PR'=>'PR',
+            'RJ'=>'SVRS',
+            'RN'=>'SVRS',
+            'RO'=>'SVRS',
+            'RR'=>'SVRS',
+            'RS'=>'RS',
+            'SC'=>'SVRS',
+            'SE'=>'SVRS',
+            'SP'=>'SP',
+            'TO'=>'SVRS',
+            'SVAN'=>'SVAN',
+            'SVRS'=>'SVRS',
+            'SVCAN'=>'SVCAN',
+        );
+
         //variável de retorno do método
         $aUrl = array();
         //testa parametro tpAmb
