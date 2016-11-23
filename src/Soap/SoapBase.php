@@ -230,10 +230,10 @@ abstract class SoapBase implements SoapInterface
             . 'soap'
             . DIRECTORY_SEPARATOR;
         if (! is_dir($tempdir)) {
-            mkdir($tempdir);
+            mkdir($tempdir, 0777);
         }
         $num = date('mdHis');
-        file_put_contents($tempdir . "req_$operation_$num.txt", $request);
-        file_put_contents($tempdir . "res_$operation_$num.txt", $response);
+        file_put_contents($tempdir . "req_" . $operation . "_" . $num . "txt", $request);
+        file_put_contents($tempdir . "res_" . $operation . "_" . $num . "txt", $response);
     }
 }
