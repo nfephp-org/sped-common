@@ -93,7 +93,7 @@ CONTENT;
         $this->serialNumber = $detail['serialNumber'];
         $this->validFrom = \DateTime::createFromFormat('ymdHis\Z', $detail['validFrom']);
         $this->validTo = \DateTime::createFromFormat('ymdHis\Z', $detail['validTo']);
-        //$this->cnpj = Asn1::getCNPJ($this->unFormated());
+        $this->cnpj = Asn1::getCNPJ($this->unFormated());
     }
 
     /**

@@ -25,7 +25,7 @@ class Asn1
     /**
      * Get CNPJ owner number from digital certificate
      * (more specifically, from public key)
-     * @param $publickeyUnformated
+     * @param string $publickeyUnformated
      * @return string CNPJ
      */
     public static function getCNPJ($publickeyUnformated)
@@ -43,6 +43,7 @@ class Asn1
      */
     public static function getOIDdata($oidNumber, $publickeyUnformated)
     {
+        $ret = '';
         $certder = base64_decode($publickeyUnformated);
         //converts the OID number from text to hexadecimal
         $oidMarker = self::oidHexMarker($oidNumber);
@@ -54,7 +55,6 @@ class Asn1
         //the certificate, but can be more. In this case only
         //first occurency will be returned.
         $partes = explode($oidMarker, $certder);
-        $ret = '';
         //if count($partes) > 1 so OID was located
         $tot = count($partes);
         if ($tot > 1) {
@@ -71,16 +71,16 @@ class Asn1
                 $xcv = substr($xcv4, -3);
             }
             //rebuild the sequency
-            $data = $xcv . $oidHexa . $partes[1];
+            $data = $xcv . $oidMarker . $partes[1];
             //converts do decimal the second digit of sequency
             $len = (integer) ord($data[1]);
-            $bytes = 0;
+            $bytes = strlen($oidMarker);
             //get length of OID data
             $len = self::getLength((string) $data);
-            //get only a sgring with bytes belongs to OID
-            $oidData = substr($data, 2 + $bytes, $len);
+            //get only a string with bytes belongs to OID
+            $oidData = substr($data, 2 + $bytes, $len-($bytes));
             //parse OID data many possibel formats and structures
-            $head = strlen($oidData) - strlen($xcv . $oidHexa);
+            $head = strlen($oidData) - strlen($xcv) - 2;
             $ret = substr($oidData, -$head);
         }
         return $ret;

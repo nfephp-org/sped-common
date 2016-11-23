@@ -39,4 +39,11 @@ class PublicKeyTest extends \PHPUnit_Framework_TestCase
         $key = PublicKey::createFromContent($content);
         $this->assertEquals($key, $this->key);
     }
+    
+    public function testGetCNPJ()
+    {
+        $expected = '99999090910270';
+        $actual = $this->key->cnpj;
+        $this->assertEquals($expected, $actual);
+    }
 }
