@@ -31,6 +31,7 @@ class SoapNative extends SoapBase implements SoapInterface
      * @param array $parameters
      * @param array $namespaces
      * @param string $request
+     * @param \SOAPHeader $soapheader
      * @return string
      * @throws \NFePHP\Common\Exception\SoapException
      */
@@ -41,20 +42,24 @@ class SoapNative extends SoapBase implements SoapInterface
         $soapver = SOAP_1_2,
         $parameters = [],
         $namespaces = [],
-        $request = ''
+        $request = '',
+        $soapheader = null
     ) {
         $this->prepare($url, $soapver);
         try {
+            if (!empty($soapheader)) {
+                $this->connection->__setSoapHeaders(array($soapheader));
+            }
             $response = $this->connection->$operation($parameters);
             $this->requestHead = $this->connection->__getLastRequestHeaders();
-            $this->requestBody = $this->makeEnvelopeSoap(
-                $request,
-                $operation,
-                $namespaces,
-                $soapver
-            );
+            $this->requestBody = $this->connection->__getLastRequest();
             $this->responseHead = $this->connection->__getLastResponseHeaders();
             $this->responseBody = $this->connection->__getLastResponse();
+            $this->saveDebugFiles(
+                $operation,
+                $this->requestHead . "\n" . $this->requestBody,
+                $this->responseHead . "\n" . $this->responseBody
+            );
         } catch (SoapFault $e) {
             throw SoapException::soapFault($e->getMessage());
         } catch (Exception $e) {

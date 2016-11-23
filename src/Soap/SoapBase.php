@@ -30,6 +30,7 @@ abstract class SoapBase implements SoapInterface
     protected $proxyPort = '';
     protected $proxyUser = '';
     protected $proxyPass = '';
+    protected $prefixes = [1 => 'soapenv', 2 => 'soap'];
     //certificat parameters
     protected $certificate;
     protected $tempdir = '';
@@ -37,10 +38,13 @@ abstract class SoapBase implements SoapInterface
     protected $pubfile = '';
     protected $certfile = '';
     //log info
-    protected $responseHead = '';
-    protected $responseBody = '';
-    protected $requestHead = '';
-    protected $requestBody = '';
+    public $responseHead = '';
+    public $responseBody = '';
+    public $requestHead = '';
+    public $requestBody = '';
+    public $soaperror = '';
+    public $soapinfo = [];
+    public $debugmode = false;
     
     /**
      * Constructor
@@ -60,6 +64,15 @@ abstract class SoapBase implements SoapInterface
     public function __destruct()
     {
         $this->removeTemporarilyKeyFiles();
+    }
+    
+    /**
+     * Set debug mode, this mode will save soap envelopes in temporary directory
+     * @param bool $value
+     */
+    public function setDebugMode($value = false)
+    {
+        $this->debugmode = $value;
     }
     
     /**
@@ -99,6 +112,11 @@ abstract class SoapBase implements SoapInterface
         $this->soapprotocol = $protocol;
     }
     
+    public function setSoapPrefix($prefixes)
+    {
+        $this->prefixes = $prefixes;
+    }
+    
     /**
      * Set proxy parameters
      * @param string $ip
@@ -121,7 +139,8 @@ abstract class SoapBase implements SoapInterface
         $soapver = SOAP_1_2,
         $parameters = [],
         $namespaces = [],
-        $request = ''
+        $request = '',
+        $soapheader = null
     );
     
     /**
@@ -129,23 +148,36 @@ abstract class SoapBase implements SoapInterface
      * @param string $request
      * @param string $operation
      * @param array $namespaces
+     * @param \SOAPHeader $header
      * @return string
      */
-    protected function makeEnvelopeSoap($request, $operation, $namespaces, $soapver = SOAP_1_2)
-    {
-        if (empty($operation)) {
-            return '';
-        }
-        $prefix = 'soap';
-        if ($soapver == SOAP_1_1) {
-            $prefix = 'soapenv';
-        }
+    protected function makeEnvelopeSoap(
+        $request,
+        $operation,
+        $namespaces,
+        $soapver = SOAP_1_2,
+        $header = null
+    ) {
+        $prefix = $this->prefixes[$soapver];
         $envelope = "<$prefix:Envelope";
         foreach ($namespaces as $key => $value) {
             $envelope .= " $key=\"$value\"";
         }
-        $envelope .= "><$prefix:Body>$request</$prefix:Body>"
-                . "</$prefix:Envelope>";
+        $envelope .= ">";
+        $soapheader = "<$prefix:Header/>";
+        if (!empty($header)) {
+            $ns = !empty($header->namespace) ? $header->namespace : '';
+            $name = $header->name;
+            $soapheader = "<$prefix:Header>";
+            $soapheader .= "<$name xmlns=\"$ns\">";
+            foreach ($header->data as $key => $value) {
+                $soapheader .= "<$key>$value</$key>";
+            }
+            $soapheader .= "</$name></$prefix:Header>";
+        }
+        $envelope .= $soapheader;
+        $envelope .= "<$prefix:Body>$request</$prefix:Body>"
+            . "</$prefix:Envelope>";
         return $envelope;
     }
     
@@ -179,5 +211,29 @@ abstract class SoapBase implements SoapInterface
         unlink(substr($this->prifile, 0, strlen($this->prifile)-4));
         unlink(substr($this->pubfile, 0, strlen($this->pubfile)-4));
         unlink(substr($this->certfile, 0, strlen($this->certfile)-4));
+    }
+    
+    /**
+     * Save request envelope and response for debug reasons
+     * @param string $operation
+     * @param string $request
+     * @param string $response
+     * @return void
+     */
+    protected function saveDebugFiles($operation, $request, $response)
+    {
+        if (!$this->debugmode) {
+            return;
+        }
+        $tempdir = sys_get_temp_dir()
+            . DIRECTORY_SEPARATOR
+            . 'soap'
+            . DIRECTORY_SEPARATOR;
+        if (! is_dir($tempdir)) {
+            mkdir($tempdir);
+        }
+        $num = date('mdHis');
+        file_put_contents($tempdir . "req_$operation_$num.txt", $request);
+        file_put_contents($tempdir . "res_$operation_$num.txt", $response);
     }
 }

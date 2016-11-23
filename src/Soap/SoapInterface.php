@@ -71,6 +71,7 @@ interface SoapInterface
      * @param int $soapver
      * @param array $parameters
      * @param array $namespaces
+     * @param \SOAPHeader $soapheader
      * @param string $request
      */
     public function send(
@@ -80,6 +81,7 @@ interface SoapInterface
         $soapver = SOAP_1_2,
         $parameters = [],
         $namespaces = [],
-        $request = ''
+        $request = '',
+        $soapheader = null
     );
 }
