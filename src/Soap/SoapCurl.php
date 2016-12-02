@@ -44,7 +44,6 @@ class SoapCurl extends SoapBase implements SoapInterface
         $request = '',
         $soapheader = null
     ) {
-        $soaperror = '';
         $response = '';
         $envelope = $this->makeEnvelopeSoap(
             $request,
@@ -70,7 +69,7 @@ class SoapCurl extends SoapBase implements SoapInterface
             curl_setopt($oCurl, CURLOPT_URL, $url);
             curl_setopt($oCurl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
             curl_setopt($oCurl, CURLOPT_CONNECTTIMEOUT, $this->soaptimeout);
-            curl_setopt($oCurl, CURLOPT_VERBOSE, 1);
+            curl_setopt($oCurl, CURLOPT_TIMEOUT, $this->soaptimeout + 20);
             curl_setopt($oCurl, CURLOPT_HEADER, 1);
             curl_setopt($oCurl, CURLOPT_SSL_VERIFYHOST, 2);
             curl_setopt($oCurl, CURLOPT_SSL_VERIFYPEER, 0);
@@ -99,7 +98,7 @@ class SoapCurl extends SoapBase implements SoapInterface
         } catch (Exception $e) {
             throw SoapException::unableToLoadCurl($e->getMessage());
         }
-        if ($soaperror != '') {
+        if ($this->soaperror != '') {
             throw SoapException::soapFault($this->soaperror);
         }
         if ($httpcode != 200) {

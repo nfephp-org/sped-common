@@ -30,6 +30,8 @@ use DOMElement;
 
 class Signer
 {
+    private static $canonical = [false,false,null,null];
+    
     /**
      * Make Signature tag
      * @param string $content
@@ -60,6 +62,9 @@ class Signer
             '',
             $content
         );
+        if (!empty($canonical)) {
+            self::$canonical = $canonical;
+        }
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->loadXML($content);
         $dom->preserveWhiteSpace = false;
@@ -73,7 +78,7 @@ class Signer
             throw SignerException::tagNotFound($tagname . ' ' . $rootname);
         }
         if (! self::existsSignature($dom)) {
-            $xml = self::createSignature(
+            $dom = self::createSignature(
                 $certificate,
                 $dom,
                 $root,
@@ -82,10 +87,23 @@ class Signer
                 $algorithm,
                 $canonical
             );
-        }
-        return $xml->saveXML($xml->documentElement, LIBXML_NOXMLDECL);
+        };    
+        return $dom->saveXML($dom->documentElement, LIBXML_NOXMLDECL);
     }
-
+    
+    /**
+     * Remove old signature from document to replace it
+     * @param DOMDocument $dom
+     * @return DOMDocument
+     */
+    public static function removeSignature(DOMDocument $dom)
+    {
+        $nfe = $dom->documentElement;
+        $signature = $nfe->getElementsByTagName('Signature')->item(0);
+        $oldsignature = $nfe->removeChild($signature);
+        return $dom;
+    }
+    
     /**
      * Verify if xml signature is valid
      * @param string $content xml content
@@ -235,7 +253,7 @@ class Signer
         if (empty($node)) {
             throw SignnerException::tagNotFound($tagname);
         }
-        $signature = $node->getElementsByTagName('Signature')->item(0);
+        $signature = $dom->getElementsByTagName('Signature')->item(0);
         if (! empty($signature)) {
             $clone = $signature->cloneNode(true);
         } else {
@@ -265,7 +283,7 @@ class Signer
      * @param array $canonical
      * @return string
      */
-    private static function makeDigest(DOMElement $node, $algorithm, $canonical)
+    private static function makeDigest(DOMElement $node, $algorithm, $canonical = [false,false,null,null])
     {
         $c14n = $node->C14N(
             $canonical[0],
