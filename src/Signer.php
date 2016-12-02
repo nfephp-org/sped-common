@@ -87,7 +87,7 @@ class Signer
                 $algorithm,
                 $canonical
             );
-        };    
+        };
         return $dom->saveXML($dom->documentElement, LIBXML_NOXMLDECL);
     }
     
