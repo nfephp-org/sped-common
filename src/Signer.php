@@ -72,20 +72,26 @@ class Signer
         if (empty($node) || empty($root)) {
             throw SignerException::tagNotFound($tagname . ' ' . $rootname);
         }
-        if (! self::existsSignature($dom)) {
-            $dom = self::createSignature(
-                $certificate,
-                $dom,
-                $root,
-                $node,
-                $mark,
-                $algorithm,
-                $canonical
-            );
+        if (self::existsSignature($dom)) {
+            $dom = self::removeSignature($dom);
         }
+        $dom = self::createSignature(
+            $certificate,
+            $dom,
+            $root,
+            $node,
+            $mark,
+            $algorithm,
+            $canonical
+        );
         return $dom->saveXML($dom->documentElement, LIBXML_NOXMLDECL);
     }
     
+    /**
+     * Remove old signature from document to replace it
+     * @param DOMDocument $dom
+     * @return DOMDocument
+     */
     public static function removeSignature(DOMDocument $dom)
     {
         $nfe = $dom->documentElement;
