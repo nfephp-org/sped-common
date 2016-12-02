@@ -73,7 +73,7 @@ class Signer
             throw SignerException::tagNotFound($tagname . ' ' . $rootname);
         }
         if (! self::existsSignature($dom)) {
-            $xml = self::createSignature(
+            $dom = self::createSignature(
                 $certificate,
                 $dom,
                 $root,
@@ -83,9 +83,17 @@ class Signer
                 $canonical
             );
         }
-        return $xml->saveXML($xml->documentElement, LIBXML_NOXMLDECL);
+        return $dom->saveXML($dom->documentElement, LIBXML_NOXMLDECL);
     }
-
+    
+    public static function removeSignature(DOMDocument $dom)
+    {
+        $nfe = $dom->documentElement;
+        $signature = $nfe->getElementsByTagName('Signature')->item(0);
+        $oldsignature = $nfe->removeChild($signature);
+        return $dom;
+    }
+    
     /**
      * Verify if xml signature is valid
      * @param string $content xml content
