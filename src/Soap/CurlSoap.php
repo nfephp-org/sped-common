@@ -12,8 +12,8 @@ namespace NFePHP\Common\Soap;
  * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
  */
 
-use NFePHP\Common\Strings\Strings;
 use NFePHP\Common\Exception;
+use NFePHP\Common\Strings\Strings;
 
 class CurlSoap
 {
@@ -214,32 +214,6 @@ class CurlSoap
     } //fim send
 
     /**
-     * getWsdl
-     * Baixa o arquivo wsdl do webservice
-     * @param string $urlsefaz
-     * @return boolean|string
-     */
-    public function getWsdl($urlservice)
-    {
-        $aURL = explode('?', $urlservice);
-        if (count($aURL) == 1) {
-            $urlservice .= '?wsdl';
-        }
-        $resposta = $this->zCommCurl($urlservice);
-        //verifica se foi retornado o wsdl
-        $nPos = strpos($resposta, '<wsdl:def');
-        if ($nPos === false) {
-            $nPos = strpos($resposta, '<definit');
-        }
-        if ($nPos === false) {
-            //não retornou um wsdl
-            return false;
-        }
-        $wsdl = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n".trim(substr($resposta, $nPos));
-        return $wsdl;
-    }
-
-    /**
      * zCommCurl
      * Realiza da comunicação via cURL
      * @param string $url
@@ -317,7 +291,7 @@ class CurlSoap
         //retorna resposta
         return $resposta;
     }
-    
+
     /**
      * zDebug
      * @param array $info
@@ -355,6 +329,32 @@ class CurlSoap
         }
         //carrega a variavel debug
         $this->soapDebug = $data."\n\n".$txtInfo."\n".$resposta;
+    }
+
+    /**
+     * getWsdl
+     * Baixa o arquivo wsdl do webservice
+     * @param string $urlsefaz
+     * @return boolean|string
+     */
+    public function getWsdl($urlservice)
+    {
+        $aURL = explode('?', $urlservice);
+        if (count($aURL) == 1) {
+            $urlservice .= '?wsdl';
+        }
+        $resposta = $this->zCommCurl($urlservice);
+        //verifica se foi retornado o wsdl
+        $nPos = strpos($resposta, '<wsdl:def');
+        if ($nPos === false) {
+            $nPos = strpos($resposta, '<definit');
+        }
+        if ($nPos === false) {
+            //não retornou um wsdl
+            return false;
+        }
+        $wsdl = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" . trim(substr($resposta, $nPos));
+        return $wsdl;
     }
     
     /**
