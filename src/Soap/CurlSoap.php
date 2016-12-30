@@ -12,8 +12,8 @@ namespace NFePHP\Common\Soap;
  * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
  */
 
-use NFePHP\Common\Strings\Strings;
 use NFePHP\Common\Exception;
+use NFePHP\Common\Strings\Strings;
 
 class CurlSoap
 {
@@ -83,22 +83,34 @@ class CurlSoap
      * @var integer
      */
     private $sslProtocol = 0;
-    
+    /**
+     * @var null|resource
+     */
+    private $curlStderrStream;
+
     /**
      * __construct
      *
      * @param string $priKeyPath path para a chave privada
      * @param string $pubKeyPath path para a chave publica
      * @param string $certKeyPath path para o certificado
-     * @param string $timeout tempo de espera da resposta do webservice
+     * @param int|string $timeout tempo de espera da resposta do webservice
      * @param integer $sslProtocol
+     * @param resource|null $curlStderrStream
      */
-    public function __construct($priKeyPath = '', $pubKeyPath = '', $certKeyPath = '', $timeout = 10, $sslProtocol = 0)
-    {
+    public function __construct(
+        $priKeyPath = '',
+        $pubKeyPath = '',
+        $certKeyPath = '',
+        $timeout = 10,
+        $sslProtocol = 0,
+        $curlStderrStream = null
+    ) {
         $this->priKeyPath = $priKeyPath;
         $this->pubKeyPath = $pubKeyPath;
         $this->certKeyPath = $certKeyPath;
         $this->soapTimeout = $timeout;
+        $this->curlStderrStream = $curlStderrStream;
         if ($sslProtocol < 0 || $sslProtocol > 6) {
             $msg = "O protocolo SSL pode estar entre 0 e seis, inclusive, mas não além desses números.";
             throw new Exception\InvalidArgumentException($msg);
@@ -268,7 +280,11 @@ class CurlSoap
         curl_setopt($oCurl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
         curl_setopt($oCurl, CURLOPT_CONNECTTIMEOUT, $this->soapTimeout);
         curl_setopt($oCurl, CURLOPT_URL, trim($url));
-        curl_setopt($oCurl, CURLOPT_VERBOSE, 1);
+        if (!is_null($this->curlStderrStream) && is_writable($this->curlStderrStream)) {
+            curl_setopt($oCurl, CURLOPT_VERBOSE, 1);
+            curl_setopt($oCurl, CURLOPT_STDERR, fopen($this->curlStderrStream, 'w'));
+        }
+
         curl_setopt($oCurl, CURLOPT_HEADER, 1);
         //caso não seja setado o protpcolo SSL o php deverá determinar
         //o protocolo correto durante o handshake.

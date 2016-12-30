@@ -417,13 +417,17 @@ class BaseTools
      */
     protected function zLoadSoapClass()
     {
-        $this->oSoap = null;
+        $curlStderrStream = null;
+        if (key_exists('curlStderrStream', $this->aConfig)) {
+            $curlStderrStream = $this->aConfig['curlStderrStream'];
+        }
         $this->oSoap = new CurlSoap(
             $this->oCertificate->priKeyFile,
             $this->oCertificate->pubKeyFile,
             $this->oCertificate->certKeyFile,
             $this->soapTimeout,
-            $this->sslProtocol
+            $this->sslProtocol,
+            $curlStderrStream
         );
     }
     
