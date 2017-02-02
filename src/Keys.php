@@ -46,7 +46,7 @@ class Keys
             $tpEmis,
             $codigo
         );
-        return $key . self::verifyingDigit($chave);
+        return $key . self::verifyingDigit($key);
     }
     
     /**
