@@ -6,8 +6,10 @@ namespace NFePHP\Common;
  * Extends DOMDocument
  * @category   NFePHP
  * @package    NFePHP\Common\DOMImproved
- * @copyright  Copyright (c) 2008-2016
+ * @copyright  Copyright (c) 2008-2017
  * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
+ * @license    https://opensource.org/licenses/MIT MIT
+ * @license    http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @author     Roberto L. Machado <linux.rlm at gmail dot com>
  * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
  */
@@ -164,7 +166,6 @@ class DOMImproved extends DOMDocument
     }
     
     /**
-     * appChild
      * Acrescenta DOMElement a pai DOMElement
      * Caso o pai esteja vazio retorna uma exception com a mensagem
      * O parametro "child" pode ser vazio
@@ -182,6 +183,37 @@ class DOMImproved extends DOMDocument
         $parent->appendChild($child);
     }
     
+    /**
+     * Append DOMElement from external documento to local Node
+     * @param DOMElement $parent
+     * @param DOMElement $child
+     */
+    public function appExternalChild(DOMElement &$parent, DOMElement $child)
+    {
+        $node = $this->importNode($child, true);
+        $parent->appendChild($node);
+    }
+    
+    /**
+     * Append DOMElement from external documento to local Node
+     * before existent node
+     * @param DOMElement $parent
+     * @param DOMElement $child
+     * @param string $before
+     * @return void
+     */
+    public function appExternalChildBefore(
+        DOMElement &$parent,
+        DOMElement $child,
+        $before
+    ) {
+        if (empty($bnode = $parent->getElementsByTagName($before)->item(0))) {
+            return;
+        }
+        $node = $this->importNode($child, true);
+        $parent->insertBefore($node, $bnode);
+    }
+        
     /**
      * appChildBefore
      * Acrescenta DOMElement a pai DOMElement

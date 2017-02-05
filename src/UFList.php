@@ -2,7 +2,19 @@
 
 namespace NFePHP\Common;
 
-use \InvalidArgumentException;
+/**
+ * Returns IBGE code or State abbreviation
+ * @category   NFePHP
+ * @package    NFePHP\Common
+ * @copyright  Copyright (c) 2008-2017
+ * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
+ * @license    https://opensource.org/licenses/MIT MIT
+ * @license    http://www.gnu.org/licenses/gpl.txt GPLv3+
+ * @author     Roberto L. Machado <linux.rlm at gmail dot com>
+ * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
+ */
+
+use NFePHP\Common\Exception\InvalidArgumentException;
 
 class UFList
 {
@@ -45,7 +57,7 @@ class UFList
     public static function getUFByCode($code)
     {
         if (!key_exists($code, self::$uflist)) {
-            throw new \InvalidArgumentException("cUF incorreto!");
+            throw new InvalidArgumentException("cUF incorreto!");
         }
         return self::$uflist[$code];
     }
@@ -61,7 +73,7 @@ class UFList
         $uf = strtoupper($uf);
         $codelist = array_flip(self::$uflist);
         if (!key_exists($uf, $codelist)) {
-            throw new \InvalidArgumentException("UF incorreto!");
+            throw new InvalidArgumentException("UF incorreto!");
         }
         return $codelist[$uf];
     }
