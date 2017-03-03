@@ -12,6 +12,8 @@ class CertificateTest extends \PHPUnit_Framework_TestCase
     const TEST_PUBLIC_KEY = '/../fixtures/certs/x99999090910270_pubKEY.pem';
     const TEST_CHAIN_KEYS = '/../fixtures/certs/chain.pem';
     const TEST_EXPECTED_CHAIN = '/../fixtures/certs/certwithchain.pem';
+    const TEST_EXPECTED_PFX = '/../fixtures/certs/expected.pfx';
+    const TEST_EXPECTED_PFX1 = '/../fixtures/certs/expected1.pfx';
 
     public function testShouldLoadPfxCertificate()
     {
