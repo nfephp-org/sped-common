@@ -196,7 +196,7 @@ abstract class SoapBase implements SoapInterface
             $this->certfile = tempnam($this->tempdir, 'Cert').'.pem';
             file_put_contents($this->prifile, $this->certificate->privateKey);
             file_put_contents($this->pubfile, $this->certificate->publicKey);
-            file_put_contents($this->certfile, $this->certificate->privateKey.$this->certificate->publicKey);
+            file_put_contents($this->certfile, "{$this->certificate}");
         }
     }
     
@@ -233,7 +233,7 @@ abstract class SoapBase implements SoapInterface
             mkdir($tempdir, 0777);
         }
         $num = date('mdHis');
-        file_put_contents($tempdir . "req_" . $operation . "_" . $num . "txt", $request);
-        file_put_contents($tempdir . "res_" . $operation . "_" . $num . "txt", $response);
+        file_put_contents($tempdir . "req_" . $operation . "_" . $num . ".txt", $request);
+        file_put_contents($tempdir . "res_" . $operation . "_" . $num . ".txt", $response);
     }
 }

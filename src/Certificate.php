@@ -35,21 +35,77 @@ class Certificate implements SignatureInterface, VerificationInterface
      * @var CertificationChain
      */
     public $chainKeys;
-
+    
+    /**
+     * Constructor
+     * @param PrivateKey $privateKey
+     * @param PublicKey $publicKey
+     * @param CertificationChain $chainKeys
+     */
     public function __construct(PrivateKey $privateKey, PublicKey $publicKey, CertificationChain $chainKeys = null)
     {
         $this->privateKey = $privateKey;
         $this->publicKey = $publicKey;
         $this->chainKeys = $chainKeys;
     }
-
+    
+    /**
+     * Read PFX and return this class
+     * @param string $content
+     * @param string $password
+     * @return \static
+     * @throws CertificateException
+     */
     public static function readPfx($content, $password)
     {
         $certs = [];
         if (!openssl_pkcs12_read($content, $certs, $password)) {
             throw CertificateException::unableToRead();
         }
-        return new static(new PrivateKey($certs['pkey']), new PublicKey($certs['cert']));
+        $chain = '';
+        if (!empty($certs['extracerts'])) {
+            foreach ($certs['extracerts'] as $ec) {
+                $chain .= $ec;
+            }
+        }
+        return new static(
+            new PrivateKey($certs['pkey']),
+            new PublicKey($certs['cert']),
+            new CertificationChain($chain)
+        );
+    }
+    
+    /**
+     * Returns a PFX string with certification chain if exists
+     * @param string $password
+     * @return string
+     */
+    public function writePfx($password)
+    {
+        $password = trim($password);
+        if (empty($password)) {
+            return '';
+        }
+        $x509_cert = openssl_x509_read("{$this->publicKey}");
+        $privateKey_resource = openssl_pkey_get_private("{$this->privateKey}");
+        $pfxstring = '';
+        $args = [];
+        $ec = [];
+        if (!empty($this->chainKeys)) {
+            $list = $this->chainKeys->listChain();
+            foreach ($list as $cert) {
+                $ec[] = "{$cert}";
+            }
+            $args  = ['extracerts' => $ec];
+        }
+        openssl_pkcs12_export(
+            $x509_cert,
+            $pfxstring,
+            $privateKey_resource,
+            $password,
+            $args
+        );
+        return $pfxstring;
     }
 
     /**
