@@ -22,11 +22,13 @@ use NFePHP\Common\Exception\SoapException;
 class SoapCurl extends SoapBase implements SoapInterface
 {
     /**
-     * Cosntructor
+     * Constructor
+     * @param Certificate $certificate
+     * @param LoggerInterface $logger
      */
-    public function __construct()
+    public function __construct(Certificate $certificate = null, LoggerInterface $logger = null)
     {
-        parent::__construct();
+        parent::__construct($certificate, $logger);
     }
     
     /**
