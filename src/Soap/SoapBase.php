@@ -67,8 +67,8 @@ abstract class SoapBase implements SoapInterface
             . DIRECTORY_SEPARATOR
             . 'certs'
             . DIRECTORY_SEPARATOR;
-        $this->adapter = new Local('/');
-        $this->filesystem = new Filesystem($this->adapter);
+        $this->tempdir = sys_get_temp_dir() . '/';
+        $this->setLocalFolder($this->tempdir);
     }
     
     public function __destruct()
@@ -83,8 +83,20 @@ abstract class SoapBase implements SoapInterface
     public function setTemporaryFolder($folderRealPath)
     {
         $this->tempdir = $folderRealPath;
+        $this->setLocalFolder($folderRealPath);
     }
     
+    /**
+     * Set Local folder for flysystem
+     * @param string $folder
+     */
+    protected function setLocalFolder($folder = '')
+    {
+        $this->adapter = new Local($folder);
+        $this->filesystem = new Filesystem($this->adapter);
+    }
+
+
     /**
      * Set debug mode, this mode will save soap envelopes in temporary directory
      * @param bool $value
