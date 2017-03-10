@@ -19,9 +19,21 @@ use NFePHP\Common\Soap\SoapClientExtended;
 use NFePHP\Common\Soap\SoapBase;
 use NFePHP\Common\Soap\SoapInterface;
 use NFePHP\Common\Exception\SoapException;
+use NFePHP\Common\Certificate;
+use Psr\Log\LoggerInterface;
 
 class SoapNative extends SoapBase implements SoapInterface
 {
+    /**
+     * Constructor
+     * @param Certificate $certificate
+     * @param LoggerInterface $logger
+     */
+    public function __construct(Certificate $certificate = null, LoggerInterface $logger = null)
+    {
+        parent::__construct($certificate, $logger);
+    }
+
     /**
      * Send soap message to url
      * @param string $url
@@ -79,7 +91,7 @@ class SoapNative extends SoapBase implements SoapInterface
     {
         $wsdl = "$url?WSDL";
         $params = [
-            'local_cert' => $this->certfile,
+            'local_cert' => $this->tempdir . $this->certfile,
             'passphrase' => '',
             'connection_timeout' => $this->soaptimeout,
             'encoding' => 'UTF-8',

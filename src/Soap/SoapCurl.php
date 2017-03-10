@@ -18,9 +18,21 @@ namespace NFePHP\Common\Soap;
 use NFePHP\Common\Soap\SoapBase;
 use NFePHP\Common\Soap\SoapInterface;
 use NFePHP\Common\Exception\SoapException;
+use NFePHP\Common\Certificate;
+use Psr\Log\LoggerInterface;
 
 class SoapCurl extends SoapBase implements SoapInterface
 {
+    /**
+     * Constructor
+     * @param Certificate $certificate
+     * @param LoggerInterface $logger
+     */
+    public function __construct(Certificate $certificate = null, LoggerInterface $logger = null)
+    {
+        parent::__construct($certificate, $logger);
+    }
+    
     /**
      * Send soap message to url
      * @param string $url
@@ -64,6 +76,7 @@ class SoapCurl extends SoapBase implements SoapInterface
         $this->requestBody = $envelope;
         
         try {
+            $this->saveTemporarilyKeyFiles();
             $oCurl = curl_init();
             $this->setCurlProxy($oCurl);
             curl_setopt($oCurl, CURLOPT_URL, $url);
@@ -74,8 +87,8 @@ class SoapCurl extends SoapBase implements SoapInterface
             curl_setopt($oCurl, CURLOPT_SSL_VERIFYHOST, 2);
             curl_setopt($oCurl, CURLOPT_SSL_VERIFYPEER, 0);
             curl_setopt($oCurl, CURLOPT_SSLVERSION, $this->soapprotocol);
-            curl_setopt($oCurl, CURLOPT_SSLCERT, $this->certfile);
-            curl_setopt($oCurl, CURLOPT_SSLKEY, $this->prifile);
+            curl_setopt($oCurl, CURLOPT_SSLCERT, $this->tempdir . $this->certfile);
+            curl_setopt($oCurl, CURLOPT_SSLKEY, $this->tempdir . $this->prifile);
             curl_setopt($oCurl, CURLOPT_RETURNTRANSFER, 1);
             if (! empty($envelope)) {
                 curl_setopt($oCurl, CURLOPT_POST, 1);

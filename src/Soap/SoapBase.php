@@ -7,7 +7,7 @@ namespace NFePHP\Common\Soap;
  *
  * @category  NFePHP
  * @package   NFePHP\Common\Soap\SoapBase
- * @copyright NFePHP Copyright (c) 2016
+ * @copyright NFePHP Copyright (c) 2017
  * @license   http://www.gnu.org/licenses/lgpl.txt LGPLv3+
  * @license   https://opensource.org/licenses/MIT MIT
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
@@ -18,6 +18,10 @@ namespace NFePHP\Common\Soap;
 use NFePHP\Common\Certificate;
 use NFePHP\Common\Soap\SoapInterface;
 use NFePHP\Common\Exception\SoapException;
+use NFePHP\Common\Exception\RuntimeException;
+use NFePHP\Common\Strings\Strings;
+use League\Flysystem\Filesystem;
+use League\Flysystem\Adapter\Local;
 use Psr\Log\LoggerInterface;
 
 abstract class SoapBase implements SoapInterface
@@ -34,6 +38,8 @@ abstract class SoapBase implements SoapInterface
     //certificat parameters
     protected $certificate;
     protected $tempdir = '';
+    protected $certsdir = '';
+    protected $debugdir = '';
     protected $prifile = '';
     protected $pubfile = '';
     protected $certfile = '';
@@ -45,7 +51,11 @@ abstract class SoapBase implements SoapInterface
     public $soaperror = '';
     public $soapinfo = [];
     public $debugmode = false;
-    
+    //flysystem
+    protected $adapter;
+    protected $filesystem;
+
+
     /**
      * Constructor
      * @param Certificate $certificate
@@ -55,17 +65,34 @@ abstract class SoapBase implements SoapInterface
     {
         $this->logger = $logger;
         $this->certificate = $certificate;
-        $this->saveTemporarilyKeyFiles();
+        $this->setTemporaryFolder(sys_get_temp_dir() . '/sped/');
+    }
+    
+    public function __destruct()
+    {
+        $this->removeTemporarilyFiles($this->certsdir);
     }
     
     /**
-     * Destructor
+     * Set another temporayfolder for saving certificates for SOAP utilization
+     * @param string $folderRealPath
      */
-    public function __destruct()
+    public function setTemporaryFolder($folderRealPath)
     {
-        $this->removeTemporarilyKeyFiles();
+        $this->tempdir = $folderRealPath;
+        $this->setLocalFolder($folderRealPath);
     }
     
+    /**
+     * Set Local folder for flysystem
+     * @param string $folder
+     */
+    protected function setLocalFolder($folder = '')
+    {
+        $this->adapter = new Local($folder);
+        $this->filesystem = new Filesystem($this->adapter);
+    }
+
     /**
      * Set debug mode, this mode will save soap envelopes in temporary directory
      * @param bool $value
@@ -82,7 +109,6 @@ abstract class SoapBase implements SoapInterface
     public function loadCertificate(Certificate $certificate)
     {
         $this->certificate = $certificate;
-        $this->saveTemporarilyKeyFiles();
     }
     
     /**
@@ -112,6 +138,10 @@ abstract class SoapBase implements SoapInterface
         $this->soapprotocol = $protocol;
     }
     
+    /**
+     * Set prefixes
+     * @param string $prefixes
+     */
     public function setSoapPrefix($prefixes)
     {
         $this->prefixes = $prefixes;
@@ -132,6 +162,9 @@ abstract class SoapBase implements SoapInterface
         $this->proxyPass = $password;
     }
     
+    /**
+     * Send message to webservice
+     */
     abstract public function send(
         $url,
         $operation = '',
@@ -184,33 +217,48 @@ abstract class SoapBase implements SoapInterface
     /**
      * Temporarily saves the certificate keys for use cURL or SoapClient
      */
-    protected function saveTemporarilyKeyFiles()
+    public function saveTemporarilyKeyFiles()
     {
-        if (is_object($this->certificate)) {
-            $this->tempdir = sys_get_temp_dir().DIRECTORY_SEPARATOR.'certs'.DIRECTORY_SEPARATOR;
-            if (! is_dir($this->tempdir)) {
-                mkdir($this->tempdir);
-            }
-            $this->prifile = tempnam($this->tempdir, 'Pri').'.pem';
-            $this->pubfile = tempnam($this->tempdir, 'Pub').'.pem';
-            $this->certfile = tempnam($this->tempdir, 'Cert').'.pem';
-            file_put_contents($this->prifile, $this->certificate->privateKey);
-            file_put_contents($this->pubfile, $this->certificate->publicKey);
-            file_put_contents($this->certfile, "{$this->certificate}");
+        if (!is_object($this->certificate)) {
+            throw new RuntimeException(
+                'Certificate not found.'
+            );
+        }
+        $this->certsdir = $this->certificate->getCnpj() . '/certs/';
+        $this->prifile = $this->certsdir. Strings::randomString(10).'.pem';
+        $this->pubfile = $this->certsdir . Strings::randomString(10).'.pem';
+        $this->certfile = $this->certsdir . Strings::randomString(10).'.pem';
+        $ret = true;
+        $ret &= $this->filesystem->put(
+            $this->prifile,
+            $this->certificate->privateKey
+        );
+        $ret &= $this->filesystem->put(
+            $this->pubfile,
+            $this->certificate->publicKey
+        );
+        $ret &= $this->filesystem->put(
+            $this->certfile,
+            "{$this->certificate}"
+        );
+        if (!$ret) {
+            throw new RuntimeException(
+                'Unable to save temporary key files in folder.'
+            );
         }
     }
     
     /**
-     * Deletes the certificate keys
+     * Delete all files in folder
      */
-    protected function removeTemporarilyKeyFiles()
+    public function removeTemporarilyFiles($folder)
     {
-        unlink($this->prifile);
-        unlink($this->pubfile);
-        unlink($this->certfile);
-        unlink(substr($this->prifile, 0, strlen($this->prifile)-4));
-        unlink(substr($this->pubfile, 0, strlen($this->pubfile)-4));
-        unlink(substr($this->certfile, 0, strlen($this->certfile)-4));
+        $contents = $this->filesystem->listContents($folder, true);
+        foreach ($contents as $item) {
+            if ($item['type'] == 'file') {
+                $this->filesystem->delete($item['path']);
+            }
+        }
     }
     
     /**
@@ -220,20 +268,27 @@ abstract class SoapBase implements SoapInterface
      * @param string $response
      * @return void
      */
-    protected function saveDebugFiles($operation, $request, $response)
+    public function saveDebugFiles($operation, $request, $response)
     {
         if (!$this->debugmode) {
             return;
         }
-        $tempdir = sys_get_temp_dir()
-            . DIRECTORY_SEPARATOR
-            . 'soap'
-            . DIRECTORY_SEPARATOR;
-        if (! is_dir($tempdir)) {
-            mkdir($tempdir, 0777);
+        $this->debugdir = $this->certificate->getCnpj() . '/debug/';
+        $now = \DateTime::createFromFormat('U.u', microtime(true));
+        $time = substr($now->format("ymdHisu"), 0, 16);
+        try {
+            $this->filesystem->put(
+                $this->debugdir . $time . "_" . $operation . "_sol.txt",
+                $request
+            );
+            $this->filesystem->put(
+                $this->debugdir . $time . "_" . $operation . "_res.txt",
+                $response
+            );
+        } catch (Exception $e) {
+            throw new RuntimeException(
+                'Unable to create debug files.'
+            );
         }
-        $num = date('mdHis');
-        file_put_contents($tempdir . "req_" . $operation . "_" . $num . ".txt", $request);
-        file_put_contents($tempdir . "res_" . $operation . "_" . $num . ".txt", $response);
     }
 }

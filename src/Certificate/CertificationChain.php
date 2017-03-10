@@ -22,7 +22,7 @@ class CertificationChain
      */
     private $rawKey = '';
     /**
-     * @var array
+     * @var array of PublicKeys::class
      */
     private $chainKeys = [];
     
@@ -30,10 +30,12 @@ class CertificationChain
      * Certification Chain Keys constructor
      * @param string $chainkeysstring
      */
-    public function __construct($chainkeysstring = '')
+    public function __construct($chainkeysstring = null)
     {
-        $this->rawKey = $chainkeysstring;
-        $this->loadListChain();
+        if (!empty($chainkeysstring)) {
+            $this->rawKey = $chainkeysstring;
+            $this->loadListChain();
+        }
     }
     
     /**
@@ -60,7 +62,7 @@ class CertificationChain
     
     /**
      * List certificates from actual certification chain
-     * @return string
+     * @return array
      */
     public function listChain()
     {
@@ -78,7 +80,25 @@ class CertificationChain
     }
     
     /**
-     *
+     * Returns a array for build extracerts in PFX files
+     * @return array
+     */
+    public function getExtraCertsForPFX()
+    {
+        $ec = [];
+        $args = [];
+        $list = $this->chainKeys;
+        foreach ($list as $cert) {
+            $ec[] = "{$cert}";
+        }
+        if (empty($ec)) {
+            $args = ['extracerts' => $ec];
+        }
+        return $args;
+    }
+    
+    /**
+     * Load chain certificates from string to array of PublicKey::class
      */
     private function loadListChain()
     {
@@ -91,6 +111,11 @@ class CertificationChain
         }
     }
     
+    /**
+     * Load PublicKey::class with certificates from chain
+     * @param string $certificate
+     * @return array
+     */
     private function loadList($certificate)
     {
         $publickey = new PublicKey($certificate);
@@ -98,6 +123,9 @@ class CertificationChain
         return $this->chainKeys;
     }
     
+    /**
+     * Generate chain certificates as raw string
+     */
     private function rawString()
     {
         $this->rawKey = '';
