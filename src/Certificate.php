@@ -6,7 +6,7 @@ namespace NFePHP\Common;
  * Certificate class for management and use of digital certificates A1 (PKCS # 12)
  * @category   NFePHP
  * @package    NFePHP\Common\Certificate
- * @copyright  Copyright (c) 2008-2016
+ * @copyright  Copyright (c) 2008-2017
  * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
  * @author     Antonio Spinelli <tonicospinelli85 at gmail dot com>
  * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
@@ -89,21 +89,12 @@ class Certificate implements SignatureInterface, VerificationInterface
         $x509_cert = openssl_x509_read("{$this->publicKey}");
         $privateKey_resource = openssl_pkey_get_private("{$this->privateKey}");
         $pfxstring = '';
-        $args = [];
-        $ec = [];
-        if (!empty($this->chainKeys)) {
-            $list = $this->chainKeys->listChain();
-            foreach ($list as $cert) {
-                $ec[] = "{$cert}";
-            }
-            $args  = ['extracerts' => $ec];
-        }
         openssl_pkcs12_export(
             $x509_cert,
             $pfxstring,
             $privateKey_resource,
             $password,
-            $args
+            $chainKeys->getExtraCertsForPFX()
         );
         return $pfxstring;
     }
@@ -142,6 +133,15 @@ class Certificate implements SignatureInterface, VerificationInterface
     public function isExpired()
     {
         return $this->publicKey->isExpired();
+    }
+    
+    /**
+     * Gets CNPJ by OID '2.16.76.1.3.3' from ASN.1 certificate struture
+     * @return string
+     */
+    public function getCnpj()
+    {
+        return $this->publicKey->cnpj;
     }
 
     /**
