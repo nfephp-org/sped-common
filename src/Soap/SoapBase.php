@@ -68,7 +68,7 @@ abstract class SoapBase implements SoapInterface
             . 'certs'
             . DIRECTORY_SEPARATOR;
         $this->adapter = new Local('/');
-        $this->filesystem = new Filesystem($adapter);
+        $this->filesystem = new Filesystem($this->adapter);
     }
     
     public function __destruct()
