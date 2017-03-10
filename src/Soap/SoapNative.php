@@ -19,6 +19,8 @@ use NFePHP\Common\Soap\SoapClientExtended;
 use NFePHP\Common\Soap\SoapBase;
 use NFePHP\Common\Soap\SoapInterface;
 use NFePHP\Common\Exception\SoapException;
+use NFePHP\Common\Certificate;
+use Psr\Log\LoggerInterface;
 
 class SoapNative extends SoapBase implements SoapInterface
 {
