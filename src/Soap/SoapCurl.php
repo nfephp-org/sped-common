@@ -22,6 +22,14 @@ use NFePHP\Common\Exception\SoapException;
 class SoapCurl extends SoapBase implements SoapInterface
 {
     /**
+     * Cosntructor
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+    
+    /**
      * Send soap message to url
      * @param string $url
      * @param string $operation
