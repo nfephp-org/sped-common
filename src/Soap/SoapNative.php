@@ -91,7 +91,7 @@ class SoapNative extends SoapBase implements SoapInterface
     {
         $wsdl = "$url?WSDL";
         $params = [
-            'local_cert' => $this->certfile,
+            'local_cert' => $this->tempdir . $this->certfile,
             'passphrase' => '',
             'connection_timeout' => $this->soaptimeout,
             'encoding' => 'UTF-8',
