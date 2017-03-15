@@ -52,7 +52,7 @@ class Strings
         );
         $retXml = str_replace($aFind, "", $xml);
         if ($remEnc) {
-            $retXml = self::deleteAllBetween('<?xml' ,'?>', $retXml);
+            $retXml = self::deleteAllBetween('<?xml', '?>', $retXml);
         }
         return $retXml;
     }
@@ -64,7 +64,8 @@ class Strings
      * @param string $string
      * @return string
      */
-    public static function deleteAllBetween($beginning, $end, $string) {
+    public static function deleteAllBetween($beginning, $end, $string)
+    {
         $beginningPos = strpos($string, $beginning);
         $endPos = strpos($string, $end);
         if ($beginningPos === false || $endPos === false) {
