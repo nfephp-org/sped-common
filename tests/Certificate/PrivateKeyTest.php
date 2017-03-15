@@ -5,7 +5,7 @@ namespace NFePHP\Common\Tests\Certificate;
 use NFePHP\Common\Certificate\PrivateKey;
 use NFePHP\Common\Certificate\SignatureInterface;
 
-class PrivateKeyTest extends \PHPUnit_Framework_TestCase
+class PrivateKeyTest extends \PHPUnit\Framework\TestCase
 {
     public function testShouldInstantiate()
     {

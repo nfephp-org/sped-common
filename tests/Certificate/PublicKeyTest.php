@@ -5,7 +5,7 @@ namespace NFePHP\Common\Tests\Certificate;
 use NFePHP\Common\Certificate\PublicKey;
 use NFePHP\Common\Certificate\VerificationInterface;
 
-class PublicKeyTest extends \PHPUnit_Framework_TestCase
+class PublicKeyTest extends \PHPUnit\Framework\TestCase
 {
     const TEST_PUBLIC_KEY = '/../fixtures/certs/x99999090910270_pubKEY.pem';
 

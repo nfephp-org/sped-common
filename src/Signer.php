@@ -24,6 +24,7 @@ namespace NFePHP\Common;
 
 use NFePHP\Common\Certificate;
 use NFePHP\Common\Certificate\PublicKey;
+use NFePHP\Common\Strings\Strings;
 use NFePHP\Common\Exception\SignnerException;
 use DOMDocument;
 use DOMElement;
@@ -52,16 +53,7 @@ class Signer
         $canonical = [false,false,null,null],
         $rootname = ''
     ) {
-        $content = str_replace(
-            [
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
-                "<?xml version=\"1.0\" encoding=\"utf-8\"?>",
-                "\r",
-                "\n"
-            ],
-            '',
-            $content
-        );
+        $content = Strings::clearXml($content, true);
         if (!empty($canonical)) {
             self::$canonical = $canonical;
         }
@@ -88,7 +80,7 @@ class Signer
                 $canonical
             );
         };
-        return $dom->saveXML($dom->documentElement, LIBXML_NOXMLDECL);
+        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" . $dom->saveXML($dom->documentElement, LIBXML_NOXMLDECL);
     }
     
     /**

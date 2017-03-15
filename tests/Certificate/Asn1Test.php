@@ -4,7 +4,7 @@ namespace NFePHP\Common\Tests\Certificate;
 
 use NFePHP\Common\Certificate\Asn1;
 
-class Asn1Test extends \PHPUnit_Framework_TestCase
+class Asn1Test extends \PHPUnit\Framework\TestCase
 {
     const TEST_PUBLIC_KEY = '/../fixtures/certs/x99999090910270_pubKEY.pem';
     

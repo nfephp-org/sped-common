@@ -39,9 +39,8 @@ class Strings
      * @param boolean $remEnc remover encoding do xml
      * @return string
      */
-    public static function clearXml($xml = '', $remEnc = false)
+    public static function clearXml($xml, $remEnc = false)
     {
-        //$xml = self::clearMsg($xml);
         $aFind = array(
             'xmlns:default="http://www.w3.org/2000/09/xmldsig#"',
             ' standalone="no"',
@@ -51,15 +50,29 @@ class Strings
             "\r",
             "\t"
         );
-        if ($remEnc) {
-            $aFind[] = '<?xml version="1.0"?>';
-            $aFind[] = '<?xml version="1.0" encoding="utf-8"?>';
-            $aFind[] = '<?xml version="1.0" encoding="UTF-8"?>';
-            $aFind[] = '<?xml version="1.0" encoding="utf-8" standalone="no"?>';
-            $aFind[] = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>';
-        }
         $retXml = str_replace($aFind, "", $xml);
+        if ($remEnc) {
+            $retXml = self::deleteAllBetween('<?xml', '?>', $retXml);
+        }
         return $retXml;
+    }
+    
+    /**
+     * Remove all characters between markers
+     * @param string $beginning
+     * @param string $end
+     * @param string $string
+     * @return string
+     */
+    public static function deleteAllBetween($beginning, $end, $string)
+    {
+        $beginningPos = strpos($string, $beginning);
+        $endPos = strpos($string, $end);
+        if ($beginningPos === false || $endPos === false) {
+            return $string;
+        }
+        $textToDelete = substr($string, $beginningPos, ($endPos + strlen($end)) - $beginningPos);
+        return str_replace($textToDelete, '', $string);
     }
     
     /**

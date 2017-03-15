@@ -4,7 +4,7 @@ namespace NFePHP\Common\Tests;
 
 use NFePHP\Common\TimeZoneByUF;
 
-class TimeZoneByUFTest extends \PHPUnit_Framework_TestCase
+class TimeZoneByUFTest extends \PHPUnit\Framework\TestCase
 {
     public function testget()
     {

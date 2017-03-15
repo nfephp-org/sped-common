@@ -4,7 +4,7 @@ namespace NFePHP\Common\Tests;
 
 use NFePHP\Common\UFList;
 
-class UFListTest extends \PHPUnit_Framework_TestCase
+class UFListTest extends \PHPUnit\Framework\TestCase
 {
     public function testgetUFByCode()
     {

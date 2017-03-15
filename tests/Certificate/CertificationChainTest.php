@@ -4,7 +4,7 @@ namespace NFePHP\Common\Tests\Certificate;
 
 use NFePHP\Common\Certificate\CertificationChain;
 
-class CertificationChainTest extends \PHPUnit_Framework_TestCase
+class CertificationChainTest extends \PHPUnit\Framework\TestCase
 {
     const TEST_CHAIN_KEYS = '/../fixtures/certs/chain.pem';
     
