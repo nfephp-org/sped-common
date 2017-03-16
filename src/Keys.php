@@ -28,8 +28,17 @@ class Keys
      * @param string $codigo random number or document number
      * @return string
      */
-    public static function build($cUF, $ano, $mes, $cnpj, $mod, $serie, $numero, $tpEmis, $codigo = '')
-    {
+    public static function build(
+        $cUF,
+        $ano,
+        $mes,
+        $cnpj,
+        $mod,
+        $serie,
+        $numero,
+        $tpEmis,
+        $codigo = ''
+    ) {
         if ($codigo == '') {
             $codigo = $numero;
         }

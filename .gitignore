@@ -14,5 +14,4 @@ local
 /.settings/
 /build
 composer.lock
-docs
 phpunit.xml

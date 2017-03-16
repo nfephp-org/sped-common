@@ -1,12 +1,12 @@
 <?php
 
-namespace NFePHP\Common\Strings;
+namespace NFePHP\Common;
 
 /**
  * Classe auxiliar para o tratamento de strings
  * @category   NFePHP
  * @package    NFePHP\Common\Strings
- * @copyright  Copyright (c) 2008-2015
+ * @copyright  Copyright (c) 2008-2017
  * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
  * @author     Roberto L. Machado <linux dot rlm at gmail dot com>
  * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
@@ -15,31 +15,31 @@ namespace NFePHP\Common\Strings;
 class Strings
 {
     /**
-     * cleanString
-     * Remove todos dos caracteres especiais do texto e os acentos
-     * @param string $texto
-     * @return  string Texto sem caractere especiais
+     * Replace all specials characters from string and retuns only 128 basics
+     * NOTE: only for UTF-8
+     * @param string $string
+     * @return  string
      */
-    public static function cleanString($texto = '')
+    public static function replaceSpecialsChars($string)
     {
-        $texto = trim($texto);
-        $aFind = array('&','á','à','ã','â','é','ê','í','ó','ô','õ','ú','ü',
-            'ç','Á','À','Ã','Â','É','Ê','Í','Ó','Ô','Õ','Ú','Ü','Ç');
-        $aSubs = array('e','a','a','a','a','e','e','i','o','o','o','u','u',
-            'c','A','A','A','A','E','E','I','O','O','O','U','U','C');
-        $novoTexto = str_replace($aFind, $aSubs, $texto);
-        $novoTexto = preg_replace("/[^a-zA-Z0-9 @,-.;:\/]/", "", $novoTexto);
-        return $novoTexto;
+        $string = trim($string);
+        $aFind = ['&','á','à','ã','â','é','ê','í','ó','ô','õ','ú','ü',
+            'ç','Á','À','Ã','Â','É','Ê','Í','Ó','Ô','Õ','Ú','Ü','Ç'];
+        $aSubs = ['e','a','a','a','a','e','e','i','o','o','o','u','u',
+            'c','A','A','A','A','E','E','I','O','O','O','U','U','C'];
+        $newstr = str_replace($aFind, $aSubs, $string);
+        $newstr = preg_replace("/[^a-zA-Z0-9 @,-.;:\/]/", "", $newstr);
+        return $newstr;
     }
     
     /**
-     * clearXml
-     * Remove \r \n \s \t
-     * @param string $xml
-     * @param boolean $remEnc remover encoding do xml
+     * Remove unwanted attributes, prefixes, sulfixes and other control
+     * characters like \r \n \s \t
+     * @param string $string
+     * @param boolean $removeEncodingTag remove encoding tag from a xml
      * @return string
      */
-    public static function clearXml($xml, $remEnc = false)
+    public static function clearXmlString($string, $removeEncodingTag = false)
     {
         $aFind = array(
             'xmlns:default="http://www.w3.org/2000/09/xmldsig#"',
@@ -50,21 +50,22 @@ class Strings
             "\r",
             "\t"
         );
-        $retXml = str_replace($aFind, "", $xml);
-        if ($remEnc) {
-            $retXml = self::deleteAllBetween('<?xml', '?>', $retXml);
+        $retXml = str_replace($aFind, "", $string);
+        $retXml = preg_replace('/(\>)\s*(\<)/m', '$1$2', $retXml);
+        if ($removeEncodingTag) {
+            $retXml = self::deleteAllBetween($retXml, '<?xml', '?>');
         }
         return $retXml;
     }
     
     /**
      * Remove all characters between markers
+     * @param string $string
      * @param string $beginning
      * @param string $end
-     * @param string $string
      * @return string
      */
-    public static function deleteAllBetween($beginning, $end, $string)
+    public static function deleteAllBetween($string, $beginning, $end)
     {
         $beginningPos = strpos($string, $beginning);
         $endPos = strpos($string, $end);
@@ -76,14 +77,13 @@ class Strings
     }
     
     /**
-     * clearProt
-     * Limpa o xml após adição do protocolo
-     * @param string $procXML
+     * Clears the xml after adding the protocol, removing repeated namespaces
+     * @param string $string
      * @return string
      */
-    public static function clearProt($procXML = '')
+    public static function clearProtocoledXML($string)
     {
-        $procXML = self::clearMsg($procXML);
+        $procXML = self::clearXmlString($string);
         $aApp = array('nfe','cte','mdfe');
         foreach ($aApp as $app) {
             $procXML = str_replace(
@@ -96,20 +96,10 @@ class Strings
     }
     
     /**
-     * clearMsg
-     * @param string $msg
+     * Creates a string ramdomically with the specified length
+     * @param int $length
      * @return string
      */
-    public static function clearMsg($msg)
-    {
-        $nmsg = str_replace(array(' standalone="no"','default:',':default',"\n","\r","\t"), '', $msg);
-        $nnmsg = str_replace('> ', '>', $nmsg);
-        if (strpos($nnmsg, '> ')) {
-            $nnmsg = self::clearMsg((string) $nnmsg);
-        }
-        return $nnmsg;
-    }
-    
     public static function randomString($length)
     {
         $keyspace = '0123456789abcdefghijklmnopqr'
