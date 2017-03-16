@@ -1,0 +1,1 @@
+#NFePHP\Common\Certificate::class
