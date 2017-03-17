@@ -30,31 +30,30 @@ abstract class SoapBase implements SoapInterface
     protected $connection;
     protected $soapprotocol = self::SSL_DEFAULT;
     protected $soaptimeout = 20;
-    protected $proxyIP = '';
-    protected $proxyPort = '';
-    protected $proxyUser = '';
-    protected $proxyPass = '';
+    protected $proxyIP;
+    protected $proxyPort;
+    protected $proxyUser;
+    protected $proxyPass;
     protected $prefixes = [1 => 'soapenv', 2 => 'soap'];
-    //certificat parameters
+    //certificate parameters
     protected $certificate;
-    protected $tempdir = '';
-    protected $certsdir = '';
-    protected $debugdir = '';
-    protected $prifile = '';
-    protected $pubfile = '';
-    protected $certfile = '';
+    protected $tempdir;
+    protected $certsdir;
+    protected $debugdir;
+    protected $prifile;
+    protected $pubfile;
+    protected $certfile;
     //log info
-    public $responseHead = '';
-    public $responseBody = '';
-    public $requestHead = '';
-    public $requestBody = '';
-    public $soaperror = '';
+    public $responseHead;
+    public $responseBody;
+    public $requestHead;
+    public $requestBody;
+    public $soaperror;
     public $soapinfo = [];
     public $debugmode = false;
     //flysystem
     protected $adapter;
     protected $filesystem;
-
 
     /**
      * Constructor
