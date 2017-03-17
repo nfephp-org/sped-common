@@ -21,4 +21,9 @@ class ValidatorException extends \RuntimeException implements ExceptionInterface
         }
         return new static('This XML is not valid. '.$msg);
     }
+    
+    public static function isNotXml()
+    {
+        return new static('This string is not a valid XML');
+    }
 }
