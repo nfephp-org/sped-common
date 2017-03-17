@@ -1,10 +1,10 @@
-#NFePHP\Common\Strings::class
+# NFePHP\Common\Strings::class
 
 Classe auxiliar para o tratamento de strings
 
-#Métodos
+# Métodos
 
-##replaceSpecialsChars()
+## replaceSpecialsChars()
 Replace all specials characters from string and retuns only 128 basic characters. [a-z] [A-Z] [0-9] @ space , - . ; :
 NOTE: only UTF-8
  @param string $string
@@ -14,7 +14,7 @@ $str = "Á é ç ";
 $ret = Strings::replaceSpecialsChars($str);
 echo $ret; //A e c
 ```
-##clearXml()
+## clearXml()
 Remove some attributes, prefixes, sulfixes and other control characters like \r \n \s \t
 @param string $xml
 @param boolean $removeEncodingTag default FALSE
@@ -24,7 +24,7 @@ Remove some attributes, prefixes, sulfixes and other control characters like \r 
 $ret = Strings::clearXml($xml);
 echo $ret; //clean xml will returned
 
-##clearProtocoledXML()
+## clearProtocoledXML()
 Clears the xml after adding the protocol, removing repeated namespaces.
 @param string $string
 @return string
@@ -32,7 +32,7 @@ Clears the xml after adding the protocol, removing repeated namespaces.
 $protxml = Strings::clearProt($xmlstring);
 echo $protxml; //clean xml will returned
 ```
-##deleteAllBetween()
+## deleteAllBetween()
 Remove all characters between markers.
 @param string $string
 @param string $beginning
@@ -47,7 +47,7 @@ echo $ret; //returns xml without encoding tag
 ```
 
 ```
-##randomString()
+## randomString()
 Creates a string ramdomically with the specified length.
 @param int $length
 @return string

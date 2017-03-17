@@ -1,1 +1,1 @@
-#NFePHP\Common\Certificate::class
+# NFePHP\Common\Certificate::class
