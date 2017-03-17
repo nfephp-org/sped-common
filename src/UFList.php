@@ -22,6 +22,7 @@ class UFList
         12=>'AC',
         27=>'AL',
         13=>'AM',
+        91=>'AN',
         16=>'AP',
         29=>'BA',
         23=>'CE',
@@ -76,5 +77,23 @@ class UFList
             throw new InvalidArgumentException("UF incorreto!");
         }
         return $codelist[$uf];
+    }
+    
+    /**
+     * Returns UF list with UF as keys
+     * @return array
+     */
+    public static function getListByUF()
+    {
+        return array_flip(self::$uflist);
+    }
+    
+    /**
+     * Returns UF list with Code as keys
+     * @return array
+     */
+    public static function getListByCode()
+    {
+        return self::$uflist;
     }
 }
