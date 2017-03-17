@@ -29,6 +29,9 @@ class Validator
      */
     public static function isValid($xml, $xsd)
     {
+        if (!self::isXML($xml)) {
+            throw ValidatorException::isNotXml();
+        }
         libxml_use_internal_errors(true);
         libxml_clear_errors();
         $dom = new DOMDocument('1.0', 'utf-8');
@@ -41,5 +44,26 @@ class Validator
             throw ValidatorException::xmlErrors(libxml_get_errors());
         }
         return true;
+    }
+    
+    /**
+     * Check if string is a XML
+     * @param string $xml
+     * @return boolean
+     */
+    public static function isXML($xml)
+    {
+        if (trim($xml) == '') {
+            return false;
+        }
+        if (stripos($xml, '<!DOCTYPE html>') !== false) {
+            return false;
+        }
+        libxml_use_internal_errors(true);
+        $doc = new DOMDocument('1.0', 'UTF-8');
+        $doc->loadXML($xml);
+        $errors = libxml_get_errors();
+        libxml_clear_errors();
+        return empty($errors);
     }
 }

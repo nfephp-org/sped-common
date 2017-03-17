@@ -20,11 +20,43 @@ class ValidatorTest extends \PHPUnit\Framework\TestCase
     /**
      * @expectedException NFePHP\Common\Exception\ValidatorException
      */
-    public function testIsValidFalse()
+    public function testIsValidWithErrors()
     {
         $xml = file_get_contents(__DIR__ . self::TEST_XML_PATH . 'NFe/35101158716523000119550010000000011003000000-nfeSigned.xml');
         $xsd = __DIR__ . self::TEST_XSD_PATH . 'nfe_v3.10.xsd';
         $actual = Validator::isValid($xml, $xsd);
         $this->assertFalse($actual);
+    }
+    
+    /**
+     * @expectedException NFePHP\Common\Exception\ValidatorException
+     */
+    public function testIsValidWithNoXML()
+    {
+        $xml = 'alkjdkjhdshkjshsjhskjshksjh';
+        $xsd = __DIR__ . self::TEST_XSD_PATH . 'nfe_v3.10.xsd';
+        $actual = Validator::isValid($xml, $xsd);
+        $this->assertFalse($actual);
+    }
+    
+    public function testIsXML()
+    {
+        $resp = Validator::isXML('<!DOCTYPE html><html><body></body></html>');
+        $this->assertFalse($resp);
+        
+        $resp = Validator::isXML('<?xml version="1.0" standalone="yes"?><root></root>');
+        $this->assertTrue($resp);
+
+        $resp = Validator::isXML(null);
+        $this->assertFalse($resp);
+
+        $resp = Validator::isXML(1);
+        $this->assertFalse($resp);
+
+        $resp = Validator::isXML(false);
+        $this->assertFalse($resp);
+
+        $resp = Validator::isXML('asdasds');
+        $this->assertFalse($resp);
     }
 }
