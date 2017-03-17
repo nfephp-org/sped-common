@@ -1,1 +1,1 @@
-#NFePHP\Common\DOMImproved::class
+# NFePHP\Common\DOMImproved::class

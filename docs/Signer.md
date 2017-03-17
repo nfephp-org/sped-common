@@ -1,1 +1,1 @@
-#NFePHP\Common\Signer::class
+# NFePHP\Common\Signer::class

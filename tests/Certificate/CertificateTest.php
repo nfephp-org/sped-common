@@ -46,7 +46,6 @@ class CertificateTest extends \PHPUnit\Framework\TestCase
      */
     public function testShouldGetExceptionWhenLoadPfxCertificate()
     {
-        //$this->setExpectedException(CertificateException::class);
         Certificate::readPfx(file_get_contents(__DIR__ . self::TEST_PFX_FILE), 'error');
     }
     
