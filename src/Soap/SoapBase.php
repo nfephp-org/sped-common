@@ -19,7 +19,7 @@ use NFePHP\Common\Certificate;
 use NFePHP\Common\Soap\SoapInterface;
 use NFePHP\Common\Exception\SoapException;
 use NFePHP\Common\Exception\RuntimeException;
-use NFePHP\Common\Strings\Strings;
+use NFePHP\Common\Strings;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Local;
 use Psr\Log\LoggerInterface;

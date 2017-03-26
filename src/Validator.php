@@ -39,7 +39,6 @@ class Validator
         $dom->formatOutput = false;
         $dom->loadXML($xml, LIBXML_NOBLANKS | LIBXML_NOEMPTYTAG);
         libxml_clear_errors();
-        $errors = [];
         if (! $dom->schemaValidate($xsd)) {
             throw ValidatorException::xmlErrors(libxml_get_errors());
         }
@@ -60,10 +59,10 @@ class Validator
             return false;
         }
         libxml_use_internal_errors(true);
+        libxml_clear_errors();
         $doc = new DOMDocument('1.0', 'UTF-8');
         $doc->loadXML($xml);
         $errors = libxml_get_errors();
-        libxml_clear_errors();
         return empty($errors);
     }
 }
