@@ -63,6 +63,7 @@ class Validator
         $doc = new DOMDocument('1.0', 'UTF-8');
         $doc->loadXML($xml);
         $errors = libxml_get_errors();
+        libxml_clear_errors();
         return empty($errors);
     }
 }
