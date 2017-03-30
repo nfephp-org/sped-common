@@ -80,7 +80,8 @@ class Signer
                 $canonical
             );
         };
-        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" . $dom->saveXML($dom->documentElement, LIBXML_NOXMLDECL);
+        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+            . $dom->saveXML($dom->documentElement, LIBXML_NOXMLDECL);
     }
     
     /**
@@ -90,9 +91,12 @@ class Signer
      */
     public static function removeSignature(DOMDocument $dom)
     {
-        $nfe = $dom->documentElement;
-        $signature = $nfe->getElementsByTagName('Signature')->item(0);
-        $oldsignature = $nfe->removeChild($signature);
+        $node = $dom->documentElement;
+        $signature = $node->getElementsByTagName('Signature')->item(0);
+        if (!empty($signature)) {
+            $parent = $signature->parentNode;
+            $oldsignature = $parent->removeChild($signature);
+        }
         return $dom;
     }
     
