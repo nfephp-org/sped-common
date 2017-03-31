@@ -42,15 +42,35 @@ class SoapFake extends SoapBase implements SoapInterface
         $request = '',
         $soapheader = null
     ) {
-        return [
+        $response = '';
+        $envelope = $this->makeEnvelopeSoap(
+            $request,
+            $operation,
+            $namespaces,
+            $soapver,
+            $soapheader
+        );
+        $msgSize = strlen($envelope);
+        $parameters = [
+            "Content-Type: application/soap+xml;charset=utf-8;",
+            "Content-length: $msgSize"
+        ];
+        if (!empty($action)) {
+            $parameters[0] .= "action=$action";
+        }
+        $requestHead = implode("\n", $parameters);
+        $requestBody = $envelope;
+        
+        
+        return json_encode([
             'url' => $url,
             'operation' => $operation,
             'action' => $action,
             'soapver' => $soapver,
             'parameters' => $parameters,
+            'header' => $requestHead,
             'namespaces' => $namespaces,
-            'request' => $request,
-            'soapheader' => $soapheader
-        ];
+            'body' => $requestBody
+        ], JSON_PRETTY_PRINT);
     }
 }
