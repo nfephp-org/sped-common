@@ -59,7 +59,7 @@ class UFList
     {
         if (!key_exists($code, self::$uflist)) {
             throw new InvalidArgumentException(
-                "cUF incorreto! [$cUF] não existe."
+                "cUF incorreto! [$code] não existe."
             );
         }
         return self::$uflist[$code];
