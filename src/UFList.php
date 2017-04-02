@@ -58,7 +58,9 @@ class UFList
     public static function getUFByCode($code)
     {
         if (!key_exists($code, self::$uflist)) {
-            throw new InvalidArgumentException("cUF incorreto!");
+            throw new InvalidArgumentException(
+                "cUF incorreto! [$cUF] não existe."
+            );
         }
         return self::$uflist[$code];
     }
@@ -74,7 +76,9 @@ class UFList
         $uf = strtoupper($uf);
         $codelist = array_flip(self::$uflist);
         if (!key_exists($uf, $codelist)) {
-            throw new InvalidArgumentException("UF incorreto!");
+            throw new InvalidArgumentException(
+                "UF incorreto! [$uf] não existe."
+            );
         }
         return $codelist[$uf];
     }
