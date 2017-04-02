@@ -43,6 +43,7 @@ abstract class SoapBase implements SoapInterface
     protected $prifile;
     protected $pubfile;
     protected $certfile;
+    protected $disablesec = false;
     //log info
     public $responseHead;
     public $responseBody;
@@ -67,9 +68,22 @@ abstract class SoapBase implements SoapInterface
         $this->setTemporaryFolder(sys_get_temp_dir() . '/sped/');
     }
     
+    /**
+     * Destructor
+     * Clean temporary files
+     */
     public function __destruct()
     {
         $this->removeTemporarilyFiles($this->certsdir);
+    }
+    
+    /**
+     * Disables the security checking of host and peer certificates
+     * @param bool $flag
+     */
+    public function disableSecurity($flag = false)
+    {
+        $this->disablesec = $flag;
     }
     
     /**

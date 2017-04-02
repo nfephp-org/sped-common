@@ -90,13 +90,18 @@ class SoapNative extends SoapBase implements SoapInterface
     protected function prepare($url, $soapver = SOAP_1_2)
     {
         $wsdl = "$url?WSDL";
+        $verifypeer = true;
+        if ($this->disablesec) {
+            $verifypeer = false;
+            $verifyhost = false;
+        }
         $params = [
             'local_cert' => $this->tempdir . $this->certfile,
             'passphrase' => '',
             'connection_timeout' => $this->soaptimeout,
             'encoding' => 'UTF-8',
-            'verifypeer' => false,
-            'verifyhost' => false,
+            'verifypeer' => $verifypeer,
+            'verifyhost' => $verifyhost,
             'soap_version' => $soapver,
             'trace' => true,
             'cache_wsdl' => WSDL_CACHE_NONE
