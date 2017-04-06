@@ -174,9 +174,9 @@ class DOMImproved extends DOMDocument
      * @param string $msg
      * @return void
      */
-    public function appChild(DOMElement &$parent, DOMElement $child, $msg = '')
+    public function appChild(DOMElement &$parent, DOMElement $child = null, $msg = '')
     {
-        if (empty($parent) || empty($child)) {
+        if (empty($child)) {
             $this->erros[] = $msg;
             return;
         }
@@ -225,13 +225,13 @@ class DOMImproved extends DOMDocument
      * @param string $msg
      * @return void
      */
-    public function appChildBefore(DOMElement &$parent, DOMElement $child, $before, $msg = '')
+    public function appChildBefore(DOMElement &$parent, DOMElement $child = null, $before = '', $msg = '')
     {
-        if (empty($parent) ||
-            empty($child) ||
+        if (empty($child) ||
+            empty($before) ||
             empty($bnode = $parent->getElementsByTagName($before)->item(0))
         ) {
-            $this->error[] = "Node parent ou node child vazios ou node <$before> não encontrado!!";
+            $this->error[] = "Node child vazio ou node <$before> não encontrado!!";
             return;
         }
         $parent->insertBefore($child, $bnode);
