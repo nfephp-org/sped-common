@@ -69,7 +69,6 @@ class Signer
         if (empty($node) || empty($root)) {
             throw SignerException::tagNotFound($tagname . ' ' . $rootname);
         }
-       
         if (! self::existsSignature($dom)) {
             $dom = self::createSignature(
                 $certificate,
@@ -284,8 +283,6 @@ class Signer
     {
         $dados = $node->C14N(true, false, null, null);
         //calcular o hash dos dados
-        $hValue = hash('sha1', $dados, true);
-        $bH = base64_encode($hValue);
         $c14n = $node->C14N(
             $canonical[0],
             $canonical[1],
@@ -293,8 +290,6 @@ class Signer
             $canonical[3]
         );
         $hashValue = hash($algorithm, $c14n, true);
-        $bHv= base64_encode($hashValue);
-        
         return base64_encode($hashValue);
     }
 }
