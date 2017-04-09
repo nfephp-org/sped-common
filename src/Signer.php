@@ -53,7 +53,7 @@ class Signer
         $canonical = [false,false,null,null],
         $rootname = ''
     ) {
-        $content = Strings::clearXmlString($content, true);
+        //$content = Strings::clearXmlString($content, true);
         if (!empty($canonical)) {
             self::$canonical = $canonical;
         }
@@ -69,6 +69,7 @@ class Signer
         if (empty($node) || empty($root)) {
             throw SignerException::tagNotFound($tagname . ' ' . $rootname);
         }
+       
         if (! self::existsSignature($dom)) {
             $dom = self::createSignature(
                 $certificate,
@@ -148,7 +149,7 @@ class Signer
         $nsTransformMethod1 ='http://www.w3.org/2000/09/xmldsig#enveloped-signature';
         $nsTransformMethod2 = 'http://www.w3.org/TR/2001/REC-xml-c14n-20010315';
         $idSigned = trim($node->getAttribute($mark));
-        $digestValue = self::makeDigest($root, $digestAlgorithm, $canonical);
+        $digestValue = self::makeDigest($node, $digestAlgorithm, $canonical);
         $signatureNode = $dom->createElementNS($nsDSIG, 'Signature');
         $root->appendChild($signatureNode);
         $signedInfoNode = $dom->createElement('SignedInfo');
@@ -281,6 +282,10 @@ class Signer
      */
     private static function makeDigest(DOMElement $node, $algorithm, $canonical = [false,false,null,null])
     {
+        $dados = $node->C14N(true, false, null, null);
+        //calcular o hash dos dados
+        $hValue = hash('sha1', $dados, true);
+        $bH = base64_encode($hValue);
         $c14n = $node->C14N(
             $canonical[0],
             $canonical[1],
@@ -288,6 +293,8 @@ class Signer
             $canonical[3]
         );
         $hashValue = hash($algorithm, $c14n, true);
+        $bHv= base64_encode($hashValue);
+        
         return base64_encode($hashValue);
     }
 }

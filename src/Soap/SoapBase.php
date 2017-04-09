@@ -43,6 +43,7 @@ abstract class SoapBase implements SoapInterface
     protected $prifile;
     protected $pubfile;
     protected $certfile;
+    protected $casefaz; //certificates from webservices
     protected $disablesec = false;
     //log info
     public $responseHead;
@@ -84,6 +85,17 @@ abstract class SoapBase implements SoapInterface
     public function disableSecurity($flag = false)
     {
         $this->disablesec = $flag;
+    }
+
+    /**
+     * Load path to CA and enable to use on SOAP
+     * @param string $capath
+     */
+    public function loadCA($capath)
+    {
+        if (is_file($capath)) {
+            $this->casefaz = $capath;
+        }
     }
     
     /**
