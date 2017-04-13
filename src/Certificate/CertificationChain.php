@@ -40,12 +40,33 @@ class CertificationChain
     
     /**
      * Add new certificate to certification chain
-     * @param string $cert Certificate in CER or PEM format
+     * @param string $contente Certificate in DER, CER or PEM format
      * @return array
      */
-    public function add($certificate)
+    public function add($content)
     {
-        return $this->loadList($certificate);
+        //verify format of certificate content if binary convert to PEM
+        if ($this->isBinary($content)) {
+            $content = base64_encode($content);
+            $content = rtrim(chunk_split(preg_replace('/[\r\n]/', '', $content), 64, PHP_EOL));
+            $content = <<<CONTENT
+-----BEGIN CERTIFICATE-----
+{$content}
+-----END CERTIFICATE-----
+
+CONTENT;
+        }
+        return $this->loadList($content);
+    }
+    
+    /**
+     * Detects if string contains binary characters
+     * @param string $str
+     * @return bool
+     */
+    private function isBinary($str)
+    {
+        return preg_match('~[^\x20-\x7E\t\r\n]~', $str) > 0;
     }
     
     /**

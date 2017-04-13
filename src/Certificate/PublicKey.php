@@ -59,7 +59,12 @@ class PublicKey implements VerificationInterface
         $this->rawKey = $publicKey;
         $this->read();
     }
-
+    
+    /**
+     * Load class with certificate content
+     * @param string $content
+     * @return \static
+     */
     public static function createFromContent($content)
     {
         $content = rtrim(chunk_split(preg_replace('/[\r\n]/', '', $content), 64, PHP_EOL));
@@ -72,6 +77,7 @@ CONTENT;
 
         return new static($certificate);
     }
+    
     /**
      * Parse an X509 certificate and define the information in object
      * @link http://php.net/manual/en/function.openssl-x509-read.php
