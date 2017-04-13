@@ -29,4 +29,17 @@ class CertificationChainTest extends \PHPUnit\Framework\TestCase
         $list = $chain->listChain();
         $this->assertEquals(3, count($list));
     }
+    
+    public function testCanLoadCertificateDER()
+    {
+        $chain1 = file_get_contents(__DIR__ . '/../fixtures/certs/ACCertisignG7.cer');
+        $chain2 = file_get_contents(__DIR__ . '/../fixtures/certs/ACCertisignMultiplaG7.cer');
+        $chain3 = file_get_contents(__DIR__ . '/../fixtures/certs/ACRaizV5.cer');
+        $chain = new CertificationChain();
+        $chain->add($chain1);
+        $chain->add($chain2);
+        $chain->add($chain3);
+        $list = $chain->listChain();
+        $this->assertEquals(3, count($list));
+    }
 }
