@@ -18,7 +18,7 @@ class ValidatorTest extends \PHPUnit\Framework\TestCase
     }
     
     /**
-     * @expectedException NFePHP\Common\Exception\ValidatorException
+     * @expectedException RuntimeException
      */
     public function testIsValidWithErrors()
     {
@@ -29,7 +29,7 @@ class ValidatorTest extends \PHPUnit\Framework\TestCase
     }
     
     /**
-     * @expectedException NFePHP\Common\Exception\ValidatorException
+     * @expectedException RuntimeException
      */
     public function testIsValidWithNoXML()
     {

@@ -15,7 +15,7 @@ namespace NFePHP\Common;
  * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
  */
 
-use NFePHP\Common\Exception\ValidatorException;
+use RuntimeException;
 use DOMDocument;
 
 class Validator
@@ -25,12 +25,12 @@ class Validator
      * @param string $xml XML content
      * @param string $xsd real path to scheme file
      * @return boolean
-     * @throws NFePHP\Common\Exception\ValidatorException
+     * @throws RuntimeException
      */
     public static function isValid($xml, $xsd)
     {
         if (!self::isXML($xml)) {
-            throw ValidatorException::isNotXml();
+            throw new RuntimeException('This document is not a XML');
         }
         libxml_use_internal_errors(true);
         libxml_clear_errors();
@@ -40,7 +40,11 @@ class Validator
         $dom->loadXML($xml, LIBXML_NOBLANKS | LIBXML_NOEMPTYTAG);
         libxml_clear_errors();
         if (! $dom->schemaValidate($xsd)) {
-            throw ValidatorException::xmlErrors(libxml_get_errors());
+            $msg = '';
+            foreach (libxml_get_errors() as $error) {
+                $msg .= $error->message."\n";
+            }
+            throw new RuntimeException($msg);
         }
         return true;
     }
