@@ -470,9 +470,16 @@ class BaseTools
         $this->urlService = $aURL[$service]['URL'];
         //recuperação do método
         $this->urlMethod = $aURL[$service]['method'];
+
         //montagem do namespace do serviço
-        $this->urlOperation = $aURL[$service]['operation'];
-        $this->urlNamespace = sprintf("%s/wsdl/%s", $this->urlPortal, $this->urlOperation);
+        if ($tipo == "cte") {
+            $this->urlNamespace = sprintf("%s/wsdl/%s", $this->urlPortal, $service);
+
+        } else {
+            $this->urlOperation = $aURL[$service]['operation'];
+            $this->urlNamespace = sprintf("%s/wsdl/%s", $this->urlPortal, $this->urlOperation);
+        }
+
         //montagem do cabeçalho da comunicação SOAP
         $this->urlHeader = $this->zMountHeader($tipo, $this->urlNamespace, $this->urlcUF, $this->urlVersion);
         return true;
