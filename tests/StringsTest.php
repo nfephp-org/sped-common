@@ -36,4 +36,22 @@ class StringsTest extends \PHPUnit\Framework\TestCase
         $resp1 = Strings::clearProtocoledXML($xmlSujo);
         $this->assertEquals($xmlLimpo, $resp1);
     }
+    
+    public function testRandomString()
+    {
+        $str = Strings::randomString(10);
+        $len = strlen($str);
+        $this->assertEquals($len, 10);
+    }
+    
+    public function testDeleteAllBetween()
+    {
+        $str = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                . "<soap:Envelope><soap:Body></soap:Body></soap:Envelope>";
+        $beginning = '<?xml';
+        $end = '?>';
+        $actual = Strings::deleteAllBetween($str, $beginning, $end);
+        $expected = "<soap:Envelope><soap:Body></soap:Body></soap:Envelope>";
+        $this->assertEquals($expected, $actual);
+    }
 }
