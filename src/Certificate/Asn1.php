@@ -91,7 +91,7 @@ class Asn1
      * @param integer $len
      * @param integer $bytes
      * @param string $data
-     * @return void
+     * @return integer
      */
     protected static function getLength($data)
     {

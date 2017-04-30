@@ -15,7 +15,9 @@ class PublicKeyTest extends \PHPUnit\Framework\TestCase
     {
         $this->key = new PublicKey(file_get_contents(__DIR__ . self::TEST_PUBLIC_KEY));
     }
-
+    /**
+     * @covers PublicKey::read
+     */
     public function testShouldInstantiate()
     {
         $this->assertInstanceOf(VerificationInterface::class, $this->key);
@@ -45,5 +47,25 @@ class PublicKeyTest extends \PHPUnit\Framework\TestCase
         $expected = '99999090910270';
         $actual = $this->key->cnpj;
         $this->assertEquals($expected, $actual);
+    }
+    
+    public function testVerify()
+    {
+        $dom = new \DOMDocument();
+        $dom->load(__DIR__ . '/../fixtures/xml/NFe/nfeSignedFail.xml');        
+        $signature = $dom->getElementsByTagName('Signature')->item(0);
+        $sigMethAlgo = $signature->getElementsByTagName('SignatureMethod')->item(0)->getAttribute('Algorithm');
+        if ($sigMethAlgo == 'http://www.w3.org/2000/09/xmldsig#rsa-sha1') {
+            $algorithm = OPENSSL_ALGO_SHA1;
+        } else {
+            $algorithm = OPENSSL_ALGO_SHA256;
+        }
+        $certificateContent = $signature->getElementsByTagName('X509Certificate')->item(0)->nodeValue;
+        $publicKey = PublicKey::createFromContent($certificateContent);
+        $signContent = $signature->getElementsByTagName('SignedInfo')->item(0)->C14N(true, false, null, null);
+        $signatureValue = $signature->getElementsByTagName('SignatureValue')->item(0)->nodeValue;
+        $decodedSignature = base64_decode(str_replace(array("\r", "\n"), '', $signatureValue));
+        $actual = $publicKey->verify($signContent, $decodedSignature, $algorithm);
+        $this->assertFalse($actual);
     }
 }

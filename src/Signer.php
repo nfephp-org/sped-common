@@ -25,7 +25,7 @@ namespace NFePHP\Common;
 use NFePHP\Common\Certificate;
 use NFePHP\Common\Certificate\PublicKey;
 use NFePHP\Common\Strings;
-use NFePHP\Common\Exception\SignnerException;
+use RuntimeException;
 use DOMDocument;
 use DOMElement;
 
@@ -53,7 +53,6 @@ class Signer
         $canonical = [false,false,null,null],
         $rootname = ''
     ) {
-        //$content = Strings::clearXmlString($content, true);
         if (!empty($canonical)) {
             self::$canonical = $canonical;
         }
@@ -67,7 +66,9 @@ class Signer
         }
         $node = $dom->getElementsByTagName($tagname)->item(0);
         if (empty($node) || empty($root)) {
-            throw SignerException::tagNotFound($tagname . ' ' . $rootname);
+            throw new \RuntimeException(
+                'Tag not found ' . $tagname . ' ' . $rootname
+            );
         }
         if (! self::existsSignature($dom)) {
             $dom = self::createSignature(
@@ -108,11 +109,13 @@ class Signer
      */
     public static function isSigned(DOMDocument $dom, $tagname)
     {
-        if (self::existsSignature($dom)) {
-            self::digestCheck($dom, $tagname);
-            self::signatureCheck($dom);
+        if (self::existsSignature($dom)
+            && self::digestCheck($dom, $tagname)
+            && self::signatureCheck($dom)
+        ) {
+            return true;
         }
-        return true;
+        return false;
     }
     
     /**
@@ -247,7 +250,7 @@ class Signer
         $root = $dom->documentElement;
         $node = $dom->getElementsByTagName($tagname)->item(0);
         if (empty($node)) {
-            throw SignnerException::tagNotFound($tagname);
+            throw new \RuntimeException('Tag not found ' .$tagname);
         }
         $signature = $dom->getElementsByTagName('Signature')->item(0);
         if (! empty($signature)) {
@@ -255,19 +258,25 @@ class Signer
         } else {
             $signature = $dom->getElementsByTagName('Signature')->item(0);
         }
-        $sigMethAlgo = $signature->getElementsByTagName('SignatureMethod')->item(0)->getAttribute('Algorithm');
+        $sigMethAlgo = $signature->getElementsByTagName('SignatureMethod')
+            ->item(0)
+            ->getAttribute('Algorithm');
         $algorithm = 'sha256';
         if ($sigMethAlgo == 'http://www.w3.org/2000/09/xmldsig#rsa-sha1') {
             $algorithm = 'sha1';
         }
-        $sigURI = $signature->getElementsByTagName('Reference')->item(0)->getAttribute('URI');
+        $sigURI = $signature->getElementsByTagName('Reference')
+            ->item(0)
+            ->getAttribute('URI');
         if ($sigURI == '') {
             $node->removeChild($signature);
         }
         $calculatedDigest = self::makeDigest($node, $algorithm);
-        $informedDigest = $signature->getElementsByTagName('DigestValue')->item(0)->nodeValue;
+        $informedDigest = $signature->getElementsByTagName('DigestValue')
+            ->item(0)
+            ->nodeValue;
         if ($calculatedDigest != $informedDigest) {
-            throw SignerException::digestComparisonFailed();
+            throw \NFePHP\Common\Exception\SignerException::digestComparisonFailed();
         }
         return true;
     }
