@@ -29,21 +29,54 @@ abstract class SoapBase implements SoapInterface
     //soap parameters
     protected $connection;
     protected $soapprotocol = self::SSL_DEFAULT;
+    /**
+     * @var int
+     */
     protected $soaptimeout = 20;
+    /**
+     * @var string
+     */
     protected $proxyIP;
+    /**
+     * @var string
+     */
     protected $proxyPort;
+    /**
+     * @var string
+     */
     protected $proxyUser;
+    /**
+     * @var string
+     */
     protected $proxyPass;
+    /**
+     * @var array
+     */
     protected $prefixes = [1 => 'soapenv', 2 => 'soap'];
     //certificate parameters
+    /**
+     * @var Certificate
+     */
     protected $certificate;
+    /**
+     * @var string
+     */
     protected $tempdir;
+    /**
+     * @var string
+     */
     protected $certsdir;
+    /**
+     * @var string
+     */
     protected $debugdir;
     protected $prifile;
     protected $pubfile;
     protected $certfile;
     protected $casefaz; //certificates from webservices
+    /**
+     * @var bool
+     */
     protected $disablesec = false;
     //log info
     public $responseHead;
@@ -51,7 +84,13 @@ abstract class SoapBase implements SoapInterface
     public $requestHead;
     public $requestBody;
     public $soaperror;
+    /**
+     * @var array
+     */
     public $soapinfo = [];
+    /**
+     * @var bool
+     */
     public $debugmode = false;
     //flysystem
     protected $adapter;
@@ -85,6 +124,7 @@ abstract class SoapBase implements SoapInterface
     public function disableSecurity($flag = false)
     {
         $this->disablesec = $flag;
+        return $this->disablesec;
     }
 
     /**
@@ -142,7 +182,7 @@ abstract class SoapBase implements SoapInterface
      */
     public function loadLogger(LoggerInterface $logger)
     {
-        $this->logger = $logger;
+        return $this->logger = $logger;
     }
     
     /**
@@ -151,16 +191,17 @@ abstract class SoapBase implements SoapInterface
      */
     public function timeout($timesecs)
     {
-        $this->soaptimeout = $timesecs;
+        return $this->soaptimeout = $timesecs;
     }
     
     /**
      * Set security protocol
      * @param int $protocol
+     * @return type Description
      */
     public function protocol($protocol = self::SSL_DEFAULT)
     {
-        $this->soapprotocol = $protocol;
+        return $this->soapprotocol = $protocol;
     }
     
     /**

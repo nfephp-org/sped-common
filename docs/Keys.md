@@ -6,6 +6,7 @@ Classe auxiliar para a geração e verficação das chaves de 44 digitos
 
 ## Métodos Estáticos
 
+
 ### (string) Keys::build(
                 (string) $cUF,
                 (string) $ano,
@@ -17,6 +18,8 @@ Classe auxiliar para a geração e verficação das chaves de 44 digitos
                 (string) $tpEmis,
                 (string) $codigo
              )
+
+Este método é o construtor das chaves de 44 digitos.
 
 ```php
 
