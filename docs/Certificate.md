@@ -2,15 +2,19 @@
 
 Esta classe é responsável por tratar a utilizar os certificados digitais modelo A1 (PKCS#12).
 
+Com o uso dessas classes não mais é necessário que existam certificados em arquivo, ou seja você pode optar por manter os certificados em base de dados, arquivo, arquivo remoto, repositório ou qualquer outra forma que deseje.
+
+Para usar um certificado PFX basta obter seu conteudo e passar para a classe com sua respectiva senha.
+
 # DEPENDÊNCIAS
 
 [NFePHP\Common\Certificate\PrivateKey](Certificate\PrivateKey.md)
+
 [NFePHP\Common\Certificate\PublicKey](Certificate\PublicKey.md)
+
 [NFePHP\Common\Certificate\CertificationChain](Certificate\CertificationChain.md)
+
 [NFePHP\Common\Certificate\Asn1](Certificate\Asn1.md)
-[NFePHP\Common\Certificate\SignatureInterface](Certificate\SignatureInterface.md)
-[NFePHP\Common\Certificate\VerificationInterface](Certificate\VerificationInterface.md)
-[NFePHP\Common\Exception\CertificateException](Exception\CertificateException.md)
 
 # PROPRIEDADES
 

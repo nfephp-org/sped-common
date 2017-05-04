@@ -1,1 +1,0 @@
-# NFePHP\Common\Certificate\SignatureInterface
