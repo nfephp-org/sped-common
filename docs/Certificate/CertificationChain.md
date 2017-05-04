@@ -61,25 +61,48 @@ $chain->add($chain3);
 
 # Métodos 
 
-## function __construct($chainstring)
+## function __construct($chainstring):this
 
 Método construtor, pode receber ou não uma string com os certificados da cadeia em formato PEM
 
 ## function __toString()
 
-## function add($content)
+## function add($content):array
 
 Método de adição de certificados, deve receber os certificados (DER, PEM, CER, ou CRT) em uam string. Não pode ser passado um path! 
 
-## function removeExpiredCertificates()
+## function removeExpiredCertificates():void
 
 Método para verificar a validade dos certificados e remover aqueles que já venceram.
 
-## function listChain()
+```php
+
+$chain->removeExpiredCertificates();
+
+```
+
+## function listChain():array
 
 Método retorna um array PublicKey::class em cada elemento, contendo um certificado da cadeia.
 
-## function getExtraCertsForPFX()
+```php
+$list = $chain->listChain();
+
+//$list irá conter 
+// $list = [Public:class, Public:class, ..., Public:class]
+
+```
+
+## function getExtraCertsForPFX():string
 
 Método que retorna os certificados da cadeia em um array que pode ser usado para adicioná-los em um arquivo PFX juntamente com a chave publica e privada.
 Ou seja pode ser usado para recriar o PFX com o conteúdo completo.
+
+```php
+
+$strchain = $chain->getExtraCertsForPFX();
+
+//a variável $strchain conterá uma string com os certificados
+//esta função é usada pela classe Certificate::class no método writePfx()
+
+```
