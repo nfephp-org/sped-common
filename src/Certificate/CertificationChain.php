@@ -72,7 +72,7 @@ CONTENT;
     /**
      * Remove certificate from certification chain by there common name
      */
-    public function removeExiredCertificates()
+    public function removeExpiredCertificates()
     {
         foreach ($this->chainKeys as $key => $publickey) {
             if ($publickey->isExpired()) {
