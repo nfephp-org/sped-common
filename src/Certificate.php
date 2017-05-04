@@ -160,6 +160,10 @@ class Certificate implements SignatureInterface, VerificationInterface
         return $this->publicKey->verify($data, $signature, $algorithm);
     }
     
+    /**
+     * Returns public key and chain in PEM format
+     * @return string
+     */
     public function __toString()
     {
         $chainKeys = '';
