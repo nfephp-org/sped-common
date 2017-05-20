@@ -99,6 +99,18 @@ abstract class SoapBase implements SoapInterface
      */
     protected $disableCertValidation = false;
     /**
+     * @var League\Flysystem\Adapter\Local
+     */
+    protected $adapter;
+    /**
+     * @var League\Flysystem\Filesystem
+     */
+    protected $filesystem;
+    /**
+     * @var string
+     */
+    protected $temppass = '';
+    /**
      * @var string
      */
     public $responseHead;
@@ -126,14 +138,6 @@ abstract class SoapBase implements SoapInterface
      * @var bool
      */
     public $debugmode = false;
-    /**
-     * @var League\Flysystem\Adapter\Local
-     */
-    protected $adapter;
-    /**
-     * @var League\Flysystem\Filesystem
-     */
-    protected $filesystem;
 
     /**
      * Constructor
@@ -234,10 +238,11 @@ abstract class SoapBase implements SoapInterface
     /**
      * Set debug mode, this mode will save soap envelopes in temporary directory
      * @param bool $value
+     * @return bool
      */
     public function setDebugMode($value = false)
     {
-        $this->debugmode = $value;
+        return $this->debugmode = $value;
     }
     
     /**
@@ -280,10 +285,11 @@ abstract class SoapBase implements SoapInterface
     /**
      * Set prefixes
      * @param string $prefixes
+     * @return string
      */
     public function setSoapPrefix($prefixes)
     {
-        $this->prefixes = $prefixes;
+        return $this->prefixes = $prefixes;
     }
     
     /**
@@ -368,9 +374,18 @@ abstract class SoapBase implements SoapInterface
         $this->pubfile = $this->certsdir . Strings::randomString(10).'.pem';
         $this->certfile = $this->certsdir . Strings::randomString(10).'.pem';
         $ret = true;
+        //cria uma senha temporária ALEATÓRIA para salvar a chave primaria
+        //portanto mesmo que localizada e identificada não estará acessível
+        //pois sua senha não existe além do tempo de execução desta classe
+        $this->temppass = Strings::randomString(16);
+        openssl_pkey_export(
+            $this->certificate->privateKey,
+            $private,
+            $this->temppass
+        );
         $ret &= $this->filesystem->put(
             $this->prifile,
-            $this->certificate->privateKey
+            $private
         );
         $ret &= $this->filesystem->put(
             $this->pubfile,
@@ -390,12 +405,30 @@ abstract class SoapBase implements SoapInterface
     /**
      * Delete all files in folder
      */
-    public function removeTemporarilyFiles($folder)
+    public function removeTemporarilyFiles()
     {
-        $contents = $this->filesystem->listContents($folder, true);
+        $contents = $this->filesystem->listContents($this->certsdir, true);
+        //define um limite de 5 min, ou seja qualquer arquivo criado a mais
+        //de 5 min será removido
+        //NOTA: qunando ocorre algum erro interno na execução do script, alguns
+        //arquivos temporários podem permanecer
+        $dt = new \DateTime();
+        $tint = new \DateInterval("PT5M");
+        $tint->invert = true;
+        $tsLimit = $dt->add($tint)->getTimestamp();
         foreach ($contents as $item) {
             if ($item['type'] == 'file') {
-                $this->filesystem->delete($item['path']);
+                if ($item['path'] == $this->prifile
+                    || $item['path'] == $this->pubfile
+                    || $item['path'] == $this->certfile
+                ) {
+                    $this->filesystem->delete($item['path']);
+                    continue;
+                }
+                $timestamp = $this->filesystem->getTimestamp($item['path']);
+                if ($timestamp < $tsLimit) {
+                    $this->filesystem->delete($item['path']);
+                }
             }
         }
     }
