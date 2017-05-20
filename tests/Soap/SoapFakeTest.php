@@ -3,9 +3,12 @@
 namespace NFePHP\Common\Tests\Soap;
 
 use NFePHP\Common\Soap\SoapFake;
+use NFePHP\Common\Certificate;
 
 class SoapFakeTest extends \PHPUnit\Framework\TestCase
 {
+    const TEST_PFX_FILE = '/../fixtures/certs/certificado_teste.pfx';
+    
     /**
      * @covers SoapBase::__construct
      */
@@ -74,5 +77,22 @@ class SoapFakeTest extends \PHPUnit\Framework\TestCase
     public function testSend()
     {
         $this->assertTrue(true);
+    }
+    
+    public function testDisableCertValidation()
+    {
+        $certificate = Certificate::readPfx(file_get_contents(__DIR__ . self::TEST_PFX_FILE), 'associacao');
+        $soap = new SoapFake();
+        $soap->disableCertValidation(true);
+        $soap->loadCertificate($certificate);
+    }
+    
+    /**
+     * @expectedException NFePHP\Common\Exception\RuntimeException
+     */
+    public function testDisableCertValidationFail()
+    {
+        $certificate = Certificate::readPfx(file_get_contents(__DIR__ . self::TEST_PFX_FILE), 'associacao');
+        $soap = new SoapFake($certificate);
     }
 }

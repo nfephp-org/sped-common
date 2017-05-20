@@ -78,6 +78,7 @@ abstract class SoapBase implements SoapInterface
      * @var bool
      */
     protected $disablesec = false;
+    protected $disableCertValidation = false;
     //log info
     public $responseHead;
     public $responseBody;
@@ -101,11 +102,34 @@ abstract class SoapBase implements SoapInterface
      * @param Certificate $certificate
      * @param LoggerInterface $logger
      */
-    public function __construct(Certificate $certificate = null, LoggerInterface $logger = null)
-    {
+    public function __construct(
+        Certificate $certificate = null,
+        LoggerInterface $logger = null
+    ) {
         $this->logger = $logger;
-        $this->certificate = $certificate;
+        $this->certificate = $this->checkCertValidity($certificate);
         $this->setTemporaryFolder(sys_get_temp_dir() . '/sped/');
+    }
+    
+    /**
+     * Check if certificate is valid
+     * @param Certificate $certificate
+     * @return Certificate
+     * @throws RuntimeException
+     */
+    private function checkCertValidity(Certificate $certificate = null)
+    {
+        if ($this->disableCertValidation) {
+            return $certificate;
+        }
+        if (!empty($certificate)) {
+            if ($certificate->isExpired()) {
+                throw new RuntimeException(
+                    'The validity of the certificate has expired.'
+                );
+            }
+        }
+        return $certificate;
     }
     
     /**
@@ -125,6 +149,17 @@ abstract class SoapBase implements SoapInterface
     {
         $this->disablesec = $flag;
         return $this->disablesec;
+    }
+    
+    /**
+     * ONlY for tests
+     * @param bool $flag
+     * @return bool
+     */
+    public function disableCertValidation($flag = true)
+    {
+        $this->disableCertValidation = $flag;
+        return $this->disableCertValidation;
     }
 
     /**
@@ -173,7 +208,7 @@ abstract class SoapBase implements SoapInterface
      */
     public function loadCertificate(Certificate $certificate)
     {
-        $this->certificate = $certificate;
+        $this->certificate = $this->checkCertValidity($certificate);
     }
     
     /**
