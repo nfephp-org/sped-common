@@ -26,8 +26,9 @@ use Psr\Log\LoggerInterface;
 
 abstract class SoapBase implements SoapInterface
 {
-    //soap parameters
-    protected $connection;
+    /**
+     * @var int
+     */
     protected $soapprotocol = self::SSL_DEFAULT;
     /**
      * @var int
@@ -53,11 +54,14 @@ abstract class SoapBase implements SoapInterface
      * @var array
      */
     protected $prefixes = [1 => 'soapenv', 2 => 'soap'];
-    //certificate parameters
     /**
      * @var Certificate
      */
     protected $certificate;
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
     /**
      * @var string
      */
@@ -70,20 +74,49 @@ abstract class SoapBase implements SoapInterface
      * @var string
      */
     protected $debugdir;
+    /**
+     * @var string
+     */
     protected $prifile;
+    /**
+     * @var string
+     */
     protected $pubfile;
+    /**
+     * @var string
+     */
     protected $certfile;
-    protected $casefaz; //certificates from webservices
+    /**
+     * @var string
+     */
+    protected $casefaz;
     /**
      * @var bool
      */
     protected $disablesec = false;
+    /**
+     * @var bool
+     */
     protected $disableCertValidation = false;
-    //log info
+    /**
+     * @var string
+     */
     public $responseHead;
+    /**
+     * @var string
+     */
     public $responseBody;
+    /**
+     * @var string
+     */
     public $requestHead;
+    /**
+     * @var string
+     */
     public $requestBody;
+    /**
+     * @var string
+     */
     public $soaperror;
     /**
      * @var array
@@ -93,8 +126,13 @@ abstract class SoapBase implements SoapInterface
      * @var bool
      */
     public $debugmode = false;
-    //flysystem
+    /**
+     * @var League\Flysystem\Adapter\Local
+     */
     protected $adapter;
+    /**
+     * @var League\Flysystem\Filesystem
+     */
     protected $filesystem;
 
     /**
