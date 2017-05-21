@@ -13,10 +13,10 @@ namespace NFePHP\Common\Exception;
 
 class SoapException extends \RuntimeException implements ExceptionInterface
 {
-    public static function unableToLoadCurl()
+    public static function unableToLoadCurl($message)
     {
         return new static('Unable to load cURL, '
-            . 'verify if libcurl is installed.');
+            . 'verify if libcurl is installed. ' . $message);
     }
 
     public static function soapFault($message)

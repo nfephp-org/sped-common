@@ -60,7 +60,7 @@ class TimeZoneByUF
             $uf = UFList::getUFByCode($uf);
         }
         //only for validation, if $uf dont exists throws exception
-        $code = UFList::getCodeByUF($uf);
+        UFList::getCodeByUF($uf);
         return self::$tzd[$uf];
     }
 }

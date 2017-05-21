@@ -73,7 +73,6 @@ class Asn1
             //rebuild the sequency
             $data = $xcv . $oidMarker . $partes[1];
             //converts do decimal the second digit of sequency
-            $len = (integer) ord($data[1]);
             $bytes = strlen($oidMarker);
             //get length of OID data
             $len = self::getLength((string) $data);
@@ -96,7 +95,6 @@ class Asn1
     protected static function getLength($data)
     {
         $len = ord($data[1]);
-        $bytes = 0;
         //check if len <= 127 bytes,
         //if so, then $lenis length of content
         if ($len > 127) {

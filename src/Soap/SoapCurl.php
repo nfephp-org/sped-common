@@ -115,7 +115,7 @@ class SoapCurl extends SoapBase implements SoapInterface
                 $this->requestHead . "\n" . $this->requestBody,
                 $this->responseHead . "\n" . $this->responseBody
             );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw SoapException::unableToLoadCurl($e->getMessage());
         }
         if ($this->soaperror != '') {
