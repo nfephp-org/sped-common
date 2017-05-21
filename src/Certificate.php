@@ -94,7 +94,7 @@ class Certificate implements SignatureInterface, VerificationInterface
             $pfxstring,
             $privateKey_resource,
             $password,
-            $chainKeys->getExtraCertsForPFX()
+            $this->chainKeys->getExtraCertsForPFX()
         );
         return $pfxstring;
     }

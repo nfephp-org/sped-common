@@ -87,8 +87,6 @@ class Asn1
     
     /**
      * Get length of data field of a sequency from certifcate
-     * @param integer $len
-     * @param integer $bytes
      * @param string $data
      * @return integer
      */
@@ -118,7 +116,8 @@ class Asn1
         $abBinary = array();
         $partes = explode('.', $oid);
         $bun = 0;
-        for ($num = 0; $num < count($partes); $num++) {
+        $npart = count($partes);
+        for ($num = 0; $num < $npart; $num++) {
             if ($num == 0) {
                 $bun = 40 * $partes[$num];
             } elseif ($num == 1) {
@@ -146,7 +145,7 @@ class Asn1
     {
         $abc = $abIn;
         if ($qIn > 127) {
-            $abc = $this->xBase128($abc, floor($qIn/128), false);
+            $abc = self::xBase128($abc, floor($qIn/128), false);
         }
         $qIn2 = $qIn % 128;
         if ($flag) {
