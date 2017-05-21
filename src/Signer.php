@@ -36,6 +36,7 @@ class Signer
     
     /**
      * Make Signature tag
+     * @param Certificate $certificate
      * @param string $content
      * @param string $tagname
      * @param string $marker for URI
@@ -102,7 +103,7 @@ class Signer
     
     /**
      * Verify if xml signature is valid
-     * @param string $content xml content
+     * @param DOMDocument $dom
      * @param string $tagname tag for sign
      * @return boolean
      */
@@ -126,7 +127,7 @@ class Signer
      * @param string $mark Marker signed attribute
      * @param int $algorithm cryptographic algorithm
      * @param array $canonical parameters to format node for signature
-     * @return \DOMDocument
+     * @return DOMDocument
      */
     private static function createSignature(
         Certificate $certificate,
@@ -202,7 +203,7 @@ class Signer
 
     /**
      * Check if Signature tag already exists
-     * @param \DOMDocument $dom
+     * @param DOMDocument $dom
      * @return boolean
      */
     private static function existsSignature(DOMDocument $dom)
@@ -216,7 +217,7 @@ class Signer
     
     /**
      * Verify signature value
-     * @param \DOMDocument $dom
+     * @param DOMDocument $dom
      * @return boolean
      */
     private static function signatureCheck(DOMDocument $dom)
@@ -239,8 +240,8 @@ class Signer
     /**
      * digestCheck
      * Verify digest value
-     * @param string $content
-     * @param string $tagid
+     * @param DOMDocument $dom
+     * @param string $tagname
      * @return boolean
      * @throws SignerException
      */
@@ -280,12 +281,12 @@ class Signer
     
     /**
      * Calculate digest value for given node
-     * @param \DOMElement $node
+     * @param DOMNode $node
      * @param string $algorithm
      * @param array $canonical
      * @return string
      */
-    private static function makeDigest(DOMElement $node, $algorithm, $canonical = [false,false,null,null])
+    private static function makeDigest(DOMNode $node, $algorithm, $canonical = [false,false,null,null])
     {
         //calcular o hash dos dados
         $c14n = $node->C14N(
