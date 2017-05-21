@@ -6,14 +6,14 @@ use SoapClient;
 
 class SoapClientExtended extends SoapClient
 {
-   /**
+    /**
      * __construct
      * @param mixed $wsdl NULL for non-wsdl mode or URL string for wsdl mode
      * @param array $options
      */
     public function __construct($wsdl, $options)
     {
-        parent::SoapClient($wsdl, $options);
+        parent::__construct($wsdl, $options);
     }
     
     /**

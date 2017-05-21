@@ -69,7 +69,7 @@ class SoapNative extends SoapBase implements SoapInterface
             if (!empty($soapheader)) {
                 $this->connection->__setSoapHeaders(array($soapheader));
             }
-            $response = $this->connection->$operation($parameters);
+            $this->connection->$operation($parameters);
             $this->requestHead = $this->connection->__getLastRequestHeaders();
             $this->requestBody = $this->connection->__getLastRequest();
             $this->responseHead = $this->connection->__getLastResponseHeaders();
@@ -97,6 +97,7 @@ class SoapNative extends SoapBase implements SoapInterface
     {
         $wsdl = "$url?WSDL";
         $verifypeer = true;
+        $verifyhost = true;
         if ($this->disablesec) {
             $verifypeer = false;
             $verifyhost = false;
@@ -112,7 +113,7 @@ class SoapNative extends SoapBase implements SoapInterface
             'trace' => true,
             'cache_wsdl' => WSDL_CACHE_NONE
         ];
-        $this->setNativeProxy($params);
+        $params = $this->setNativeProxy($params);
         try {
             $this->connection = new SoapClientExtended($wsdl, $params);
         } catch (SoapFault $e) {
@@ -125,8 +126,9 @@ class SoapNative extends SoapBase implements SoapInterface
     /**
      * Set parameters for proxy
      * @param array $params
+     * @return array
      */
-    private function setNativeProxy(&$params)
+    private function setNativeProxy($params)
     {
         if ($this->proxyIP != '') {
             $pproxy1 = [
@@ -142,5 +144,6 @@ class SoapNative extends SoapBase implements SoapInterface
             ];
             array_push($params, $pproxy2);
         }
+        return $params;
     }
 }

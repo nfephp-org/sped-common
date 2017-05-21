@@ -40,7 +40,7 @@ class CertificationChain
     
     /**
      * Add new certificate to certification chain
-     * @param string $contente Certificate in DER, CER or PEM format
+     * @param string $content Certificate in DER, CER or PEM format
      * @return array
      */
     public function add($content)

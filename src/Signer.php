@@ -26,8 +26,8 @@ use NFePHP\Common\Certificate;
 use NFePHP\Common\Certificate\PublicKey;
 use NFePHP\Common\Exception\SignerException;
 use NFePHP\Common\Strings;
-use RuntimeException;
 use DOMDocument;
+use DOMNode;
 use DOMElement;
 
 class Signer
@@ -43,7 +43,7 @@ class Signer
      * @param array $canonical parameters to format node for signature
      * @param string $rootname name of tag to insert signature block
      * @return string
-     * @throws \NFePHP\Common\Exception\SignnerException
+     * @throws SignnerException
      */
     public static function sign(
         Certificate $certificate,
@@ -67,9 +67,7 @@ class Signer
         }
         $node = $dom->getElementsByTagName($tagname)->item(0);
         if (empty($node) || empty($root)) {
-            throw new \RuntimeException(
-                'Tag not found ' . $tagname . ' ' . $rootname
-            );
+            throw SignerException::tagNotFound($tagname);
         }
         if (! self::existsSignature($dom)) {
             $dom = self::createSignature(
@@ -122,9 +120,9 @@ class Signer
     /**
      * Method that provides the signature of xml as standard SEFAZ
      * @param Certificate $certificate
-     * @param \DOMDocument $dom
-     * @param \DOMElement $root xml root
-     * @param \DOMElement $node node to be signed
+     * @param DOMDocument $dom
+     * @param DOMNode $root xml root
+     * @param DOMNode $node node to be signed
      * @param string $mark Marker signed attribute
      * @param int $algorithm cryptographic algorithm
      * @param array $canonical parameters to format node for signature
@@ -133,8 +131,8 @@ class Signer
     private static function createSignature(
         Certificate $certificate,
         DOMDocument $dom,
-        DOMElement $root,
-        DOMElement $node,
+        DOMNode $root,
+        DOMNode $node,
         $mark,
         $algorithm = OPENSSL_ALGO_SHA1,
         $canonical = [false,false,null,null]
