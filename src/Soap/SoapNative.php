@@ -19,11 +19,18 @@ use NFePHP\Common\Soap\SoapClientExtended;
 use NFePHP\Common\Soap\SoapBase;
 use NFePHP\Common\Soap\SoapInterface;
 use NFePHP\Common\Exception\SoapException;
+use SoapHeader;
+use SoapFault;
 use NFePHP\Common\Certificate;
 use Psr\Log\LoggerInterface;
 
 class SoapNative extends SoapBase implements SoapInterface
 {
+    /**
+     * @var SoapClientExtended
+     */
+    protected $connection;
+
     /**
      * Constructor
      * @param Certificate $certificate
@@ -43,9 +50,9 @@ class SoapNative extends SoapBase implements SoapInterface
      * @param array $parameters
      * @param array $namespaces
      * @param string $request
-     * @param \SOAPHeader $soapheader
+     * @param SOAPHeader $soapheader
      * @return string
-     * @throws \NFePHP\Common\Exception\SoapException
+     * @throws SoapException
      */
     public function send(
         $url,
@@ -84,8 +91,7 @@ class SoapNative extends SoapBase implements SoapInterface
      * Prepare connection
      * @param string $url
      * @param int $soapver
-     * @throws RuntimeException
-     * @throws \NFePHP\Common\Exception\SoapException
+     * @throws SoapException
      */
     protected function prepare($url, $soapver = SOAP_1_2)
     {
@@ -97,7 +103,7 @@ class SoapNative extends SoapBase implements SoapInterface
         }
         $params = [
             'local_cert' => $this->tempdir . $this->certfile,
-            'passphrase' => '',
+            'passphrase' => $this->temppass,
             'connection_timeout' => $this->soaptimeout,
             'encoding' => 'UTF-8',
             'verifypeer' => $verifypeer,
@@ -111,7 +117,7 @@ class SoapNative extends SoapBase implements SoapInterface
             $this->connection = new SoapClientExtended($wsdl, $params);
         } catch (SoapFault $e) {
             throw SoapException::soapFault($e->getMessage());
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw SoapException::soapFault($e->getMessage());
         }
     }

@@ -231,7 +231,7 @@ class DOMImproved extends DOMDocument
             empty($before) ||
             empty($bnode = $parent->getElementsByTagName($before)->item(0))
         ) {
-            $this->error[] = "Node child vazio ou node <$before> não encontrado!!";
+            $this->error[] = "$msg Node child vazio ou node <$before> não encontrado!!";
             return;
         }
         $parent->insertBefore($child, $bnode);

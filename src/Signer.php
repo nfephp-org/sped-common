@@ -24,6 +24,7 @@ namespace NFePHP\Common;
 
 use NFePHP\Common\Certificate;
 use NFePHP\Common\Certificate\PublicKey;
+use NFePHP\Common\Exception\SignerException;
 use NFePHP\Common\Strings;
 use RuntimeException;
 use DOMDocument;
@@ -96,7 +97,7 @@ class Signer
         $signature = $node->getElementsByTagName('Signature')->item(0);
         if (!empty($signature)) {
             $parent = $signature->parentNode;
-            $oldsignature = $parent->removeChild($signature);
+            $parent->removeChild($signature);
         }
         return $dom;
     }
@@ -243,20 +244,18 @@ class Signer
      * @param string $content
      * @param string $tagid
      * @return boolean
-     * @throws \NFePHP\Common\Exception\SignerException
+     * @throws SignerException
      */
     private static function digestCheck(DOMDocument $dom, $tagname = '')
     {
-        $root = $dom->documentElement;
         $node = $dom->getElementsByTagName($tagname)->item(0);
         if (empty($node)) {
             throw new \RuntimeException('Tag not found ' .$tagname);
         }
         $signature = $dom->getElementsByTagName('Signature')->item(0);
-        if (! empty($signature)) {
-            $clone = $signature->cloneNode(true);
-        } else {
-            $signature = $dom->getElementsByTagName('Signature')->item(0);
+        if (empty($signature)) {
+            //not sign document
+            return false;
         }
         $sigMethAlgo = $signature->getElementsByTagName('SignatureMethod')
             ->item(0)
@@ -276,7 +275,7 @@ class Signer
             ->item(0)
             ->nodeValue;
         if ($calculatedDigest != $informedDigest) {
-            throw \NFePHP\Common\Exception\SignerException::digestComparisonFailed();
+            throw SignerException::digestComparisonFailed();
         }
         return true;
     }
@@ -290,7 +289,6 @@ class Signer
      */
     private static function makeDigest(DOMElement $node, $algorithm, $canonical = [false,false,null,null])
     {
-        $dados = $node->C14N(true, false, null, null);
         //calcular o hash dos dados
         $c14n = $node->C14N(
             $canonical[0],
