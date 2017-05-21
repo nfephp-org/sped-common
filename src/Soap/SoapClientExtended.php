@@ -13,7 +13,7 @@ class SoapClientExtended extends SoapClient
      */
     public function __construct($wsdl, $options)
     {
-        parent::__construct($wsdl, $options);
+        parent::SoapClient($wsdl, $options);
     }
     
     /**
