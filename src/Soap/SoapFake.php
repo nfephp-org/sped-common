@@ -44,7 +44,6 @@ class SoapFake extends SoapBase implements SoapInterface
     ) {
         $envelope = $this->makeEnvelopeSoap(
             $request,
-            $operation,
             $namespaces,
             $soapver,
             $soapheader

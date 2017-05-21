@@ -59,7 +59,6 @@ class SoapCurl extends SoapBase implements SoapInterface
         $response = '';
         $envelope = $this->makeEnvelopeSoap(
             $request,
-            $operation,
             $namespaces,
             $soapver,
             $soapheader
@@ -104,7 +103,10 @@ class SoapCurl extends SoapBase implements SoapInterface
             }
             $response = curl_exec($oCurl);
             $this->soaperror = curl_error($oCurl);
-            $this->soapinfo = curl_getinfo($oCurl);
+            $ainfo = curl_getinfo($oCurl);
+            if (is_array($ainfo)) {
+                $this->soapinfo = $ainfo;
+            }
             $headsize = curl_getinfo($oCurl, CURLINFO_HEADER_SIZE);
             $httpcode = curl_getinfo($oCurl, CURLINFO_HTTP_CODE);
             curl_close($oCurl);
