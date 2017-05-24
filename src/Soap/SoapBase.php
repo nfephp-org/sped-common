@@ -99,11 +99,11 @@ abstract class SoapBase implements SoapInterface
      */
     protected $disableCertValidation = false;
     /**
-     * @var League\Flysystem\Adapter\Local
+     * @var \League\Flysystem\Adapter\Local
      */
     protected $adapter;
     /**
-     * @var League\Flysystem\Filesystem
+     * @var \League\Flysystem\Filesystem
      */
     protected $filesystem;
     /**
@@ -328,14 +328,12 @@ abstract class SoapBase implements SoapInterface
     /**
      * Mount soap envelope
      * @param string $request
-     * @param string $operation
      * @param array $namespaces
      * @param \SOAPHeader $header
      * @return string
      */
     protected function makeEnvelopeSoap(
         $request,
-        $operation,
         $namespaces,
         $soapver = SOAP_1_2,
         $header = null

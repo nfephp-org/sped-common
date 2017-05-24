@@ -33,6 +33,16 @@ class Strings
     }
     
     /**
+     * Remove all non numeric characters from string
+     * @param string $string
+     * @return string
+     */
+    public static function onlyNumbers($string)
+    {
+        return preg_replace("/[^0-9]/", "", $string);
+    }
+    
+    /**
      * Remove unwanted attributes, prefixes, sulfixes and other control
      * characters like \r \n \s \t
      * @param string $string

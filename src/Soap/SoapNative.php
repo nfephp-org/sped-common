@@ -19,6 +19,7 @@ use NFePHP\Common\Soap\SoapClientExtended;
 use NFePHP\Common\Soap\SoapBase;
 use NFePHP\Common\Soap\SoapInterface;
 use NFePHP\Common\Exception\SoapException;
+use Exception;
 use SoapHeader;
 use SoapFault;
 use NFePHP\Common\Certificate;
@@ -81,7 +82,7 @@ class SoapNative extends SoapBase implements SoapInterface
             );
         } catch (SoapFault $e) {
             throw SoapException::soapFault($e->getMessage());
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw SoapException::soapFault($e->getMessage());
         }
         return $this->responseBody;
