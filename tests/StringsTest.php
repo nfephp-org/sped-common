@@ -37,6 +37,13 @@ class StringsTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($xmlLimpo, $resp1);
     }
     
+    public function testOnlyNumbers()
+    {
+        $expected = '123657788';
+        $actual = Strings::onlyNumbers('123-65af77./88 Ç $#');
+        $this->assertEquals($expected, $actual);
+    }
+    
     public function testRandomString()
     {
         $str = Strings::randomString(10);
