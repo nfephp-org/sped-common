@@ -9,6 +9,8 @@
 
 Classes comuns usadas nas atividades e classes das API de NFe, CTe, MDFe, e-Financeira, eSfinge, eSocial
 
+# Version v5.0.x
+
 # [Documentos](docs/README.md)
 
 
