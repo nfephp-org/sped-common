@@ -155,6 +155,7 @@ abstract class SoapBase implements SoapInterface
         $this->logger = $logger;
         $this->certificate = $this->checkCertValidity($certificate);
         $this->setTemporaryFolder(sys_get_temp_dir() . '/sped/');
+        $this->saveTemporarilyKeyFiles();
     }
     
     /**
@@ -395,7 +396,7 @@ abstract class SoapBase implements SoapInterface
         );
         $ret &= $this->filesystem->put(
             $this->certfile,
-            "{$this->certificate}"
+            $this->certificate->privateKey.$this->certificate->publicKey
         );
         if (!$ret) {
             throw new RuntimeException(
