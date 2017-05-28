@@ -81,9 +81,9 @@ class SoapNative extends SoapBase implements SoapInterface
                 $this->responseHead . "\n" . $this->responseBody
             );
         } catch (SoapFault $e) {
-            throw SoapException::soapFault($e->getMessage());
+            throw SoapException::soapFault("[$url] " . $e->getMessage());
         } catch (\Exception $e) {
-            throw SoapException::soapFault($e->getMessage());
+            throw SoapException::soapFault("[$url] " . $e->getMessage());
         }
         return $this->responseBody;
     }
@@ -103,9 +103,9 @@ class SoapNative extends SoapBase implements SoapInterface
             $verifypeer = false;
             $verifyhost = false;
         }
+        $this->saveTemporarilyKeyFiles();
         $params = [
             'local_cert' => $this->tempdir . $this->certfile,
-            'passphrase' => $this->temppass,
             'connection_timeout' => $this->soaptimeout,
             'encoding' => 'UTF-8',
             'verifypeer' => $verifypeer,
@@ -114,6 +114,9 @@ class SoapNative extends SoapBase implements SoapInterface
             'trace' => true,
             'cache_wsdl' => WSDL_CACHE_NONE
         ];
+        if (!empty($this->temppass)) {
+            $params['passphrase'] = $this->temppass;
+        }
         $params = $this->setNativeProxy($params);
         try {
             $this->connection = new SoapClientExtended($wsdl, $params);

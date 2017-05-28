@@ -94,7 +94,9 @@ class SoapCurl extends SoapBase implements SoapInterface
             curl_setopt($oCurl, CURLOPT_SSLVERSION, $this->soapprotocol);
             curl_setopt($oCurl, CURLOPT_SSLCERT, $this->tempdir . $this->certfile);
             curl_setopt($oCurl, CURLOPT_SSLKEY, $this->tempdir . $this->prifile);
-            curl_setopt($oCurl, CURLOPT_KEYPASSWD, $this->temppass);
+            if (!empty($this->temppass)) {
+                curl_setopt($oCurl, CURLOPT_KEYPASSWD, $this->temppass);
+            }
             curl_setopt($oCurl, CURLOPT_RETURNTRANSFER, 1);
             if (! empty($envelope)) {
                 curl_setopt($oCurl, CURLOPT_POST, 1);
@@ -121,10 +123,10 @@ class SoapCurl extends SoapBase implements SoapInterface
             throw SoapException::unableToLoadCurl($e->getMessage());
         }
         if ($this->soaperror != '') {
-            throw SoapException::soapFault($this->soaperror);
+            throw SoapException::soapFault($this->soaperror . " [$url]");
         }
         if ($httpcode != 200) {
-            throw SoapException::soapFault($this->responseHead);
+            throw SoapException::soapFault(" [$url]" . $this->responseHead);
         }
         return $this->responseBody;
     }

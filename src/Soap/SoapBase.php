@@ -111,6 +111,14 @@ abstract class SoapBase implements SoapInterface
      */
     protected $temppass = '';
     /**
+     * @var bool
+     */
+    protected $encriptPrivateKey = true;
+    /**
+     * @var bool
+     */
+    protected $debugmode = false;
+    /**
      * @var string
      */
     public $responseHead;
@@ -134,10 +142,6 @@ abstract class SoapBase implements SoapInterface
      * @var array
      */
     public $soapinfo = [];
-    /**
-     * @var bool
-     */
-    public $debugmode = false;
     /**
      * @var int
      */
@@ -217,6 +221,17 @@ abstract class SoapBase implements SoapInterface
         if (is_file($capath)) {
             $this->casefaz = $capath;
         }
+    }
+    
+    /**
+     * Set option to encript private key before save in filesystem
+     * for an additional layer of protection
+     * @param bool $encript
+     * @return bool
+     */
+    public function setEncriptPrivateKey($encript = true)
+    {
+        return $this->encriptPrivateKey = $encript;
     }
     
     /**
@@ -376,15 +391,19 @@ abstract class SoapBase implements SoapInterface
         $this->pubfile = $this->certsdir . Strings::randomString(10).'.pem';
         $this->certfile = $this->certsdir . Strings::randomString(10).'.pem';
         $ret = true;
-        //cria uma senha temporária ALEATÓRIA para salvar a chave primaria
-        //portanto mesmo que localizada e identificada não estará acessível
-        //pois sua senha não existe além do tempo de execução desta classe
-        $this->temppass = Strings::randomString(16);
-        openssl_pkey_export(
-            $this->certificate->privateKey,
-            $private,
-            $this->temppass
-        );
+        $private = $this->certificate->privateKey;
+        if ($this->encriptPrivateKey) {
+            //cria uma senha temporária ALEATÓRIA para salvar a chave primaria
+            //portanto mesmo que localizada e identificada não estará acessível
+            //pois sua senha não existe além do tempo de execução desta classe
+            $this->temppass = Strings::randomString(16);
+            //encripta a chave privada entes da gravação do filesystem
+            openssl_pkey_export(
+                $this->certificate->privateKey,
+                $private,
+                $this->temppass
+            );
+        }
         $ret &= $this->filesystem->put(
             $this->prifile,
             $private
@@ -395,7 +414,7 @@ abstract class SoapBase implements SoapInterface
         );
         $ret &= $this->filesystem->put(
             $this->certfile,
-            "{$this->certificate}"
+            $private."{$this->certificate}"
         );
         if (!$ret) {
             throw new RuntimeException(
