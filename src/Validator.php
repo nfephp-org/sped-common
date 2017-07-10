@@ -59,10 +59,11 @@ class Validator
         if (trim($xml) == '') {
             return false;
         }
-        if (stripos($xml, '<!DOCTYPE html>') !== false) {
+        if (stripos($xml, '<!DOCTYPE html>') !== false
+           || stripos($xml, '</html>') !== false
+        ) {
             return false;
         }
-        libxml_use_internal_errors(true);
         libxml_clear_errors();
         $doc = new DOMDocument('1.0', 'UTF-8');
         $doc->loadXML($xml);

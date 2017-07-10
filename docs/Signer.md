@@ -22,7 +22,11 @@ Esta classe é responsável por realizar as assinaturas digitais nos documentos 
     ):string
 
 
-## static function removeSignature(DOMDocument $dom):string
+## static function removeSignature($xml):string
 
-## static function isSigned(DOMDocument $dom, $tagname):bool
+## static function isSigned($xml, $tagname, $canonical):bool
+
+## public static function existsSignature($xml):bool
+
+
 
