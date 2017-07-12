@@ -172,18 +172,18 @@ class Signer
 
     /**
      * Remove old signature from document to replace it
-     * @param string $xml
+     * @param string $content
      * @return string
      */
-    public static function removeSignature($xml)
+    public static function removeSignature($content)
     {
-        if (! self::existsSignature($xml)) {
-            return $xml;
+        if (! self::existsSignature($content)) {
+            return $content;
         }
         $dom = new \DOMDocument('1.0', 'utf-8');
         $dom->formatOutput = false;
         $dom->preserveWhiteSpace = false;
-        $dom->loadXML($xml);
+        $dom->loadXML($content);
         $node = $dom->documentElement;
         $signature = $node->getElementsByTagName('Signature')->item(0);
         if (!empty($signature)) {
@@ -196,20 +196,20 @@ class Signer
 
     /**
      * Verify if xml signature is valid
-     * @param string $xml
+     * @param string $content
      * @param string $tagname tag for sign (opcional)
      * @param array $canonical parameters to format node for signature (opcional)
      * @return boolean
      * @throws SignerException Not is a XML, Digest or Signature dont match
      */
     public static function isSigned(
-        $xml,
+        $content,
         $tagname = '',
         $canonical = [true,false,null,null]
     ) {
-        if (self::existsSignature($xml)) {
-            if (self::digestCheck($xml, $tagname, $canonical)) {
-                if (self::signatureCheck($xml, $canonical)) {
+        if (self::existsSignature($content)) {
+            if (self::digestCheck($content, $tagname, $canonical)) {
+                if (self::signatureCheck($content, $canonical)) {
                     return true;
                 }
             }
@@ -219,18 +219,18 @@ class Signer
     
     /**
      * Check if Signature tag already exists
-     * @param DOMDocument $dom
+     * @param string $content
      * @return boolean
      */
-    public static function existsSignature($xml)
+    public static function existsSignature($content)
     {
-        if (! Validator::isXML($xml)) {
+        if (! Validator::isXML($content)) {
             throw SignerException::isNotXml();
         }
         $dom = new \DOMDocument('1.0', 'utf-8');
         $dom->formatOutput = false;
         $dom->preserveWhiteSpace = false;
-        $dom->loadXML($xml);
+        $dom->loadXML($content);
         $signature = $dom->getElementsByTagName('Signature')->item(0);
         if (empty($signature)) {
             return false;
