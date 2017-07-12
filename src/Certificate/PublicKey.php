@@ -114,10 +114,10 @@ CONTENT;
     public function verify($data, $signature, $algorithm = OPENSSL_ALGO_SHA1)
     {
         $verified = openssl_verify($data, $signature, $this->rawKey, $algorithm);
-        if ($verified === static::SIGNATURE_ERROR) {
+        if ($verified === self::SIGNATURE_ERROR) {
             throw CertificateException::signatureFailed();
         }
-        return $verified === static::SIGNATURE_CORRECT;
+        return $verified === self::SIGNATURE_CORRECT;
     }
 
     /**
