@@ -40,7 +40,7 @@ class Signer
      * @param Certificate $certificate
      * @param string $content xml for signed
      * @param string $tagname
-     * @param string $marker for URI (opcional)
+     * @param string $mark for URI (opcional)
      * @param string $algorithm (opcional)
      * @param array $canonical parameters to format node for signature (opcional)
      * @param string $rootname name of tag to insert signature block (opcional)

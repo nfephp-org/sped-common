@@ -44,7 +44,7 @@ class ExceptionCollection extends \Exception implements ExceptionInterface, Iter
     
     /**
      * Add exceptions to the collection
-     * @param ExceptionCollection|\Exception $e Exception to add
+     * @param Exception Exception to add
      * @return ExceptionCollection;
      */
     public function add(\Exception $exception)
