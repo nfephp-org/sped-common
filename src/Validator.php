@@ -67,8 +67,8 @@ class Validator
         }
         libxml_use_internal_errors(true);
         simplexml_load_string($content);
-        $errors = libxml_get_errors();          
-        libxml_clear_errors();  
+        $errors = libxml_get_errors();
+        libxml_clear_errors();
         return empty($errors);
     }
 }
