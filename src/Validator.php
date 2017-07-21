@@ -7,7 +7,7 @@ namespace NFePHP\Common;
  * and defined structure in an XSD file
  * @category   NFePHP
  * @package    NFePHP\Common\Validator
- * @copyright  Copyright (c) 2008-2016
+ * @copyright  Copyright (c) 2008-2017
  * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
  * @license    https://opensource.org/licenses/MIT MIT
  * @license    http://www.gnu.org/licenses/gpl.txt GPLv3+
@@ -15,7 +15,7 @@ namespace NFePHP\Common;
  * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
  */
 
-use RuntimeException;
+use NFePHP\Common\Exception\ValidatorException;
 use DOMDocument;
 
 class Validator
@@ -25,12 +25,12 @@ class Validator
      * @param string $xml XML content
      * @param string $xsd real path to scheme file
      * @return boolean
-     * @throws RuntimeException
+     * @throws ValidatorException
      */
     public static function isValid($xml, $xsd)
     {
         if (!self::isXML($xml)) {
-            throw new RuntimeException('This document is not a XML');
+            throw ValidatorException::isNotXml();
         }
         libxml_use_internal_errors(true);
         libxml_clear_errors();
@@ -40,33 +40,33 @@ class Validator
         $dom->loadXML($xml, LIBXML_NOBLANKS | LIBXML_NOEMPTYTAG);
         libxml_clear_errors();
         if (! $dom->schemaValidate($xsd)) {
-            $msg = '';
+            $errors = [];
             foreach (libxml_get_errors() as $error) {
-                $msg .= $error->message."\n";
+                $errors[] = $error->message;
             }
-            throw new RuntimeException($msg);
+            throw ValidatorException::xmlErrors($errors);
         }
         return true;
     }
     
     /**
      * Check if string is a XML
-     * @param string $xml
+     * @param string $content
      * @return boolean
      */
-    public static function isXML($xml)
+    public static function isXML($content)
     {
-        if (trim($xml) == '') {
+        $content = trim($content);
+        if (empty($content)) {
             return false;
         }
-        if (stripos($xml, '<!DOCTYPE html>') !== false
-           || stripos($xml, '</html>') !== false
+        if (stripos($content, '<!DOCTYPE html>') !== false
+           || stripos($content, '</html>') !== false
         ) {
             return false;
         }
-        libxml_clear_errors();
-        $doc = new DOMDocument('1.0', 'UTF-8');
-        $doc->loadXML($xml);
+        libxml_use_internal_errors(true);
+        simplexml_load_string($content);
         $errors = libxml_get_errors();
         libxml_clear_errors();
         return empty($errors);

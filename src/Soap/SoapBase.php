@@ -39,7 +39,7 @@ abstract class SoapBase implements SoapInterface
      */
     protected $proxyIP;
     /**
-     * @var string
+     * @var int
      */
     protected $proxyPort;
     /**
@@ -303,10 +303,10 @@ abstract class SoapBase implements SoapInterface
     
     /**
      * Set prefixes
-     * @param string $prefixes
+     * @param array $prefixes
      * @return string
      */
-    public function setSoapPrefix($prefixes)
+    public function setSoapPrefix($prefixes = [])
     {
         return $this->prefixes = $prefixes;
     }

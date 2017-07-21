@@ -6,17 +6,13 @@ Esta assinatura segue os padrões estabelecidos pelas SEFAZ, Recita Federal e Mi
 
 # MÉTODOS
 
-## sign():string
-
-- Acesso: Publico
-- Método: Estático
-- Retorna: string
-
+## static function sign():string
 
 Este método realiza a assinatura em um XML. O XML assinado é retornado como string.
 
 > NOTA: essa assinatura está limitada aos padrões da Receita Federal e Sefaz, e permite o uso dos algoritimos SHA1 e SHA256 apenas.
-> NOTA: A assinatura será montada mesmo que o certificado estajá vencido !! e com isso gerand uma assinatura INVALIDA.
+
+> NOTA: A assinatura será montada mesmo que o certificado estaja vencido !! e com isso gerand uma assinatura INVALIDA.
 
 | Parametro | Tipo | Descrição |
 | :---  | :---: | :--- |
@@ -35,6 +31,7 @@ Este método irá retornar exceptions caso:
 - $content vazio
 - $content não for um XML válido
 
+**Exemplo de USO**
 
 ```php
 
@@ -83,12 +80,7 @@ try {
 
 ```
 
-## removeSignature():string
-
-- Acesso: Publico
-- Método: Estático
-- Retorna: string
-
+## static function removeSignature():string
 
 Este método irá remover a tag &lt;Signature&gt; do XML, caso exista.
 Se não existir será retornado o mesmo XML da entrada.
@@ -124,11 +116,7 @@ try {
 ```
 
 
-## isSigned():bool
-
-- Acesso: Publico
-- Método: Estático
-- Retorna: boolean
+## static function isSigned():bool
 
 Este método verifica a validade de uma assinatura em um XML conforme os padrões da SEFAZ e da Receita Federal.
 
@@ -141,6 +129,7 @@ Este método verifica a validade de uma assinatura em um XML conforme os padrõe
 | $canonical | array | opções para obtenção da forma canonica da string a ser assinada (OPCIONAL) |
 
 > NOTA: Limitação apenas nos casos de SHA1 e SHA256, outros possiveis modelos de assinatura não podem ser validados com essa classe.
+
 > NOTA: Caso o XML não esteja assinado irá retornar FALSE
 
 ```php
@@ -162,12 +151,7 @@ try {
 
 ```
 
-
-## existsSignature():bool
-
-- Acesso: Publico
-- Método: Estático
-- Retorna: boolean
+## static function existsSignature():bool
 
 Este método indica se existe uma assinatura no XML, mas não executa nenhuma outra validação sobre a mesma.
 

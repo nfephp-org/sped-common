@@ -7,7 +7,7 @@
 
 # sped-common
 
-Classes comuns usadas nas atividades e classes das API de NFe, CTe, MDFe, e-Financeira, eSfinge, eSocial
+Classes comuns usadas nas atividades e classes das API de NFe, CTe, MDFe, e-Financeira, eSfinge, eSocial e NFSe
 
 ## Certificado Digital
 [Certificate::class](Certificate.md)

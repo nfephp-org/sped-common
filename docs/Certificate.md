@@ -27,7 +27,7 @@ Instância de [PublicKey::class](Certificate/PublicKey.md)
 ## public $chainKeys;
 Instância de [CertificationChain::class](Certificate/CertificationChain.md)
 
-# USO
+** Forma principal de uso**
 
 ```php
 use NFePHP\Common\Certificate;
@@ -46,36 +46,46 @@ $cert->chainKeys = $chain;
 
 # MÉTODOS
 
-## public function __construct(PrivateKey $privateKey, PublicKey $publicKey, CertificationChain $chainKeys = null)::this
+## __construct($privateKey, $publicKey, $chainKeys):this
 
 - $privateKey = Instância de [PrivateKey::class](Certificate/PrivateKey.md)
 - $publicKey = Instância de [PublicKey::class](Certificate/PublicKey.md)
 - $chainKeys = Instância de [CertificationChain::class](Certificate/CertificationChain.md)
 
+**Exceptions**
+
+
+**Forma de USO**
+
 ```php
-//anuncio
+
 use NFePHP\Common\Certificate\PrivateKey;
 use NFePHP\Common\Certificate\PublicKey;
 use NFePHP\Common\Certificate\CertificationChain;
 
-//pre carregamento
-$priKey = new PrivateKey($privatekeyContent);
-$pubKey = new PublicKey($publickeyContent);
-$chain = new CertificationChain($chainkeysContent);
+try {
+    $priKey = new PrivateKey($privatekeyContent);
+    $pubKey = new PublicKey($publickeyContent);
+    $chain = new CertificationChain($chainkeysContent);
 
-//instanciação
-$certs = new Certificate($priKey, $pubKey, $chain);
+    $certs = new Certificate($priKey, $pubKey, $chain);
+} catch (\Exception $e) {
+    //aqui você trata as exceções
+    $e->getMessage();
+}
 
 ```
 
-## public static function readPfx($content, $password)::this
+## static function readPfx($content, $password):this
 
-Alternativamente essa classe pode ser carregada estaticamente com a chamada readPfx(), onde:
+Alternativamente essa classe pode ser carregada estaticamente com a chamada readPfx().
 
-$content = conteudo do arquivo PFX
-$password = senha de acesso ao certificado
+| Parametro | Tipo | Descrição |
+| :---  | :---: | :--- |
+| $content | string | conteudo do arquivo PFX |
+| $password | string | senha de acesso ao certificado |
 
-NOTA: caso ocorra algum erro será disparada uma EXCEPTION
+>NOTA: $content com é uma string com o conteudo do PFX (Certificado A1) esse conteúdo pode ser mantido em tabela no banco de dados ou em arquivo (local ou remoto). O único cuidado é lembrar que um PFX é um registro binário então ao tentar mante-lo em base de dados converta para base64.
 
 ```php
 use NFePHP\Common\Certificate;
@@ -85,12 +95,13 @@ try {
 
     $cert = Certificate::readPfx($content, $password);
 
-} catch (CertificateException $e) {
+} catch (\Exception $e) {
     //aqui você trata a exceção
+    $e->getMessage();
 }
 ```
 
-## public function writePfx($password)::string
+## writePfx($password):string
 
 Esse método permite que o PFX seja recriado com base em sua chave publica, privada e irá incluir toda a cadeia de certificação, se fornecida.
 

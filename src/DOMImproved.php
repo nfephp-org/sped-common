@@ -106,7 +106,7 @@ class DOMImproved extends DOMDocument
      * Retorna o node solicitado
      * @param string $nodeName
      * @param integer $itemNum
-     * @return DOMElement se existir ou string vazia se não
+     * @return DOMElement | string
      */
     public function getNode($nodeName, $itemNum = 0)
     {
@@ -187,6 +187,7 @@ class DOMImproved extends DOMDocument
      * Append DOMElement from external documento to local Node
      * @param DOMElement $parent
      * @param DOMElement $child
+     * @return void
      */
     public function appExternalChild(DOMElement &$parent, DOMElement $child)
     {
