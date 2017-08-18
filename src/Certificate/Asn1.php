@@ -3,8 +3,7 @@
 namespace NFePHP\Common\Certificate;
 
 /**
- * Class to obtain the encrypted data contained in a digital
- * certificate PKCS #12.
+ * Obtain the encrypted data contained in a digital certificate PKCS #12.
  * See Abstract Syntax Notation One (ASN.1)
  * for Distinguished Encoding Rules (DER)
  * This data may be formatted and encoded into multiple data formats, so to
@@ -17,8 +16,6 @@ namespace NFePHP\Common\Certificate;
  * @author     Roberto L. Machado <linux.rlm at gmail dot com>
  * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
  */
-
-use NFePHP\Common\Certificate;
 
 class Asn1
 {

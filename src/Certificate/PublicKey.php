@@ -3,7 +3,7 @@
 namespace NFePHP\Common\Certificate;
 
 /**
- * Class for management and use of digital certificates A1 (PKCS # 12)
+ * Management and use of digital certificates A1 (PKCS # 12).
  * @category   NFePHP
  * @package    NFePHP\Common\PublicKey
  * @copyright  Copyright (c) 2008-2016
@@ -91,12 +91,12 @@ CONTENT;
         }
         $detail = openssl_x509_parse($resource, false);
         $this->commonName = $detail['subject']['commonName'];
-        $this->emailAddress = !empty($detail['subject']['emailAddress']) ?
-            $detail['subject']['emailAddress'] :
-            '';
-        $this->cspName = isset($detail['issuer']['organizationalUnitName']) ?
-            $detail['issuer']['organizationalUnitName'] :
-            '';
+        if (isset($detail['subject']['emailAddress'])) {
+            $this->emailAddress = $detail['subject']['emailAddress'];
+        }
+        if (isset($detail['issuer']['organizationalUnitName'])) {
+            $this->cspName = $detail['issuer']['organizationalUnitName'];
+        }
         $this->serialNumber = $detail['serialNumber'];
         $this->validFrom = \DateTime::createFromFormat('ymdHis\Z', $detail['validFrom']);
         $this->validTo = \DateTime::createFromFormat('ymdHis\Z', $detail['validTo']);
