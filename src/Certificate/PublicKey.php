@@ -13,7 +13,6 @@ namespace NFePHP\Common\Certificate;
  */
 
 use NFePHP\Common\Exception\CertificateException;
-use NFePHP\Common\Certificate\Asn1;
 
 class PublicKey implements VerificationInterface
 {
@@ -42,7 +41,7 @@ class PublicKey implements VerificationInterface
      */
     public $emailAddress;
     /**
-     * @var string
+     * @var string Cryptographic Service Provider
      */
     public $cspName;
     /**
@@ -95,7 +94,9 @@ CONTENT;
         $this->emailAddress = !empty($detail['subject']['emailAddress']) ?
             $detail['subject']['emailAddress'] :
             '';
-        $this->cspName = $detail['issuer']['organizationalUnitName'];
+        $this->cspName = isset($detail['issuer']['organizationalUnitName']) ?
+            $detail['issuer']['organizationalUnitName'] :
+            '';
         $this->serialNumber = $detail['serialNumber'];
         $this->validFrom = \DateTime::createFromFormat('ymdHis\Z', $detail['validFrom']);
         $this->validTo = \DateTime::createFromFormat('ymdHis\Z', $detail['validTo']);
