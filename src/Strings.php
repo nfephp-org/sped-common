@@ -110,7 +110,7 @@ class Strings
      * @param string $txt
      * @return string
      */
-    public function removeSomeAlienCharsfromTxt($txt)
+    public static function removeSomeAlienCharsfromTxt($txt)
     {
         //remove CRs and TABs
         $txt = str_replace(["\r","\t"], "", $txt);
