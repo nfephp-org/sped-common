@@ -119,7 +119,7 @@ class Strings
         //remove spaces at begin and end of fields
         $txt = str_replace(["| "," |"], "|", $txt);
         return $txt;
-    }    
+    }
     
     /**
      * Creates a string ramdomically with the specified length

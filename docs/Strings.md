@@ -67,3 +67,16 @@ Creates a string ramdomically with the specified length.
     echo $randomStr; //zRT20
 ```
 
+## removeSomeAlienCharsfromTxt()
+- Removes [CR] and [TAB]
+- Removes duplicated [spaces]
+- Removes [spaces] after | (pipe)
+- Removes [spaces] before | (pipe)
+
+- @param string $txt
+- @return string
+
+```php
+    $txtclean = Strings::removeSomeAlienCharsfromTxt($txt);
+    echo $txtclean; //returns txt without this characters  
+```

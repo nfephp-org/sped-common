@@ -6,7 +6,7 @@ namespace NFePHP\Common;
  * Class for identification and convertion of eletronic documents in xml
  * from documents used in sped-nfe, sped-esocial, sped-cte, sped-mdfe, etc.
  * This class converts XML to JSON, ARRAY, YAML or sdtClass
- * To use in projects this class will be extented and include all root Tag List 
+ * To use in projects this class will be extented and include all root Tag List
  *
  * @category  NFePHP
  * @package   NFePHP\Common\Standardize
@@ -54,10 +54,10 @@ class Standardize
     
     /**
      * Load tag list
-     * This list must contain the root tags of all XML documents used by 
+     * This list must contain the root tags of all XML documents used by
      * the project whether NFe, CTe, MDFe, eSocial or any other of the SPED set,
-     * it is important to note that the order of this list is relevant 
-     * to the result. 
+     * it is important to note that the order of this list is relevant
+     * to the result.
      * @param array $tagList
      */
     public function loadTagList($tagList)
