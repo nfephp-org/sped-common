@@ -106,6 +106,22 @@ class Strings
     }
     
     /**
+     * Remove some alien chars from txt
+     * @param string $txt
+     * @return string
+     */
+    public function removeSomeAlienCharsfromTxt($txt)
+    {
+        //remove CRs and TABs
+        $txt = str_replace(["\r","\t"], "", $txt);
+        //remove multiple spaces
+        $txt = preg_replace('/(?:\s\s+)/', ' ', $txt);
+        //remove spaces at begin and end of fields
+        $txt = str_replace(["| "," |"], "|", $txt);
+        return $txt;
+    }    
+    
+    /**
      * Creates a string ramdomically with the specified length
      * @param int $length
      * @return string
