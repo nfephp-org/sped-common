@@ -61,4 +61,16 @@ class StringsTest extends \PHPUnit\Framework\TestCase
         $expected = "<soap:Envelope><soap:Body></soap:Body></soap:Envelope>";
         $this->assertEquals($expected, $actual);
     }
+    
+    public function testRemoveSomeAlienCharsfromTxt()
+    {
+        $txt = "C|PLASTFOAM                   IND. E       COM DE PLASTICOS LTDA|PLASTFOAM| 336546371113||184394 |2222600|3 |\n";
+        $txt .= "V|\r\n";
+        $txt .= "ZV|\t\n";
+        $actual = Strings::removeSomeAlienCharsfromTxt($txt);
+        $expected = "C|PLASTFOAM IND. E COM DE PLASTICOS LTDA|PLASTFOAM|336546371113||184394|2222600|3|\n";
+        $expected .= "V|\n";
+        $expected .= "ZV|\n";
+        $this->assertEquals($expected, $actual);
+    }
 }

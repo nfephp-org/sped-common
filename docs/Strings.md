@@ -11,10 +11,11 @@ Replace all specials characters from string and retuns only 128 basic characters
 
 - @param string $string
 - @return  string 
+
 ```php
-$str = "Á é ç ";
-$ret = Strings::replaceSpecialsChars($str);
-echo $ret; //A e c
+    $str = "Á é ç ";
+    $ret = Strings::replaceSpecialsChars($str);
+    echo $ret; //A e c
 ```
 ## clearXml()
 Remove some attributes, prefixes, sulfixes and other control characters like \r \n \s \t
@@ -24,8 +25,9 @@ Remove some attributes, prefixes, sulfixes and other control characters like \r 
 - @return string
 
 ```php
-$ret = Strings::clearXml($xml);
-echo $ret; //clean xml will returned
+    $ret = Strings::clearXml($xml);
+    echo $ret; //clean xml will returned
+```
 
 ## clearProtocoledXML()
 Clears the xml after adding the protocol, removing repeated namespaces.
@@ -34,8 +36,8 @@ Clears the xml after adding the protocol, removing repeated namespaces.
 - @return string
 
 ```php
-$protxml = Strings::clearProt($xmlstring);
-echo $protxml; //clean xml will returned
+    $protxml = Strings::clearProt($xmlstring);
+    echo $protxml; //clean xml will returned
 ```
 
 ## deleteAllBetween()
@@ -47,14 +49,13 @@ Remove all characters between markers.
 - @return string
 
 ```php
-$str = '<?xml version="1.0" encoding="UTF-8"?><nfeProc versao="3.10" xmlns="http://www.portalfiscal.inf.br/nfe">
-<NFe xmlns="http://www.portalfiscal.inf.br/nfe">';
-
-$ret = Strings::deleteAllBetween($str, '<?xml', '?>');
-echo $ret; //returns xml without encoding tag
+    $str = '<?xml version="1.0" encoding="UTF-8"?><nfeProc versao="3.10" xmlns="http://www.portalfiscal.inf.br/nfe">
+    <NFe xmlns="http://www.portalfiscal.inf.br/nfe">';
+    
+    $ret = Strings::deleteAllBetween($str, '<?xml', '?>');
+    echo $ret; //returns xml without encoding tag
 ```
 
-```
 ## randomString()
 Creates a string ramdomically with the specified length.
 
@@ -62,7 +63,7 @@ Creates a string ramdomically with the specified length.
 - @return string
 
 ```php
-$randomStr = Strings::randomString(5);
-echo $randomStr; //zRT20
+    $randomStr = Strings::randomString(5);
+    echo $randomStr; //zRT20
 ```
 

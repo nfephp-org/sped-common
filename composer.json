@@ -33,7 +33,8 @@
         "ext-openssl": "*",
         "ext-mbstring": "*",
         "psr/log": "^1.0",
-        "league/flysystem": "^1.0"
+        "league/flysystem": "^1.0",
+        "symfony/yaml": "^3.3"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^2.8",
