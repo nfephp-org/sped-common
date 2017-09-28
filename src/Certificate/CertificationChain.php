@@ -112,7 +112,7 @@ CONTENT;
         foreach ($list as $cert) {
             $ec[] = "{$cert}";
         }
-        if (empty($ec)) {
+        if (!empty($ec)) {
             $args = ['extracerts' => $ec];
         }
         return $args;
