@@ -95,7 +95,9 @@ CONTENT;
             $this->emailAddress = $detail['subject']['emailAddress'];
         }
         if (isset($detail['issuer']['organizationalUnitName'])) {
-            $this->cspName = $detail['issuer']['organizationalUnitName'];
+            $this->cspName = is_array($detail['issuer']['organizationalUnitName'])
+                ? implode(', ', $detail['issuer']['organizationalUnitName'])
+                : $detail['issuer']['organizationalUnitName'];
         }
         $this->serialNumber = $detail['serialNumber'];
         $this->validFrom = \DateTime::createFromFormat('ymdHis\Z', $detail['validFrom']);
