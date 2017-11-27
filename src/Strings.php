@@ -28,7 +28,7 @@ class Strings
         $aSubs = ['e','a','a','a','a','e','e','i','o','o','o','u','u',
             'c','A','A','A','A','E','E','I','O','O','O','U','U','C'];
         $newstr = str_replace($aFind, $aSubs, $string);
-        $newstr = preg_replace("/[^a-zA-Z0-9 @,-.;:\/]/", "", $newstr);
+        $newstr = preg_replace("/[^a-zA-Z0-9 @,-_.;:\/]/", "", $newstr);
         return $newstr;
     }
     
