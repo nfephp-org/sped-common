@@ -159,7 +159,6 @@ abstract class SoapBase implements SoapInterface
         $this->logger = $logger;
         $this->certificate = $this->checkCertValidity($certificate);
         $this->setTemporaryFolder(sys_get_temp_dir() . '/sped/');
-        $this->saveTemporarilyKeyFiles();
     }
     
     /**
