@@ -386,10 +386,10 @@ abstract class SoapBase implements SoapInterface
      * @return string
      */
     private function mountEnvelopString(
-        string $envelopPrefix,
-        string $envelopAttributes = '',
-        string $header = '',
-        string $bodyContent = ''
+        $envelopPrefix,
+        $envelopAttributes = '',
+        $header = '',
+        $bodyContent = ''
     ) {
         return sprintf(
             '<%s:Envelope %s >'.$header.'<%s:Body>%s</%s:Body></%s:Envelop>',
