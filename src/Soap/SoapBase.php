@@ -1,6 +1,12 @@
 <?php
-
 namespace NFePHP\Common\Soap;
+
+use NFePHP\Common\Certificate;
+use NFePHP\Common\Exception\RuntimeException;
+use NFePHP\Common\Strings;
+use League\Flysystem\Filesystem;
+use League\Flysystem\Adapter\Local;
+use Psr\Log\LoggerInterface;
 
 /**
  * Soap base class
@@ -8,22 +14,12 @@ namespace NFePHP\Common\Soap;
  * @category  NFePHP
  * @package   NFePHP\Common\Soap\SoapBase
  * @copyright NFePHP Copyright (c) 2017
+ * @author    Roberto L. Machado <linux.rlm at gmail dot com>
  * @license   http://www.gnu.org/licenses/lgpl.txt LGPLv3+
  * @license   https://opensource.org/licenses/MIT MIT
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
- * @author    Roberto L. Machado <linux.rlm at gmail dot com>
  * @link      http://github.com/nfephp-org/sped-nfse for the canonical source repository
  */
-
-use NFePHP\Common\Certificate;
-use NFePHP\Common\Soap\SoapInterface;
-use NFePHP\Common\Exception\SoapException;
-use NFePHP\Common\Exception\RuntimeException;
-use NFePHP\Common\Strings;
-use League\Flysystem\Filesystem;
-use League\Flysystem\Adapter\Local;
-use Psr\Log\LoggerInterface;
-
 abstract class SoapBase implements SoapInterface
 {
     /**
@@ -62,7 +58,7 @@ abstract class SoapBase implements SoapInterface
      * @var LoggerInterface
      */
     protected $logger;
-    /**
+     /**
      * @var string
      */
     protected $tempdir;
@@ -148,9 +144,9 @@ abstract class SoapBase implements SoapInterface
     public $waitingTime = 45;
 
     /**
-     * Constructor
-     * @param Certificate $certificate
-     * @param LoggerInterface $logger
+     * SoapBase constructor.
+     * @param Certificate|null     $certificate Certificate from client
+     * @param LoggerInterface|null $logger      Logger object for logger
      */
     public function __construct(
         Certificate $certificate = null,
@@ -164,7 +160,7 @@ abstract class SoapBase implements SoapInterface
             $this->saveTemporarilyKeyFiles();
         }
     }
-    
+
     /**
      * Check if certificate is valid to currently used date
      * @param Certificate $certificate
@@ -173,10 +169,9 @@ abstract class SoapBase implements SoapInterface
      */
     private function certIsExpired(Certificate $certificate = null)
     {
-        if (
-            $this->disableCertValidation &&
-            null !== $certificate &&
-            $certificate->isExpired()
+        if ($this->disableCertValidation
+            && null !== $certificate
+            && $certificate->isExpired()
         ) {
             throw new RuntimeException(
                 'The validity of the certificate has expired.'
@@ -218,6 +213,7 @@ abstract class SoapBase implements SoapInterface
     /**
      * Load path to CA and enable to use on SOAP
      * @param string $capath
+     * @return void
      */
     public function loadCA($capath)
     {
@@ -227,7 +223,7 @@ abstract class SoapBase implements SoapInterface
     }
     
     /**
-     * Set option to encript private key before save in filesystem
+     * Set option to encrypt private key before save in filesystem
      * for an additional layer of protection
      * @param bool $encript
      * @return bool
@@ -240,6 +236,7 @@ abstract class SoapBase implements SoapInterface
     /**
      * Set another temporayfolder for saving certificates for SOAP utilization
      * @param string $folderRealPath
+     * @return void
      */
     public function setTemporaryFolder($folderRealPath)
     {
@@ -270,10 +267,11 @@ abstract class SoapBase implements SoapInterface
     /**
      * Set certificate class for SSL communications
      * @param Certificate $certificate
+     * @return void
      */
     public function loadCertificate(Certificate $certificate)
     {
-        $this->certificate = $this->certIsExpired($certificate);
+        $this->certificate = $this->_certIsExpired($certificate);
     }
     
     /**
@@ -315,13 +313,14 @@ abstract class SoapBase implements SoapInterface
     {
         return $this->prefixes = $prefixes;
     }
-    
+
     /**
      * Set proxy parameters
      * @param string $ip
-     * @param int $port
+     * @param int    $port
      * @param string $user
      * @param string $password
+     * @return void
      */
     public function proxy($ip, $port, $user, $password)
     {
@@ -332,7 +331,6 @@ abstract class SoapBase implements SoapInterface
     }
 
     /**
-     * Send message to webservice
      * @param string $url
      * @param string $operation
      * @param string $action
@@ -369,18 +367,15 @@ abstract class SoapBase implements SoapInterface
         \SoapHeader $header = null
     ) {
         $prefix = $this->prefixes[$soapVer];
-        $envelopeAttributes = '';
 
-        // Interessante desmembrar em uma função
-        foreach ($namespaces as $key => $value) {
-            $envelopeAttributes = $key.'="'.$value.'"';
-        }
+        $envelopeAttributes = $this->getStringAttributes($namespaces);
 
-        if (null === $header) {
-            return $this->mountEnvelopString($prefix, $envelopeAttributes, '', $request);
-        }
-
-        return $this->mountEnvelopString($prefix, $envelopeAttributes, $this->mountSoapHeaders($prefix, $header), $request);
+        return $this->mountEnvelopString(
+            $prefix,
+            $envelopeAttributes,
+            $this->mountSoapHeaders($prefix, $header),
+            $request
+        );
     }
 
     /**
@@ -390,8 +385,12 @@ abstract class SoapBase implements SoapInterface
      * @param string $bodyContent
      * @return string
      */
-    private function mountEnvelopString(string $envelopPrefix, string $envelopAttributes = '', string $header = '', string $bodyContent = '')
-    {
+    private function mountEnvelopString(
+        string $envelopPrefix,
+        string $envelopAttributes = '',
+        string $header = '',
+        string $bodyContent = ''
+    ) {
         return sprintf(
             '<%s:Envelope %s >'.$header.'<%s:Body>%s</%s:Body></%s:Envelop>',
             $envelopPrefix,
@@ -408,20 +407,34 @@ abstract class SoapBase implements SoapInterface
      * @param \SoapHeader $header
      * @return string
      */
-    private function mountSoapHeaders(string $envelopPrefix, \SoapHeader $header)
+    private function mountSoapHeaders(string $envelopPrefix, \SoapHeader $header = null)
     {
         $headerItems = '';
         foreach ($header->data as $key => $value) {
             $headerItems = '<'.$key.'>'.$value.'<'.$key.'>';
         }
 
-        return sprintf(
-            '<%s:Header><%s xmlns="%s">%s</%s></%s:Header>',
-            $envelopPrefix,
-            $header->name,
-            $header->ns ?? '',
-            $headerItems
-        );
+        return
+            $header ? sprintf(
+                '<%s:Header><%s xmlns="%s">%s</%s></%s:Header>',
+                $envelopPrefix,
+                $header->name,
+                $header->ns ?? '',
+                $headerItems
+            ) : '';
+    }
+
+    /**
+     * @param array $namespaces
+     * @return string
+     */
+    private function getStringAttributes($namespaces = [])
+    {
+        foreach ($namespaces as $key => $value) {
+            $envelopeAttributes = $key.'="'.$value.'"';
+        }
+
+        return $envelopeAttributes ?? '';
     }
 
     
@@ -534,7 +547,7 @@ abstract class SoapBase implements SoapInterface
                 $this->debugdir . $time . "_" . $operation . "_res.txt",
                 $response
             );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new RuntimeException(
                 'Unable to create debug files.'
             );
