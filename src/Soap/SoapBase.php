@@ -153,7 +153,7 @@ abstract class SoapBase implements SoapInterface
         LoggerInterface $logger = null
     ) {
         $this->logger = $logger;
-        $this->certificate = $this->isCertificateExpired($certificate);
+        $this->loadCertificate($certificate);
         $this->setTemporaryFolder(sys_get_temp_dir() . '/sped/');
 
         if (null !== $certificate) {
@@ -164,21 +164,18 @@ abstract class SoapBase implements SoapInterface
     /**
      * Check if certificate is valid to currently used date
      * @param Certificate $certificate
-     * @return Certificate
-     * @throws RuntimeException
+     * @return void
+     * @throws Certificate\Exception\Expired
      */
     private function isCertificateExpired(Certificate $certificate = null)
     {
-
-        if (!$this->disableCertValidation) {
-            return $certificate;
+        if ($this->disableCertValidation) {
+            return null;
         }
 
         if (null !== $certificate && $certificate->isExpired()) {
             throw new Certificate\Exception\Expired($certificate);
         }
-
-        return $certificate;
     }
     
     /**
@@ -269,9 +266,10 @@ abstract class SoapBase implements SoapInterface
      * @param Certificate $certificate
      * @return void
      */
-    public function loadCertificate(Certificate $certificate)
+    public function loadCertificate(Certificate $certificate = null)
     {
-        $this->certificate = $this->isCertificateExpired($certificate);
+        $this->isCertificateExpired($certificate);
+        $this->certificate = $certificate;
     }
     
     /**
