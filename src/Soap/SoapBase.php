@@ -364,7 +364,7 @@ abstract class SoapBase implements SoapInterface
         $request,
         $namespaces,
         $soapVer = SOAP_1_2,
-        \SoapHeader $header = null
+        $header = null
     ) {
         $prefix = $this->prefixes[$soapVer];
 
