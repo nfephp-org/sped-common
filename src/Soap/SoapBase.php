@@ -169,7 +169,7 @@ abstract class SoapBase implements SoapInterface
      */
     private function certIsExpired(Certificate $certificate = null)
     {
-        if ($this->disableCertValidation
+        if (false === $this->disableCertValidation
             && null !== $certificate
             && $certificate->isExpired()
         ) {

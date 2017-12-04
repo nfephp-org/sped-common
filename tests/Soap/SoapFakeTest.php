@@ -2,6 +2,7 @@
 
 namespace NFePHP\Common\Tests\Soap;
 
+use NFePHP\Common\Soap\SoapBase;
 use NFePHP\Common\Soap\SoapFake;
 use NFePHP\Common\Certificate;
 
@@ -15,6 +16,7 @@ class SoapFakeTest extends \PHPUnit\Framework\TestCase
     public function testInstanciate()
     {
         $soap = new SoapFake();
+        $this->assertInstanceOf(SoapFake::class, $soap);
     }
     
     public function testDisableSecurity()
@@ -85,6 +87,7 @@ class SoapFakeTest extends \PHPUnit\Framework\TestCase
         $soap = new SoapFake();
         $soap->disableCertValidation(true);
         $soap->loadCertificate($certificate);
+        $this->assertInstanceOf(SoapBase::class, $soap);
     }
     
     /**

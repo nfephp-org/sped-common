@@ -10,6 +10,7 @@ class SoapNativeTest extends \PHPUnit\Framework\TestCase
     public function testInstanciate()
     {
         $soap = new SoapNative();
+        $this->assertInstanceOf(SoapNative::class, $soap);
     }
    
     public function testSend()

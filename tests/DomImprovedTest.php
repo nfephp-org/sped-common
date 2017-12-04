@@ -9,6 +9,7 @@ class DomImprovedTest  extends \PHPUnit\Framework\TestCase
     public function testInstanciate()
     {
         $dom = new DOMImproved();
+        $this->assertInstanceOf(DOMImproved::class, $dom);
     }
     
     public function testAddArrayChild()
