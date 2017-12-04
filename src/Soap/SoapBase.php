@@ -430,11 +430,12 @@ abstract class SoapBase implements SoapInterface
      */
     private function getStringAttributes($namespaces = [])
     {
+        $envelopeAttributes = '';
         foreach ($namespaces as $key => $value) {
             $envelopeAttributes = $key.'="'.$value.'"';
         }
 
-        return $envelopeAttributes ?? '';
+        return $envelopeAttributes;
     }
 
     
