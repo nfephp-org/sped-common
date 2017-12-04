@@ -195,7 +195,7 @@ abstract class SoapBase implements SoapInterface
      * @param bool $flag
      * @return bool
      */
-    public function disableSecurity(bool $flag = false)
+    public function disableSecurity($flag = false)
     {
         return $this->disablesec = $flag;
     }
@@ -205,7 +205,7 @@ abstract class SoapBase implements SoapInterface
      * @param bool $flag
      * @return bool
      */
-    public function disableCertValidation(bool $flag = true)
+    public function disableCertValidation($flag = true)
     {
         return $this->disableCertValidation = $flag;
     }
@@ -407,7 +407,7 @@ abstract class SoapBase implements SoapInterface
      * @param \SoapHeader $header
      * @return string
      */
-    private function mountSoapHeaders(string $envelopPrefix, \SoapHeader $header = null)
+    private function mountSoapHeaders($envelopPrefix, $header = null)
     {
         $headerItems = '';
         foreach ($header->data as $key => $value) {
