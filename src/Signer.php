@@ -124,7 +124,7 @@ class Signer
         }
         $nsTransformMethod1 ='http://www.w3.org/2000/09/xmldsig#enveloped-signature';
         $nsTransformMethod2 = 'http://www.w3.org/TR/2001/REC-xml-c14n-20010315';
-        $idSigned = trim($node->getAttribute($mark));
+        $idSigned = trim($mark);
         $digestValue = self::makeDigest($node, $digestAlgorithm, $canonical);
         $signatureNode = $dom->createElementNS($nsDSIG, 'Signature');
         $root->appendChild($signatureNode);
@@ -138,10 +138,7 @@ class Signer
         $signatureMethodNode->setAttribute('Algorithm', $nsSignatureMethod);
         $referenceNode = $dom->createElement('Reference');
         $signedInfoNode->appendChild($referenceNode);
-        if (!empty($idSigned)) {
-            $idSigned = "#$idSigned";
-        }
-        $referenceNode->setAttribute('URI', $idSigned);
+        $referenceNode->setAttribute('URI', empty($idSigned) ? '#Id' : "#$idSigned");
         $transformsNode = $dom->createElement('Transforms');
         $referenceNode->appendChild($transformsNode);
         $transfNode1 = $dom->createElement('Transform');
