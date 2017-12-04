@@ -271,7 +271,7 @@ abstract class SoapBase implements SoapInterface
      */
     public function loadCertificate(Certificate $certificate)
     {
-        $this->certificate = $this->_certIsExpired($certificate);
+        $this->certificate = $this->certIsExpired($certificate);
     }
     
     /**
