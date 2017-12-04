@@ -46,7 +46,7 @@ interface SoapInterface
      * Set timeout for connection
      * @param int $timesecs
      */
-    public function timeout(int $timesecs);
+    public function timeout($timesecs);
     
     /**
      * Set security protocol for soap communications

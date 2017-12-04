@@ -58,7 +58,7 @@ abstract class SoapBase implements SoapInterface
      * @var LoggerInterface
      */
     protected $logger;
-     /**
+    /**
      * @var string
      */
     protected $tempdir;
@@ -145,15 +145,15 @@ abstract class SoapBase implements SoapInterface
 
     /**
      * SoapBase constructor.
-     * @param Certificate|null     $certificate Certificate from client
-     * @param LoggerInterface|null $logger      Logger object for logger
+     * @param Certificate|null $certificate
+     * @param LoggerInterface|null $logger
      */
     public function __construct(
         Certificate $certificate = null,
         LoggerInterface $logger = null
     ) {
         $this->logger = $logger;
-        $this->certificate = $this->certIsExpired($certificate);
+        $this->certificate = $this->isCertificateExpired($certificate);
         $this->setTemporaryFolder(sys_get_temp_dir() . '/sped/');
 
         if (null !== $certificate) {
@@ -167,15 +167,15 @@ abstract class SoapBase implements SoapInterface
      * @return Certificate
      * @throws RuntimeException
      */
-    private function certIsExpired(Certificate $certificate = null)
+    private function isCertificateExpired(Certificate $certificate = null)
     {
-        if (false === $this->disableCertValidation
-            && null !== $certificate
-            && $certificate->isExpired()
-        ) {
-            throw new RuntimeException(
-                'The validity of the certificate has expired.'
-            );
+
+        if (!$this->disableCertValidation) {
+            return $certificate;
+        }
+
+        if (null !== $certificate && $certificate->isExpired()) {
+            throw new Certificate\Exception\Expired($certificate);
         }
 
         return $certificate;
@@ -271,7 +271,7 @@ abstract class SoapBase implements SoapInterface
      */
     public function loadCertificate(Certificate $certificate)
     {
-        $this->certificate = $this->certIsExpired($certificate);
+        $this->certificate = $this->isCertificateExpired($certificate);
     }
     
     /**
@@ -289,7 +289,7 @@ abstract class SoapBase implements SoapInterface
      * @param int $timesecs
      * @return int
      */
-    public function timeout(int $timesecs)
+    public function timeout($timesecs)
     {
         return $this->soaptimeout = $timesecs;
     }
@@ -409,19 +409,22 @@ abstract class SoapBase implements SoapInterface
      */
     private function mountSoapHeaders($envelopPrefix, $header = null)
     {
+        if (null === $header) {
+            return '';
+        }
+
         $headerItems = '';
         foreach ($header->data as $key => $value) {
             $headerItems = '<'.$key.'>'.$value.'<'.$key.'>';
         }
 
-        return
-            $header ? sprintf(
-                '<%s:Header><%s xmlns="%s">%s</%s></%s:Header>',
-                $envelopPrefix,
-                $header->name,
-                $header->ns === null ? '' : $header->ns,
-                $headerItems
-            ) : '';
+        return sprintf(
+            '<%s:Header><%s xmlns="%s">%s</%s></%s:Header>',
+            $envelopPrefix,
+            $header->name,
+            $header->ns === null ? '' : $header->ns,
+            $headerItems
+        );
     }
 
     /**
