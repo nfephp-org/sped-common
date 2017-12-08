@@ -44,8 +44,8 @@ class ExceptionCollection extends \Exception implements ExceptionInterface, Iter
     
     /**
      * Add exceptions to the collection
-     * @param Exception Exception to add
-     * @return ExceptionCollection;
+     * @param \Exception $exception Exception to add
+     * @return \NFePHP\Common\Exception\ExceptionCollection;
      */
     public function add(\Exception $exception)
     {

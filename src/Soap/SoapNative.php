@@ -51,7 +51,7 @@ class SoapNative extends SoapBase implements SoapInterface
      * @param array $parameters
      * @param array $namespaces
      * @param string $request
-     * @param SOAPHeader $soapheader
+     * @param \SoapHeader $soapheader
      * @return string
      * @throws SoapException
      */

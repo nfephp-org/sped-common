@@ -71,7 +71,7 @@ interface SoapInterface
      * @param int $soapver
      * @param array $parameters
      * @param array $namespaces
-     * @param \SOAPHeader $soapheader
+     * @param \SoapHeader $soapheader
      * @param string $request
      */
     public function send(
