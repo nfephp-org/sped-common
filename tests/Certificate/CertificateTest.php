@@ -30,7 +30,8 @@ class CertificateTest extends \PHPUnit\Framework\TestCase
     {
         $certificate = new Certificate(
             new Certificate\PrivateKey(file_get_contents(__DIR__ . self::TEST_PRIVATE_KEY)),
-            new Certificate\PublicKey(file_get_contents(__DIR__ . self::TEST_PUBLIC_KEY))
+            new Certificate\PublicKey(file_get_contents(__DIR__ . self::TEST_PUBLIC_KEY)),
+            new Certificate\CertificationChain()    
         );
         $this->assertInstanceOf(Certificate::class, $certificate);
         $this->assertEquals('NFe - Associacao NF-e:99999090910270', $certificate->getCompanyName());
