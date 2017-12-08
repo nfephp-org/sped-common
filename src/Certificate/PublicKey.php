@@ -62,7 +62,7 @@ class PublicKey implements VerificationInterface
     /**
      * Load class with certificate content
      * @param string $content
-     * @return \static
+     * @return \NFePHP\Common\Certificate\PublicKey
      */
     public static function createFromContent($content)
     {

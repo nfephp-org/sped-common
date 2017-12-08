@@ -10,6 +10,8 @@ namespace NFePHP\Common;
  *     sped-mdfe,
  *     sped-nfse,
  *     sped-efinanceira
+ *     sped-esocial
+ *     sped-efdreinf
  *     e sped-esfinge
  *
  * @category  NFePHP
@@ -41,7 +43,7 @@ class Signer
      * @param string $content xml for signed
      * @param string $tagname
      * @param string $mark for URI (opcional)
-     * @param string $algorithm (opcional)
+     * @param int $algorithm (opcional)
      * @param array $canonical parameters to format node for signature (opcional)
      * @param string $rootname name of tag to insert signature block (opcional)
      * @return string
@@ -88,26 +90,26 @@ class Signer
                 $canonical
             );
         };
-        return (string) "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
             . $dom->saveXML($dom->documentElement, LIBXML_NOXMLDECL);
     }
     
     /**
      * Method that provides the signature of xml as standard SEFAZ
      * @param Certificate $certificate
-     * @param DOMDocument $dom
-     * @param DOMNode $root xml root
-     * @param DOMNode $node node to be signed
+     * @param \DOMDocument $dom
+     * @param \DOMNode $root xml root
+     * @param \DOMElement $node node to be signed
      * @param string $mark Marker signed attribute
      * @param int $algorithm cryptographic algorithm (opcional)
      * @param array $canonical parameters to format node for signature (opcional)
-     * @return DOMDocument
+     * @return \DOMDocument
      */
     private static function createSignature(
         Certificate $certificate,
         DOMDocument $dom,
         DOMNode $root,
-        DOMNode $node,
+        DOMElement $node,
         $mark,
         $algorithm = OPENSSL_ALGO_SHA1,
         $canonical = [true,false,null,null]

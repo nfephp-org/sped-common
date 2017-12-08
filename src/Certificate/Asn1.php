@@ -36,7 +36,7 @@ class Asn1
      * type "sequence", as the first element of the structure
      * @param string $publickeyUnformated
      * @param string $oidNumber OID formated number
-     * @return array
+     * @return string
      */
     public static function getOIDdata($oidNumber, $publickeyUnformated)
     {
@@ -72,7 +72,7 @@ class Asn1
             //converts do decimal the second digit of sequency
             $bytes = strlen($oidMarker);
             //get length of OID data
-            $len = self::getLength((string) $data);
+            $len = self::getLength($data);
             //get only a string with bytes belongs to OID
             $oidData = substr($data, 2 + $bytes, $len-($bytes));
             //parse OID data many possibel formats and structures
@@ -121,7 +121,7 @@ class Asn1
                 $bun +=  $partes[$num];
                 $abBinary[] = $bun;
             } else {
-                $abBinary = self::xBase128((array) $abBinary, (integer) $partes[$num], true);
+                $abBinary = self::xBase128($abBinary, (integer) $partes[$num], true);
             }
         }
         $value = chr(0x06) . chr(count($abBinary));
@@ -136,7 +136,7 @@ class Asn1
      * @param array $abIn
      * @param integer $qIn
      * @param boolean $flag
-     * @return integer
+     * @return array
      */
     protected static function xBase128($abIn, $qIn, $flag)
     {

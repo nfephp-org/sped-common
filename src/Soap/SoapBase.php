@@ -55,7 +55,7 @@ abstract class SoapBase implements SoapInterface
      */
     protected $certificate;
     /**
-     * @var LoggerInterface
+     * @var LoggerInterface|null
      */
     protected $logger;
     /**
@@ -169,12 +169,10 @@ abstract class SoapBase implements SoapInterface
      */
     private function isCertificateExpired(Certificate $certificate = null)
     {
-        if ($this->disableCertValidation) {
-            return null;
-        }
-
-        if (null !== $certificate && $certificate->isExpired()) {
-            throw new Certificate\Exception\Expired($certificate);
+        if (! $this->disableCertValidation) {
+            if (null !== $certificate && $certificate->isExpired()) {
+                throw new Certificate\Exception\Expired($certificate);
+            }
         }
     }
     
@@ -269,7 +267,9 @@ abstract class SoapBase implements SoapInterface
     public function loadCertificate(Certificate $certificate = null)
     {
         $this->isCertificateExpired($certificate);
-        $this->certificate = $certificate;
+        if (null !== $certificate) {
+            $this->certificate = $certificate;
+        }
     }
     
     /**
@@ -354,8 +354,8 @@ abstract class SoapBase implements SoapInterface
      * Mount soap envelope
      * @param string $request
      * @param array $namespaces
-     * @param $soapVer int
-     * @param \SOAPHeader $header
+     * @param int $soapVer
+     * @param \SoapHeader $header
      * @return string
      */
     protected function makeEnvelopeSoap(
@@ -377,6 +377,7 @@ abstract class SoapBase implements SoapInterface
     }
 
     /**
+     * Create a envelop string
      * @param string $envelopPrefix
      * @param string $envelopAttributes
      * @param string $header
@@ -401,6 +402,7 @@ abstract class SoapBase implements SoapInterface
     }
 
     /**
+     * Create a haeader tag
      * @param string $envelopPrefix
      * @param \SoapHeader $header
      * @return string
@@ -410,22 +412,23 @@ abstract class SoapBase implements SoapInterface
         if (null === $header) {
             return '';
         }
-
         $headerItems = '';
         foreach ($header->data as $key => $value) {
             $headerItems = '<'.$key.'>'.$value.'<'.$key.'>';
         }
-
         return sprintf(
             '<%s:Header><%s xmlns="%s">%s</%s></%s:Header>',
             $envelopPrefix,
             $header->name,
             $header->ns === null ? '' : $header->ns,
-            $headerItems
+            $headerItems,
+            $header->name,
+            $envelopPrefix
         );
     }
 
     /**
+     * Get attributes
      * @param array $namespaces
      * @return string
      */
@@ -435,13 +438,13 @@ abstract class SoapBase implements SoapInterface
         foreach ($namespaces as $key => $value) {
             $envelopeAttributes = $key.'="'.$value.'"';
         }
-
         return $envelopeAttributes;
     }
 
     
     /**
      * Temporarily saves the certificate keys for use cURL or SoapClient
+     * @return void
      */
     public function saveTemporarilyKeyFiles()
     {
@@ -489,6 +492,7 @@ abstract class SoapBase implements SoapInterface
     
     /**
      * Delete all files in folder
+     * @return void
      */
     public function removeTemporarilyFiles()
     {
@@ -505,7 +509,7 @@ abstract class SoapBase implements SoapInterface
         //encontrada oportunamente.
         $dt = new \DateTime();
         $tint = new \DateInterval("PT".$this->waitingTime."M");
-        $tint->invert = true;
+        $tint->invert = 1;
         $tsLimit = $dt->add($tint)->getTimestamp();
         foreach ($contents as $item) {
             if ($item['type'] == 'file') {

@@ -22,27 +22,27 @@ use NFePHP\Common\Exception\CertificateException;
 class Certificate implements SignatureInterface, VerificationInterface
 {
     /**
-     * @var PrivateKey
+     * @var \NFePHP\Common\Certificate\PrivateKey
      */
     public $privateKey;
 
     /**
-     * @var PublicKey
+     * @var \NFePHP\Common\Certificate\PublicKey
      */
     public $publicKey;
     
     /**
-     * @var CertificationChain
+     * @var \NFePHP\Common\Certificate\CertificationChain
      */
     public $chainKeys;
     
     /**
      * Constructor
-     * @param PrivateKey $privateKey
-     * @param PublicKey $publicKey
-     * @param CertificationChain $chainKeys
+     * @param \NFePHP\Common\Certificate\PrivateKey $privateKey
+     * @param \NFePHP\Common\Certificate\PublicKey $publicKey
+     * @param \NFePHP\Common\Certificate\CertificationChain $chainKeys
      */
-    public function __construct(PrivateKey $privateKey, PublicKey $publicKey, CertificationChain $chainKeys = null)
+    public function __construct(PrivateKey $privateKey, PublicKey $publicKey, CertificationChain $chainKeys)
     {
         $this->privateKey = $privateKey;
         $this->publicKey = $publicKey;
@@ -53,7 +53,7 @@ class Certificate implements SignatureInterface, VerificationInterface
      * Read PFX and return this class
      * @param string $content
      * @param string $password
-     * @return \static
+     * @return \NFePHP\Common\Certificate
      * @throws CertificateException
      */
     public static function readPfx($content, $password)
