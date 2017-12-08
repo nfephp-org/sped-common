@@ -22,7 +22,7 @@ class DOMImproved extends DOMDocument
     /**
      * @var array
      */
-    public $error = [];
+    public $errors = [];
     
     /**
      * @param string $version
@@ -46,7 +46,7 @@ class DOMImproved extends DOMDocument
         if (substr($content, 0, 1) != '<' ||
             !$this->loadXML($content, LIBXML_NOBLANKS | LIBXML_NOEMPTYTAG)
         ) {
-            $this->error[] = $msg;
+            $this->errors[] = $msg;
             return false;
         }
         return true;
@@ -60,7 +60,7 @@ class DOMImproved extends DOMDocument
     public function loadXMLFile($filename)
     {
         if (!is_file($filename)) {
-            $this->error[] = 'Arquivo não encontrado!';
+            $this->errors[] = 'Arquivo não encontrado!';
             return false;
         }
         $content = file_get_contents($filename);
@@ -156,7 +156,7 @@ class DOMImproved extends DOMDocument
     ) {
         $content = trim($content);
         if ($obrigatorio && $content === '' && !$force) {
-            $this->erros[] = "Preenchimento Obrigatório! [$name] $descricao";
+            $this->errors[] = "Preenchimento Obrigatório! [$name] $descricao";
         }
         if ($obrigatorio || $content !== '' || $force) {
             $content = htmlspecialchars($content, ENT_QUOTES);
@@ -177,7 +177,7 @@ class DOMImproved extends DOMDocument
     public function appChild(DOMElement &$parent, DOMElement $child = null, $msg = '')
     {
         if (empty($child)) {
-            $this->erros[] = $msg;
+            $this->errors[] = $msg;
             return;
         }
         $parent->appendChild($child);
@@ -232,7 +232,7 @@ class DOMImproved extends DOMDocument
             empty($before) ||
             empty($bnode = $parent->getElementsByTagName($before)->item(0))
         ) {
-            $this->error[] = "$msg Node child vazio ou node <$before> não encontrado!!";
+            $this->errors[] = "$msg Node child vazio ou node <$before> não encontrado!!";
             return;
         }
         $parent->insertBefore($child, $bnode);
