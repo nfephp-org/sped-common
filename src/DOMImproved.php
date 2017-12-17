@@ -140,7 +140,7 @@ class DOMImproved extends DOMDocument
      * nenhum parâmetro for passado na variável $content e $force for false
      * @param DOMElement $parent
      * @param string $name
-     * @param string $content
+     * @param string|int $content
      * @param boolean $obrigatorio
      * @param string $descricao
      * @param boolean $force força a criação do elemento mesmo sem dados e não considera como erro
@@ -149,16 +149,16 @@ class DOMImproved extends DOMDocument
     public function addChild(
         DOMElement &$parent,
         $name,
-        $content = '',
+        $content,
         $obrigatorio = false,
         $descricao = '',
         $force = false
     ) {
-        $content = trim($content);
+        $content = trim("$content");
         if ($obrigatorio && $content === '' && !$force) {
             $this->errors[] = "Preenchimento Obrigatório! [$name] $descricao";
         }
-        if ($obrigatorio || $content !== '' || $force) {
+        if ($obrigatorio || !empty($content) || $force) {
             $content = htmlspecialchars($content, ENT_QUOTES);
             $temp = $this->createElement($name, $content);
             $parent->appendChild($temp);
