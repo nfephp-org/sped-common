@@ -391,7 +391,7 @@ abstract class SoapBase implements SoapInterface
         $bodyContent = ''
     ) {
         return sprintf(
-            '<%s:Envelope %s >'.$header.'<%s:Body>%s</%s:Body></%s:Envelop>',
+            '<%s:Envelope %s >'.$header.'<%s:Body>%s</%s:Body></%s:Envelope>',
             $envelopPrefix,
             $envelopAttributes,
             $envelopPrefix,
