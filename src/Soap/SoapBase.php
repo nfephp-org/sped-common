@@ -414,13 +414,13 @@ abstract class SoapBase implements SoapInterface
         }
         $headerItems = '';
         foreach ($header->data as $key => $value) {
-            $headerItems = '<'.$key.'>'.$value.'<'.$key.'>';
+            $headerItems .= '<'.$key.'>'.$value.'</'.$key.'>';
         }
         return sprintf(
             '<%s:Header><%s xmlns="%s">%s</%s></%s:Header>',
             $envelopPrefix,
             $header->name,
-            $header->ns === null ? '' : $header->ns,
+            $header->namespace === null ? '' : $header->namespace,
             $headerItems,
             $header->name,
             $envelopPrefix
