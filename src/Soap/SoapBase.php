@@ -175,7 +175,7 @@ abstract class SoapBase implements SoapInterface
             }
         }
     }
-    
+
     /**
      * Destructor
      * Clean temporary files
@@ -194,7 +194,7 @@ abstract class SoapBase implements SoapInterface
     {
         return $this->disablesec = $flag;
     }
-    
+
     /**
      * ONlY for tests
      * @param bool $flag
@@ -216,7 +216,7 @@ abstract class SoapBase implements SoapInterface
             $this->casefaz = $capath;
         }
     }
-    
+
     /**
      * Set option to encrypt private key before save in filesystem
      * for an additional layer of protection
@@ -227,7 +227,7 @@ abstract class SoapBase implements SoapInterface
     {
         return $this->encriptPrivateKey = $encript;
     }
-    
+
     /**
      * Set another temporayfolder for saving certificates for SOAP utilization
      * @param string $folderRealPath
@@ -235,10 +235,18 @@ abstract class SoapBase implements SoapInterface
      */
     public function setTemporaryFolder($folderRealPath)
     {
+        if (null !== $this->filesystem) {
+            $this->removeTemporarilyFiles();
+        }
+
         $this->tempdir = $folderRealPath;
         $this->setLocalFolder($folderRealPath);
+
+        if (null !== $this->certificate) {
+            $this->saveTemporarilyKeyFiles();
+        }
     }
-    
+
     /**
      * Set Local folder for flysystem
      * @param string $folder
@@ -258,7 +266,7 @@ abstract class SoapBase implements SoapInterface
     {
         return $this->debugmode = $value;
     }
-    
+
     /**
      * Set certificate class for SSL communications
      * @param Certificate $certificate
@@ -271,7 +279,7 @@ abstract class SoapBase implements SoapInterface
             $this->certificate = $certificate;
         }
     }
-    
+
     /**
      * Set logger class
      * @param LoggerInterface $logger
@@ -281,7 +289,7 @@ abstract class SoapBase implements SoapInterface
     {
         return $this->logger = $logger;
     }
-    
+
     /**
      * Set timeout for communication
      * @param int $timesecs
@@ -291,7 +299,7 @@ abstract class SoapBase implements SoapInterface
     {
         return $this->soaptimeout = $timesecs;
     }
-    
+
     /**
      * Set security protocol
      * @param int $protocol
@@ -301,7 +309,7 @@ abstract class SoapBase implements SoapInterface
     {
         return $this->soapprotocol = $protocol;
     }
-    
+
     /**
      * Set prefixes
      * @param array $prefixes
@@ -349,7 +357,7 @@ abstract class SoapBase implements SoapInterface
         $request = '',
         $soapheader = null
     );
-    
+
     /**
      * Mount soap envelope
      * @param string $request
@@ -441,7 +449,7 @@ abstract class SoapBase implements SoapInterface
         return $envelopeAttributes;
     }
 
-    
+
     /**
      * Temporarily saves the certificate keys for use cURL or SoapClient
      * @return void
@@ -489,7 +497,7 @@ abstract class SoapBase implements SoapInterface
             );
         }
     }
-    
+
     /**
      * Delete all files in folder
      * @return void
@@ -528,7 +536,7 @@ abstract class SoapBase implements SoapInterface
             }
         }
     }
-    
+
     /**
      * Save request envelope and response for debug reasons
      * @param string $operation
