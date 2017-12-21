@@ -169,7 +169,7 @@ abstract class SoapBase implements SoapInterface
      */
     private function isCertificateExpired(Certificate $certificate = null)
     {
-        if (! $this->disableCertValidation) {
+        if (!$this->disableCertValidation) {
             if (null !== $certificate && $certificate->isExpired()) {
                 throw new Certificate\Exception\Expired($certificate);
             }
@@ -373,9 +373,7 @@ abstract class SoapBase implements SoapInterface
         $header = null
     ) {
         $prefix = $this->prefixes[$soapVer];
-
         $envelopeAttributes = $this->getStringAttributes($namespaces);
-
         return $this->mountEnvelopString(
             $prefix,
             $envelopeAttributes,
@@ -489,7 +487,7 @@ abstract class SoapBase implements SoapInterface
         );
         $ret &= $this->filesystem->put(
             $this->certfile,
-            $private."{$this->certificate}"
+            $private . "{$this->certificate}"
         );
         if (!$ret) {
             throw new RuntimeException(
