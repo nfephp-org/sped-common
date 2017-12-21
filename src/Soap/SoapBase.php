@@ -399,7 +399,7 @@ abstract class SoapBase implements SoapInterface
         $bodyContent = ''
     ) {
         return sprintf(
-            '<%s:Envelope %s>'.$header.'<%s:Body>%s</%s:Body></%s:Envelope>',
+            '<%s:Envelope %s>' . $header . '<%s:Body>%s</%s:Body></%s:Envelope>',
             $envelopPrefix,
             $envelopAttributes,
             $envelopPrefix,
@@ -422,7 +422,7 @@ abstract class SoapBase implements SoapInterface
         }
         $headerItems = '';
         foreach ($header->data as $key => $value) {
-            $headerItems .= '<'.$key.'>'.$value.'</'.$key.'>';
+            $headerItems .= '<' . $key . '>' . $value . '</' . $key . '>';
         }
         return sprintf(
             '<%s:Header><%s xmlns="%s">%s</%s></%s:Header>',
@@ -444,7 +444,7 @@ abstract class SoapBase implements SoapInterface
     {
         $envelopeAttributes = '';
         foreach ($namespaces as $key => $value) {
-            $envelopeAttributes = $key.'="'.$value.'"';
+            $envelopeAttributes = $key . '="' . $value . '"';
         }
         return $envelopeAttributes;
     }
@@ -462,9 +462,9 @@ abstract class SoapBase implements SoapInterface
             );
         }
         $this->certsdir = $this->certificate->getCnpj() . '/certs/';
-        $this->prifile = $this->certsdir. Strings::randomString(10).'.pem';
-        $this->pubfile = $this->certsdir . Strings::randomString(10).'.pem';
-        $this->certfile = $this->certsdir . Strings::randomString(10).'.pem';
+        $this->prifile = $this->certsdir . Strings::randomString(10) . '.pem';
+        $this->pubfile = $this->certsdir . Strings::randomString(10) . '.pem';
+        $this->certfile = $this->certsdir . Strings::randomString(10) . '.pem';
         $ret = true;
         $private = $this->certificate->privateKey;
         if ($this->encriptPrivateKey) {
@@ -516,7 +516,7 @@ abstract class SoapBase implements SoapInterface
         //utilize a API. Outra solução para remover arquivos "perdidos" pode ser
         //encontrada oportunamente.
         $dt = new \DateTime();
-        $tint = new \DateInterval("PT".$this->waitingTime."M");
+        $tint = new \DateInterval("PT" . $this->waitingTime . "M");
         $tint->invert = 1;
         $tsLimit = $dt->add($tint)->getTimestamp();
         foreach ($contents as $item) {
