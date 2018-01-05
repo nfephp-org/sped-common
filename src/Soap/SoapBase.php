@@ -109,7 +109,7 @@ abstract class SoapBase implements SoapInterface
     /**
      * @var bool
      */
-    protected $encriptPrivateKey = true;
+    protected $encriptPrivateKey = false;
     /**
      * @var bool
      */
@@ -225,7 +225,14 @@ abstract class SoapBase implements SoapInterface
      */
     public function setEncriptPrivateKey($encript = true)
     {
-        return $this->encriptPrivateKey = $encript;
+        $this->encriptPrivateKey = $encript;
+        if (null !== $this->filesystem) {
+            $this->removeTemporarilyFiles();
+        }
+        if (null !== $this->certificate) {
+            $this->saveTemporarilyKeyFiles();
+        }
+        return $this->encriptPrivateKey;
     }
 
     /**
