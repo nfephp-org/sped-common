@@ -449,7 +449,7 @@ abstract class SoapBase implements SoapInterface
     {
         $envelopeAttributes = '';
         foreach ($namespaces as $key => $value) {
-            $envelopeAttributes = $key . '="' . $value . '"';
+            $envelopeAttributes .= $key . '="' . $value . '" ';
         }
         return $envelopeAttributes;
     }
