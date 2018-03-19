@@ -24,11 +24,8 @@ namespace NFePHP\Common;
  * @link      http://github.com/nfephp-org/sped-common for the canonical source repository
  */
 
-use NFePHP\Common\Certificate;
 use NFePHP\Common\Certificate\PublicKey;
 use NFePHP\Common\Exception\SignerException;
-use NFePHP\Common\Strings;
-use NFePHP\Common\Validator;
 use DOMDocument;
 use DOMNode;
 use DOMElement;
@@ -47,7 +44,7 @@ class Signer
      * @param array $canonical parameters to format node for signature (opcional)
      * @param string $rootname name of tag to insert signature block (opcional)
      * @return string
-     * @throws SignnerException
+     * @throws SignerException
      */
     public static function sign(
         Certificate $certificate,
@@ -284,7 +281,8 @@ class Signer
      * Verify digest value of data node
      * @param string $xml
      * @param string $tagname
-     * @return boolean
+     * @param array $canonical
+     * @return bool
      * @throws SignerException
      */
     private static function digestCheck(
