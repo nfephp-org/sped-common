@@ -15,6 +15,7 @@ namespace NFePHP\Common;
  */
 
 use DOMDocument;
+use DOMNode;
 use DOMElement;
 
 class DOMImproved extends DOMDocument
@@ -33,6 +34,21 @@ class DOMImproved extends DOMDocument
         parent::__construct($version, $charset);
         $this->formatOutput = false;
         $this->preserveWhiteSpace = false;
+    }
+    
+    /**
+     * Insert node AFTER reference node
+     * @param \DOMNode $newNode
+     * @param \DOMNode $referenceNode
+     * @return \DOMNode
+     */
+    public function insertAfter(\DOMNode $newNode, \DOMNode $referenceNode)
+    {
+        if ($referenceNode->nextSibling === null) {
+            return $referenceNode->parentNode->appendChild($newNode);
+        } else {
+            return $referenceNode->parentNode->insertBefore($newNode, $referenceNode->nextSibling);
+        }
     }
     
     /**
@@ -138,7 +154,7 @@ class DOMImproved extends DOMDocument
      * Adiciona um elemento ao node xml passado como referencia
      * Serão inclusos erros na array $erros[] sempre que a tag for obrigatória e
      * nenhum parâmetro for passado na variável $content e $force for false
-     * @param DOMElement $parent
+     * @param \DOMElement $parent
      * @param string $name
      * @param string|float|null $content
      * @param boolean $obrigatorio
@@ -189,8 +205,8 @@ class DOMImproved extends DOMDocument
     
     /**
      * Append DOMElement from external documento to local Node
-     * @param DOMElement $parent
-     * @param DOMElement $child
+     * @param \DOMElement $parent
+     * @param \DOMElement $child
      * @return void
      */
     public function appExternalChild(DOMElement &$parent, DOMElement $child)
@@ -202,8 +218,8 @@ class DOMImproved extends DOMDocument
     /**
      * Append DOMElement from external documento to local Node
      * before existent node
-     * @param DOMElement $parent
-     * @param DOMElement $child
+     * @param \DOMElement $parent
+     * @param \DOMElement $child
      * @param string $before
      * @return void
      */
@@ -224,8 +240,8 @@ class DOMImproved extends DOMDocument
      * Acrescenta DOMElement a pai DOMElement
      * Caso o pai esteja vazio retorna uma exception com a mensagem
      * O parametro "child" pode ser vazio
-     * @param DOMElement $parent
-     * @param DOMElement $child
+     * @param \DOMElement $parent
+     * @param \DOMElement $child
      * @param string $before
      * @param string $msg
      * @return void
@@ -245,7 +261,7 @@ class DOMImproved extends DOMDocument
     /**
      * addArrayChild
      * Adiciona a um DOMElemt parent, outros elementos passados em um array de DOMElements
-     * @param DOMElement $parent
+     * @param \DOMElement $parent
      * @param array $arr
      * @return int
      */

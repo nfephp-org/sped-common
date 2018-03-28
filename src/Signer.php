@@ -192,7 +192,6 @@ class Signer
         return $dom->saveXML();
     }
 
-
     /**
      * Verify if xml signature is valid
      * @param string $content
@@ -243,7 +242,7 @@ class Signer
      * @param array $canonical
      * @return boolean
      */
-    private static function signatureCheck(
+    public static function signatureCheck(
         $xml,
         $canonical = [true,false,null,null]
     ) {
@@ -285,7 +284,7 @@ class Signer
      * @return bool
      * @throws SignerException
      */
-    private static function digestCheck(
+    public static function digestCheck(
         $xml,
         $tagname = '',
         $canonical = [true,false,null,null]
@@ -307,6 +306,7 @@ class Signer
                 $entries = $xpath->query('//@Id');
                 foreach ($entries as $entry) {
                     $tagname = $entry->ownerElement->nodeName;
+                    break;
                 }
             }
         }
