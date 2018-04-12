@@ -28,24 +28,24 @@ class Asn1
     public static function getCNPJ($publickeyUnformated)
     {
         //CNPJ
-        //OID = 2.16.76.1.3.3 
+        //OID = 2.16.76.1.3.3
         return self::getOIDdata('2.16.76.1.3.3', $publickeyUnformated);
     }
     
     /**
      * CPF
-     * OID = 2.16.76.1.3.1 e 
+     * OID = 2.16.76.1.3.1 e
      * conteúdo = nas primeiras 8 (oito) posições,
-     *  a data de nascimento do titular, 
-     * no formato ddmmaaaa; 
-     * nas 11 (onze) posições subseqüentes, 
+     *  a data de nascimento do titular,
+     * no formato ddmmaaaa;
+     * nas 11 (onze) posições subseqüentes,
      * o Cadastro de Pessoa Física (CPF) do titular;
-     * nas 11 (onze) posições subseqüentes, 
-     * o número de inscrição do titular no PIS/PASEP; 
-     * nas 11 (onze) posições subseqüentes, 
-     * o número do Registro Geral - RG do titular; 
-     * nas 6 (seis) posições subseqüentes, 
-     * as siglas do órgão expedidor do RG 
+     * nas 11 (onze) posições subseqüentes,
+     * o número de inscrição do titular no PIS/PASEP;
+     * nas 11 (onze) posições subseqüentes,
+     * o número do Registro Geral - RG do titular;
+     * nas 6 (seis) posições subseqüentes,
+     * as siglas do órgão expedidor do RG
      * e respectiva UF.
      */
 
