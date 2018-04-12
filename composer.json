@@ -56,7 +56,7 @@
     "minimum-stability": "stable",
     "scripts": {
         "test": "phpunit -c phpunit.xml.dist",
-        "phpcs": "./vendor/bin/phpcs --standard=psr2 src",
-        "phpcbf": "./vendor/bin/phpcbf --standard=psr2 src"
+        "phpcs": "./vendor/bin/phpcs --standard=psr2 src/",
+        "phpcbf": "./vendor/bin/phpcbf --standard=psr2 src/"
     }
 }
