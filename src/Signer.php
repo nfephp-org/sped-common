@@ -4,7 +4,7 @@ namespace NFePHP\Common;
 
 /**
  * Class to signner a Xml
- * Meets packages :
+ * Meets packages:
  *     sped-nfe,
  *     sped-cte,
  *     sped-mdfe,
@@ -34,76 +34,95 @@ class Signer
 {
     const CANONICAL = array(true,false,null,null);
     private static $canonical = self::CANONICAL;
-    
+
     /**
-     * Make Signature tag
+     * Make Signature for multiple tags within the document.
+     * 
      * @param Certificate $certificate
-     * @param string $content xml for signed
-     * @param string $tagname
-     * @param string $mark for URI (opcional)
-     * @param int $algorithm (opcional)
-     * @param array $canonical parameters to format node for signature (opcional)
-     * @param string $rootname name of tag to insert signature block (opcional)
-     * @return string
+     * @param \DOMDocument $doc The XML to sign.
+     * @param array $tags the tags to include signature.
+     * @param string $mark for URI (optional).
+     * @param int $algorithm (optional).
+     * @param array $canonical parameters to format node for signature (optional).
+     * 
+     * @return \DOMDocument
+     * 
      * @throws SignerException
      */
-    public static function sign(
+    public static function signMultipleTags(
         Certificate $certificate,
-        string $content,
-        string $tagname,
+        DOMDocument $doc,
+        array $tags,
         string $mark = 'Id',
-        $algorithm = OPENSSL_ALGO_SHA1,
-        $canonical = self::CANONICAL,
-        string $rootname = ''
-    ): string {
-        if (empty($content))
-            throw SignerException::isNotXml();
-        
-        if (!Validator::isXML($content))
-            throw SignerException::isNotXml();
+        int $algorithm = OPENSSL_ALGO_SHA1,
+        $canonical = self::CANONICAL
+    ): DOMDocument {
+        $signed = $doc;
+
+        foreach ($tags as $tagName) {
+            $node = $signed->getElementsByTagName($tagName)->item(0); //TODO: loop here too when multiple tags found.
             
-        if (!empty($canonical))
-            self::$canonical = $canonical;
-        
-        $dom = new DOMDocument('1.0', 'UTF-8');
-        $dom->loadXML($content);
-        $dom->preserveWhiteSpace = false;
-        $dom->formatOutput = false;
-        $root = $dom->documentElement;
-
-        if (!empty($rootname))
-            $root = $dom->getElementsByTagName($rootname)->item(0);
-        
-        $node = $dom->getElementsByTagName($tagname)->item(0);
-
-        if (empty($node) || empty($root))
-            throw SignerException::tagNotFound($tagname);
-        
-        if (!self::existsSignature($content)) {
-            $dom = self::createSignature(
+            $signed = self::sign(
                 $certificate,
-                $dom,
-                $root,
+                $signed,
                 $node,
                 $mark,
                 $algorithm,
                 $canonical
             );
+
+            if (!Signer::isSigned($signed->saveXML(), $tagName))
+                throw SignerException::signatureComparisonFailed();
         }
 
-        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-            . $dom->saveXML($dom->documentElement, LIBXML_NOXMLDECL);
+        return $signed;
     }
     
     /**
-     * Method that provides the signature of xml as standard SEFAZ
+     * Make the Signature tag.
+     * 
      * @param Certificate $certificate
-     * @param \DOMDocument $dom
-     * @param \DOMNode $root xml root
+     * @param \DOMDocument $content xml to sign
+     * @param \DOMNode $tagNode The tagNode to be signed
+     * @param string $mark for URI (optional)
+     * @param int $algorithm (optional)
+     * @param array $canonical parameters to format node for signature (optional)
+     * 
+     * @return \DOMDocument
+     * 
+     * @throws SignerException
+     */
+    public static function sign(
+        Certificate $certificate,
+        DOMDocument $content,
+        DOMNode $tagNode,
+        string $mark = 'Id',
+        int $algorithm = OPENSSL_ALGO_SHA1,
+        $canonical = self::CANONICAL
+    ): DOMDocument {
+        if (!empty($canonical))
+            self::$canonical = $canonical;
+        
+        return self::createSignature(
+            $certificate,
+            $content,
+            $tagNode,
+            $mark,
+            $algorithm,
+            $canonical
+        );
+    }
+    
+    /**
+     * Method that provides the signature of xml as standard SEFAZ.
+     * 
+     * @param Certificate $certificate
+     * @param \DOMDocument $dom The original document
      * @param \DOMElement $node node to be signed
      * @param string $mark Marker signed attribute
-     * @param int $algorithm cryptographic algorithm (opcional)
-     * @param array $canonical parameters to format node for signature (opcional)
+     * @param int $algorithm cryptographic algorithm (optional)
+     * @param array $canonical parameters to format node for signature (optional)
+     * 
      * @return \DOMDocument
      */
     private static function createSignature(
@@ -111,7 +130,7 @@ class Signer
         DOMDocument $dom,
         DOMElement $node,
         string $mark,
-        $algorithm = OPENSSL_ALGO_SHA1,
+        int $algorithm = OPENSSL_ALGO_SHA1,
         $canonical = self::CANONICAL
     ): DOMDocument {
         $nsDSIG = 'http://www.w3.org/2000/09/xmldsig#';
@@ -203,8 +222,8 @@ class Signer
     /**
      * Verify if xml signature is valid
      * @param string $content
-     * @param string $tagname tag for sign (opcional)
-     * @param array $canonical parameters to format node for signature (opcional)
+     * @param string $tagname tag for sign (optional)
+     * @param array $canonical parameters to format node for signature (optional)
      * @return bool
      * @throws SignerException Not is a XML, Digest or Signature dont match
      */
