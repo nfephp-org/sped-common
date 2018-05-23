@@ -32,7 +32,7 @@ use DOMElement;
 
 class Signer
 {
-    const CANONICAL = [true,false,null,null];
+    const CANONICAL = array(true,false,null,null);
     private static $canonical = self::CANONICAL;
     
     /**
@@ -49,13 +49,13 @@ class Signer
      */
     public static function sign(
         Certificate $certificate,
-        $content,
-        $tagname,
-        $mark = 'Id',
-        $algorithm = OPENSSL_ALGO_SHA1,
-        $canonical = self::CANONICAL,
-        $rootname = ''
-    ) {
+        string $content,
+        string $tagname,
+        string $mark = 'Id',
+        int $algorithm = OPENSSL_ALGO_SHA1,
+        array $canonical = self::CANONICAL,
+        string $rootname = ''
+    ): string {
         if (empty($content))
             throw SignerException::isNotXml();
         
@@ -111,10 +111,10 @@ class Signer
         DOMDocument $dom,
         DOMNode $root,
         DOMElement $node,
-        $mark,
-        $algorithm = OPENSSL_ALGO_SHA1,
-        $canonical = self::CANONICAL
-    ) {
+        string $mark,
+        int $algorithm = OPENSSL_ALGO_SHA1,
+        array $canonical = self::CANONICAL
+    ): DOMDocument {
         $nsDSIG = 'http://www.w3.org/2000/09/xmldsig#';
         $nsCannonMethod = 'http://www.w3.org/TR/2001/REC-xml-c14n-20010315';
         $nsSignatureMethod = 'http://www.w3.org/2000/09/xmldsig#rsa-sha1';
@@ -181,7 +181,7 @@ class Signer
      * @param string $content
      * @return string
      */
-    public static function removeSignature($content) {
+    public static function removeSignature(string $content): string {
         if (!self::existsSignature($content))
             return $content;
 
@@ -205,10 +205,10 @@ class Signer
      * @param string $content
      * @param string $tagname tag for sign (opcional)
      * @param array $canonical parameters to format node for signature (opcional)
-     * @return boolean
+     * @return bool
      * @throws SignerException Not is a XML, Digest or Signature dont match
      */
-    public static function isSigned($content, $tagname = '', $canonical = self::CANONICAL) {
+    public static function isSigned(string $content, string $tagname = '', array $canonical = self::CANONICAL): bool {
         if (!self::existsSignature($content))
             return false;
 
@@ -223,7 +223,7 @@ class Signer
      * @param string $content
      * @return boolean
      */
-    public static function existsSignature($content) {
+    public static function existsSignature(string $content): bool {
         if (!Validator::isXML($content))
             throw SignerException::isNotXml();
 
@@ -242,7 +242,7 @@ class Signer
      * @param array $canonical
      * @return boolean
      */
-    private static function signatureCheck($xml, $canonical = self::CANONICAL) {
+    private static function signatureCheck(string $xml, array $canonical = self::CANONICAL): bool {
         $dom = new \DOMDocument('1.0', 'utf-8');
         $dom->formatOutput = false;
         $dom->preserveWhiteSpace = false;
@@ -281,7 +281,7 @@ class Signer
      * @return bool
      * @throws SignerException
      */
-    private static function digestCheck($xml, $tagname = '', $canonical = self::CANONICAL) {
+    private static function digestCheck(string $xml, string $tagname = '', array $canonical = self::CANONICAL): bool {
         $dom = new \DOMDocument('1.0', 'utf-8');
         $dom->formatOutput = false;
         $dom->preserveWhiteSpace = false;
@@ -334,10 +334,10 @@ class Signer
      * @param array $canonical
      * @return string
      */
-    private static function makeDigest(DOMNode $node, $algorithm, $canonical = self::CANONICAL) {
+    private static function makeDigest(DOMNode $node, string $algorithm, array $canonical = self::CANONICAL): string {
         $c14n = self::canonize($node, $canonical);
         $hashValue = hash($algorithm, $c14n, true);
-        
+
         return base64_encode($hashValue);
     }
     
@@ -347,7 +347,7 @@ class Signer
      * @param array $canonical
      * @return string
      */
-    private static function canonize(DOMNode $node, $canonical = self::CANONICAL) {
+    private static function canonize(DOMNode $node, array $canonical = self::CANONICAL): string {
         return $node->C14N(
             $canonical[0],
             $canonical[1],
