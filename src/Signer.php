@@ -52,8 +52,8 @@ class Signer
         string $content,
         string $tagname,
         string $mark = 'Id',
-        int $algorithm = OPENSSL_ALGO_SHA1,
-        array $canonical = self::CANONICAL,
+        $algorithm = OPENSSL_ALGO_SHA1,
+        $canonical = self::CANONICAL,
         string $rootname = ''
     ): string {
         if (empty($content))
@@ -112,8 +112,8 @@ class Signer
         DOMNode $root,
         DOMElement $node,
         string $mark,
-        int $algorithm = OPENSSL_ALGO_SHA1,
-        array $canonical = self::CANONICAL
+        $algorithm = OPENSSL_ALGO_SHA1,
+        $canonical = self::CANONICAL
     ): DOMDocument {
         $nsDSIG = 'http://www.w3.org/2000/09/xmldsig#';
         $nsCannonMethod = 'http://www.w3.org/TR/2001/REC-xml-c14n-20010315';
@@ -208,7 +208,7 @@ class Signer
      * @return bool
      * @throws SignerException Not is a XML, Digest or Signature dont match
      */
-    public static function isSigned(string $content, string $tagname = '', array $canonical = self::CANONICAL): bool {
+    public static function isSigned(string $content, string $tagname = '', $canonical = self::CANONICAL): bool {
         if (!self::existsSignature($content))
             return false;
 
@@ -242,7 +242,7 @@ class Signer
      * @param array $canonical
      * @return boolean
      */
-    private static function signatureCheck(string $xml, array $canonical = self::CANONICAL): bool {
+    private static function signatureCheck(string $xml, $canonical = self::CANONICAL): bool {
         $dom = new \DOMDocument('1.0', 'utf-8');
         $dom->formatOutput = false;
         $dom->preserveWhiteSpace = false;
@@ -281,7 +281,7 @@ class Signer
      * @return bool
      * @throws SignerException
      */
-    private static function digestCheck(string $xml, string $tagname = '', array $canonical = self::CANONICAL): bool {
+    private static function digestCheck(string $xml, string $tagname = '', $canonical = self::CANONICAL): bool {
         $dom = new \DOMDocument('1.0', 'utf-8');
         $dom->formatOutput = false;
         $dom->preserveWhiteSpace = false;
@@ -334,7 +334,7 @@ class Signer
      * @param array $canonical
      * @return string
      */
-    private static function makeDigest(DOMNode $node, string $algorithm, array $canonical = self::CANONICAL): string {
+    private static function makeDigest(DOMNode $node, string $algorithm, $canonical = self::CANONICAL): string {
         $c14n = self::canonize($node, $canonical);
         $hashValue = hash($algorithm, $c14n, true);
 
@@ -347,7 +347,7 @@ class Signer
      * @param array $canonical
      * @return string
      */
-    private static function canonize(DOMNode $node, array $canonical = self::CANONICAL): string {
+    private static function canonize(DOMNode $node, $canonical = self::CANONICAL): string {
         return $node->C14N(
             $canonical[0],
             $canonical[1],
