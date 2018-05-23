@@ -109,7 +109,6 @@ class Signer
     private static function createSignature(
         Certificate $certificate,
         DOMDocument $dom,
-        DOMNode $root,
         DOMElement $node,
         string $mark,
         $algorithm = OPENSSL_ALGO_SHA1,
@@ -128,9 +127,9 @@ class Signer
         $nsTransformMethod1 ='http://www.w3.org/2000/09/xmldsig#enveloped-signature';
         $nsTransformMethod2 = 'http://www.w3.org/TR/2001/REC-xml-c14n-20010315';
         $idSigned = trim($node->getAttribute($mark));
-        $digestValue = self::makeDigest($node, $digestAlgorithm, $canonical);
         $signatureNode = $dom->createElementNS($nsDSIG, 'Signature');
-        $root->appendChild($signatureNode);
+        $signatureNode->setAttribute('Id', "Ass_$idSigned");
+        $node->parentNode->appendChild($signatureNode);
         $signedInfoNode = $dom->createElement('SignedInfo');
         $signatureNode->appendChild($signedInfoNode);
         $canonicalNode = $dom->createElement('CanonicalizationMethod');
@@ -141,11 +140,11 @@ class Signer
         $signatureMethodNode->setAttribute('Algorithm', $nsSignatureMethod);
         $referenceNode = $dom->createElement('Reference');
         $signedInfoNode->appendChild($referenceNode);
-
+        
         if (!empty($idSigned)) {
             $idSigned = "#$idSigned";
         }
-
+        
         $referenceNode->setAttribute('URI', $idSigned);
         $transformsNode = $dom->createElement('Transforms');
         $referenceNode->appendChild($transformsNode);
@@ -158,6 +157,7 @@ class Signer
         $digestMethodNode = $dom->createElement('DigestMethod');
         $referenceNode->appendChild($digestMethodNode);
         $digestMethodNode->setAttribute('Algorithm', $nsDigestMethod);
+        $digestValue = self::makeDigest($node, $digestAlgorithm, $canonical);
         $digestValueNode = $dom->createElement('DigestValue', $digestValue);
         $referenceNode->appendChild($digestValueNode);
         $c14n = self::canonize($signedInfoNode, $canonical);
