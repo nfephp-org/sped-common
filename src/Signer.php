@@ -286,13 +286,16 @@ class Signer
         $dom->formatOutput = false;
         $dom->preserveWhiteSpace = false;
         $dom->loadXML($xml);
-        $root = $dom->documentElement;
-        $signature = $dom->getElementsByTagName('Signature')->item(0);
-        $sigURI = $signature->getElementsByTagName('Reference')->item(0)->getAttribute('URI');
+
+        $signature = null;
+        $sigURI = null;
+        $node = null;
 
         if (empty($tagname)) {
+            $signature = $dom->getElementsByTagName('Signature')->item(0);
+            $sigURI = $signature->getElementsByTagName('Reference')->item(0)->getAttribute('URI');
             if (empty($sigURI)) {
-                $tagname = $root->nodeName;
+                $tagname = $dom->documentElement->nodeName;
             } else {
                 $xpath = new \DOMXPath($dom);
                 $entries = $xpath->query('//@Id');
@@ -301,8 +304,16 @@ class Signer
                     break;
                 }
             }
+            $node = $dom->getElementsByTagName($tagname)->item(0);
         }
-        $node = $dom->getElementsByTagName($tagname)->item(0);
+        else {
+            $node = $dom->getElementsByTagName($tagname)->item(0);
+            $signature = $node->nextSibling;
+            if ($signature->nodeName !== 'Signature')
+                throw SignerException::tagNotFound('Signature');
+            
+            $sigURI = $signature->getElementsByTagName('Reference')->item(0)->getAttribute('URI');
+        }
 
         if (empty($node))
             throw SignerException::tagNotFound($tagname);
