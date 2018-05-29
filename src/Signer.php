@@ -131,7 +131,7 @@ class Signer
         Certificate $certificate,
         DOMDocument $dom,
         DOMElement $node,
-        string $mark = 'Id',
+        $mark = 'Id',
         $algorithm = OPENSSL_ALGO_SHA1,
         $canonical = self::CANONICAL
     ) {
