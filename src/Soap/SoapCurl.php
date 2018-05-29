@@ -17,6 +17,7 @@ namespace NFePHP\Common\Soap;
 
 use NFePHP\Common\Soap\SoapBase;
 use NFePHP\Common\Soap\SoapInterface;
+use NFePHP\Common\Soap\SoapData;
 use NFePHP\Common\Exception\SoapException;
 use NFePHP\Common\Certificate;
 use Psr\Log\LoggerInterface;
@@ -56,78 +57,60 @@ class SoapCurl extends SoapBase implements SoapInterface
         $request = '',
         $soapheader = null
     ) {
-        $response = '';
-        $envelope = $this->makeEnvelopeSoap(
-            $request,
-            $namespaces,
-            $soapver,
-            $soapheader
-        );
-        $msgSize = strlen($envelope);
-        $parameters = [
-            "Content-Type: application/soap+xml;charset=utf-8;",
-            "Content-length: $msgSize"
-        ];
-        if (!empty($action)) {
-            $parameters[0] .= "action=$action";
-        }
-        $this->requestHead = implode("\n", $parameters);
-        $this->requestBody = $envelope;
+        $data = new SoapData();
+        $data->urlService = $url;
+        $data->urlAction = $action;
+        $data->soapNamespaces = $namespaces;
+        $data->envelopedData = $this->makeEnvelopeSoap($request, $namespaces, $soapver, $soapheader);
+        $data->contentType = 'application/soap+xml';
+
+        return $this->send2($data);
+    }
+    
+    public function send2(SoapData $data): string
+    {
+        $parameters = self::buildParameters($data);
+        $this->requestHead = implode('\n', $parameters);
+        $this->requestBody = $data->envelopedData;
+
+        $url = $data->urlService;
         
+        $httpcode = 0;
         try {
-            $oCurl = curl_init();
-            $this->setCurlProxy($oCurl);
-            curl_setopt($oCurl, CURLOPT_URL, $url);
-            curl_setopt($oCurl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
-            curl_setopt($oCurl, CURLOPT_CONNECTTIMEOUT, $this->soaptimeout);
-            curl_setopt($oCurl, CURLOPT_TIMEOUT, $this->soaptimeout + 20);
-            curl_setopt($oCurl, CURLOPT_HEADER, 1);
-            curl_setopt($oCurl, CURLOPT_SSL_VERIFYHOST, 0);
-            curl_setopt($oCurl, CURLOPT_SSL_VERIFYPEER, 0);
-            if (!$this->disablesec) {
-                curl_setopt($oCurl, CURLOPT_SSL_VERIFYHOST, 2);
-                if (is_file($this->casefaz)) {
-                    curl_setopt($oCurl, CURLOPT_CAINFO, $this->casefaz);
-                }
-            }
-            curl_setopt($oCurl, CURLOPT_SSLVERSION, $this->soapprotocol);
-            curl_setopt($oCurl, CURLOPT_SSLCERT, $this->tempdir . $this->certfile);
-            curl_setopt($oCurl, CURLOPT_SSLKEY, $this->tempdir . $this->prifile);
-            if (!empty($this->temppass)) {
-                curl_setopt($oCurl, CURLOPT_KEYPASSWD, $this->temppass);
-            }
-            curl_setopt($oCurl, CURLOPT_RETURNTRANSFER, 1);
-            if (!empty($envelope)) {
-                curl_setopt($oCurl, CURLOPT_POST, 1);
-                curl_setopt($oCurl, CURLOPT_POSTFIELDS, $envelope);
-                curl_setopt($oCurl, CURLOPT_HTTPHEADER, $parameters);
-            }
-            $response = curl_exec($oCurl);
-            $this->soaperror = curl_error($oCurl);
-            $ainfo = curl_getinfo($oCurl);
-            if (is_array($ainfo)) {
-                $this->soapinfo = $ainfo;
-            }
-            $headsize = curl_getinfo($oCurl, CURLINFO_HEADER_SIZE);
-            $httpcode = curl_getinfo($oCurl, CURLINFO_HTTP_CODE);
-            curl_close($oCurl);
-            $this->responseHead = trim(substr($response, 0, $headsize));
-            $this->responseBody = trim(substr($response, $headsize));
-            $this->saveDebugFiles(
-                $operation,
-                $this->requestHead . "\n" . $this->requestBody,
-                $this->responseHead . "\n" . $this->responseBody
-            );
+            $curl = $this->create_curl($url, $data->envelopedData, $parameters);
+            
+            $response = curl_exec($curl);
+
+            $httpcode = $this->dispose_curl($curl, $response, $data->urlMethod);
         } catch (\Exception $e) {
             throw SoapException::unableToLoadCurl($e->getMessage());
         }
+
         if ($this->soaperror != '') {
             throw SoapException::soapFault($this->soaperror . " [$url]");
         }
+
         if ($httpcode != 200) {
             throw SoapException::soapFault(" [$url]" . $this->responseHead);
         }
+
         return $this->responseBody;
+    }
+
+    private static function buildParameters(SoapData $data): array
+    {
+        $msgSize = strlen($data->envelopedData);
+        $parameters = array(
+            "Content-Type: $data->contentType;charset=\"utf-8\"",
+            "Content-Length: $msgSize",
+        );
+        if (!empty($data->urlMethod)) {
+            $parameters[0] .= ";action=\"$data->urlMethod\"";
+        }
+        if (!empty($data->urlAction)) {
+            $parameters[] = "SOAPAction: $data->urlAction";
+        }
+        return $parameters;
     }
     
     /**
@@ -145,5 +128,72 @@ class SoapCurl extends SoapBase implements SoapInterface
                 curl_setopt($oCurl, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
             }
         }
+    }
+    
+    private function createCurl($url, $envelope, $parameters)
+    {
+        $oCurl = curl_init();
+        $this->setCurlProxy($oCurl);
+        curl_setopt($oCurl, CURLOPT_URL, $url);
+        curl_setopt($oCurl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+        curl_setopt($oCurl, CURLOPT_CONNECTTIMEOUT, $this->soaptimeout);
+        curl_setopt($oCurl, CURLOPT_TIMEOUT, $this->soaptimeout + 30);
+        curl_setopt($oCurl, CURLOPT_HEADER, 1);
+        curl_setopt($oCurl, CURLOPT_VERBOSE, 1);
+        // curl_setopt($oCurl, CURLOPT_FAILONERROR, 1);
+        curl_setopt($oCurl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($oCurl, CURLOPT_SSL_VERIFYPEER, 0);
+
+        if (!$this->disablesec) {
+            curl_setopt($oCurl, CURLOPT_SSL_VERIFYHOST, 2);
+            if (is_file($this->casefaz)) {
+                curl_setopt($oCurl, CURLOPT_CAINFO, $this->casefaz);
+            }
+        }
+
+        curl_setopt($oCurl, CURLOPT_SSLVERSION, $this->soapprotocol);
+        curl_setopt($oCurl, CURLOPT_SSLCERT, $this->tempdir . $this->certfile);
+        curl_setopt($oCurl, CURLOPT_SSLKEY, $this->tempdir . $this->prifile);
+
+        if (!empty($this->temppass)) {
+            curl_setopt($oCurl, CURLOPT_KEYPASSWD, $this->temppass);
+        }
+
+        curl_setopt($oCurl, CURLOPT_RETURNTRANSFER, 1);
+
+        if (!empty($envelope)) {
+            curl_setopt($oCurl, CURLOPT_POST, 1);
+            curl_setopt($oCurl, CURLOPT_POSTFIELDS, $envelope);
+            curl_setopt($oCurl, CURLOPT_HTTPHEADER, $parameters);
+        }
+
+        return $oCurl;
+    }
+
+    private function disposeCurl($oCurl, $response, $operation = '')
+    {
+        $this->soaperror = curl_error($oCurl);
+        $ainfo = curl_getinfo($oCurl);
+
+        if (is_array($ainfo)) {
+            $this->soapinfo = $ainfo;
+        }
+
+        $headsize = curl_getinfo($oCurl, CURLINFO_HEADER_SIZE);
+        $httpcode = curl_getinfo($oCurl, CURLINFO_HTTP_CODE);
+        curl_close($oCurl);
+
+        if ($response) {
+            $this->responseHead = trim(substr($response, 0, $headsize));
+            $this->responseBody = trim(substr($response, $headsize));
+        }
+
+        $this->saveDebugFiles(
+            $operation,
+            $this->requestHead . "\n" . $this->requestBody,
+            $this->responseHead . "\n" . $this->responseBody
+        );
+        
+        return $httpcode;
     }
 }
