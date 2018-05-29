@@ -202,7 +202,7 @@ class Signer
      * @param string $content
      * @return string
      */
-    public static function removeSignature(string $content)
+    public static function removeSignature($content)
     {
         if (!self::existsSignature($content)) {
             return $content;
@@ -231,7 +231,7 @@ class Signer
      * @return bool
      * @throws SignerException Not is a XML, Digest or Signature dont match
      */
-    public static function isSigned(string $content, $tagname = '', $canonical = self::CANONICAL)
+    public static function isSigned($content, $tagname = '', $canonical = self::CANONICAL)
     {
         if (!self::existsSignature($content)) {
             return false;
@@ -249,7 +249,7 @@ class Signer
      * @param string $content
      * @return boolean
      */
-    public static function existsSignature(string $content)
+    public static function existsSignature($content)
     {
         if (!Validator::isXML($content)) {
             throw SignerException::isNotXml();
@@ -270,7 +270,7 @@ class Signer
      * @param array $canonical
      * @return boolean
      */
-    private static function signatureCheck(string $xml, $canonical = self::CANONICAL)
+    private static function signatureCheck($xml, $canonical = self::CANONICAL)
     {
         $dom = new \DOMDocument('1.0', 'utf-8');
         $dom->formatOutput = false;
@@ -311,7 +311,7 @@ class Signer
      * @return bool
      * @throws SignerException
      */
-    private static function digestCheck(string $xml, $tagname = '', $canonical = self::CANONICAL)
+    private static function digestCheck($xml, $tagname = '', $canonical = self::CANONICAL)
     {
         $dom = new \DOMDocument('1.0', 'utf-8');
         $dom->formatOutput = false;
@@ -381,7 +381,7 @@ class Signer
      * @param array $canonical
      * @return string
      */
-    private static function makeDigest(DOMNode $node, string $algorithm, $canonical = self::CANONICAL)
+    private static function makeDigest(DOMNode $node, $algorithm, $canonical = self::CANONICAL)
     {
         $c14n = self::canonize($node, $canonical);
         $hashValue = hash($algorithm, $c14n, true);
