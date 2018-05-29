@@ -67,7 +67,8 @@ class SoapCurl extends SoapBase implements SoapInterface
         return $this->send2($data);
     }
     
-    public function send2(SoapData $data): string {
+    public function send2(SoapData $data): string
+    {
         $parameters = self::buildParameters($data);
         $this->requestHead = implode('\n', $parameters);
         $this->requestBody = $data->envelopedData;
@@ -81,16 +82,18 @@ class SoapCurl extends SoapBase implements SoapInterface
             $response = curl_exec($curl);
 
             $httpcode = $this->dispose_curl($curl, $response, $data->urlMethod);
-        }
-        catch(\Exception $e) {
+        } 
+        catch (\Exception $e) {
             throw SoapException::unableToLoadCurl($e->getMessage());
         }
 
-        if ($this->soaperror != '')
+        if ($this->soaperror != '') {
             throw SoapException::soapFault($this->soaperror . " [$url]");
+        }
 
-        if ($httpcode != 200)
+        if ($httpcode != 200) {
             throw SoapException::soapFault(" [$url]" . $this->responseHead);
+        }
 
         return $this->responseBody;
     }
@@ -106,7 +109,7 @@ class SoapCurl extends SoapBase implements SoapInterface
         }
         if (!empty($data->urlAction)) {
             $parameters[] = "SOAPAction: $data->urlAction";
-        }        
+        }
         return $parameters;
     }
     
@@ -127,7 +130,7 @@ class SoapCurl extends SoapBase implements SoapInterface
         }
     }
     
-    private function create_curl($url, $envelope, $parameters)
+    private function createCurl($url, $envelope, $parameters)
     {
         $oCurl = curl_init();
         $this->setCurlProxy($oCurl);
@@ -144,7 +147,7 @@ class SoapCurl extends SoapBase implements SoapInterface
         if (!$this->disablesec) {
             curl_setopt($oCurl, CURLOPT_SSL_VERIFYHOST, 2);
             if (is_file($this->casefaz)) {
-                curl_setopt($oCurl, CURLOPT_CAINFO, $this->casefaz); //must have already called function loadCA at this point.
+                curl_setopt($oCurl, CURLOPT_CAINFO, $this->casefaz);
             }
         }
 
@@ -167,7 +170,7 @@ class SoapCurl extends SoapBase implements SoapInterface
         return $oCurl;
     }
 
-    private function dispose_curl($oCurl, $response, $operation = '')
+    private function disposeCurl($oCurl, $response, $operation = '')
     {
         $this->soaperror = curl_error($oCurl);
         $ainfo = curl_getinfo($oCurl);
