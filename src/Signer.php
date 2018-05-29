@@ -56,7 +56,7 @@ class Signer
         $mark = 'Id',
         $algorithm = OPENSSL_ALGO_SHA1,
         $canonical = self::CANONICAL
-    ): DOMDocument {
+    ) {
         $signed = $doc;
 
         foreach ($tags as $tagName) {
@@ -100,7 +100,7 @@ class Signer
         $mark = 'Id',
         $algorithm = OPENSSL_ALGO_SHA1,
         $canonical = self::CANONICAL
-    ): DOMDocument {
+    ) {
         if (!empty($canonical)) {
             self::$canonical = $canonical;
         }
@@ -134,7 +134,7 @@ class Signer
         string $mark = 'Id',
         $algorithm = OPENSSL_ALGO_SHA1,
         $canonical = self::CANONICAL
-    ): DOMDocument {
+    ) {
         $nsDSIG = 'http://www.w3.org/2000/09/xmldsig#';
         $nsCannonMethod = 'http://www.w3.org/TR/2001/REC-xml-c14n-20010315';
         $nsSignatureMethod = 'http://www.w3.org/2000/09/xmldsig#rsa-sha1';
@@ -202,7 +202,7 @@ class Signer
      * @param string $content
      * @return string
      */
-    public static function removeSignature(string $content): string
+    public static function removeSignature(string $content)
     {
         if (!self::existsSignature($content)) {
             return $content;
@@ -231,7 +231,7 @@ class Signer
      * @return bool
      * @throws SignerException Not is a XML, Digest or Signature dont match
      */
-    public static function isSigned(string $content, $tagname = '', $canonical = self::CANONICAL): bool
+    public static function isSigned(string $content, $tagname = '', $canonical = self::CANONICAL)
     {
         if (!self::existsSignature($content)) {
             return false;
@@ -249,7 +249,7 @@ class Signer
      * @param string $content
      * @return boolean
      */
-    public static function existsSignature(string $content): bool
+    public static function existsSignature(string $content)
     {
         if (!Validator::isXML($content)) {
             throw SignerException::isNotXml();
@@ -270,7 +270,7 @@ class Signer
      * @param array $canonical
      * @return boolean
      */
-    private static function signatureCheck(string $xml, $canonical = self::CANONICAL): bool
+    private static function signatureCheck(string $xml, $canonical = self::CANONICAL)
     {
         $dom = new \DOMDocument('1.0', 'utf-8');
         $dom->formatOutput = false;
@@ -311,7 +311,7 @@ class Signer
      * @return bool
      * @throws SignerException
      */
-    private static function digestCheck(string $xml, $tagname = '', $canonical = self::CANONICAL): bool
+    private static function digestCheck(string $xml, $tagname = '', $canonical = self::CANONICAL)
     {
         $dom = new \DOMDocument('1.0', 'utf-8');
         $dom->formatOutput = false;
@@ -381,7 +381,7 @@ class Signer
      * @param array $canonical
      * @return string
      */
-    private static function makeDigest(DOMNode $node, string $algorithm, $canonical = self::CANONICAL): string
+    private static function makeDigest(DOMNode $node, string $algorithm, $canonical = self::CANONICAL)
     {
         $c14n = self::canonize($node, $canonical);
         $hashValue = hash($algorithm, $c14n, true);
@@ -395,7 +395,7 @@ class Signer
      * @param array $canonical
      * @return string
      */
-    private static function canonize(DOMNode $node, $canonical = self::CANONICAL): string
+    private static function canonize(DOMNode $node, $canonical = self::CANONICAL)
     {
         return $node->C14N(
             $canonical[0],
