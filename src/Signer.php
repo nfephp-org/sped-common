@@ -53,8 +53,8 @@ class Signer
         Certificate $certificate,
         DOMDocument $doc,
         array $tags,
-        string $mark = 'Id',
-        int $algorithm = OPENSSL_ALGO_SHA1,
+        $mark = 'Id',
+        $algorithm = OPENSSL_ALGO_SHA1,
         $canonical = self::CANONICAL
     ): DOMDocument {
         $signed = $doc;
@@ -97,8 +97,8 @@ class Signer
         Certificate $certificate,
         DOMDocument $content,
         DOMNode $tagNode,
-        string $mark = 'Id',
-        int $algorithm = OPENSSL_ALGO_SHA1,
+        $mark = 'Id',
+        $algorithm = OPENSSL_ALGO_SHA1,
         $canonical = self::CANONICAL
     ): DOMDocument {
         if (!empty($canonical)) {
@@ -131,8 +131,8 @@ class Signer
         Certificate $certificate,
         DOMDocument $dom,
         DOMElement $node,
-        string $mark,
-        int $algorithm = OPENSSL_ALGO_SHA1,
+        string $mark = 'Id',
+        $algorithm = OPENSSL_ALGO_SHA1,
         $canonical = self::CANONICAL
     ): DOMDocument {
         $nsDSIG = 'http://www.w3.org/2000/09/xmldsig#';
@@ -231,7 +231,7 @@ class Signer
      * @return bool
      * @throws SignerException Not is a XML, Digest or Signature dont match
      */
-    public static function isSigned(string $content, string $tagname = '', $canonical = self::CANONICAL): bool
+    public static function isSigned(string $content, $tagname = '', $canonical = self::CANONICAL): bool
     {
         if (!self::existsSignature($content)) {
             return false;
@@ -311,7 +311,7 @@ class Signer
      * @return bool
      * @throws SignerException
      */
-    private static function digestCheck(string $xml, string $tagname = '', $canonical = self::CANONICAL): bool
+    private static function digestCheck(string $xml, $tagname = '', $canonical = self::CANONICAL): bool
     {
         $dom = new \DOMDocument('1.0', 'utf-8');
         $dom->formatOutput = false;
