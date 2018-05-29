@@ -99,7 +99,7 @@ class SignerTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($actual);
     }
 
-    private static function getNFeDOMDocument(): DOMDocument
+    private static function getNFeDOMDocument()
     {
         $content = file_get_contents(__DIR__. '/fixtures/xml/NFe/35101158716523000119550010000000011003000000-nfe.xml');
 
@@ -111,7 +111,7 @@ class SignerTest extends \PHPUnit\Framework\TestCase
         return $doc;
     }
 
-    private static function getCertificate(): Certificate
+    private static function getCertificate()
     {
         $pfx = file_get_contents(__DIR__. '/fixtures/certs/certificado_teste.pfx');
         $certificate = Certificate::readPfx($pfx, 'associacao');
