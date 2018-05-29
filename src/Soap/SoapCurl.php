@@ -82,8 +82,7 @@ class SoapCurl extends SoapBase implements SoapInterface
             $response = curl_exec($curl);
 
             $httpcode = $this->dispose_curl($curl, $response, $data->urlMethod);
-        } 
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             throw SoapException::unableToLoadCurl($e->getMessage());
         }
 
@@ -98,7 +97,8 @@ class SoapCurl extends SoapBase implements SoapInterface
         return $this->responseBody;
     }
 
-    private static function buildParameters(SoapData $data): array {
+    private static function buildParameters(SoapData $data): array
+    {
         $msgSize = strlen($data->envelopedData);
         $parameters = array(
             "Content-Type: $data->contentType;charset=\"utf-8\"",

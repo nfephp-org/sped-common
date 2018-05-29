@@ -56,8 +56,7 @@ class Signer
         string $mark = 'Id',
         int $algorithm = OPENSSL_ALGO_SHA1,
         $canonical = self::CANONICAL
-    ): DOMDocument
-    {
+    ): DOMDocument {
         $signed = $doc;
 
         foreach ($tags as $tagName) {
@@ -101,8 +100,7 @@ class Signer
         string $mark = 'Id',
         int $algorithm = OPENSSL_ALGO_SHA1,
         $canonical = self::CANONICAL
-    ): DOMDocument
-    {
+    ): DOMDocument {
         if (!empty($canonical)) {
             self::$canonical = $canonical;
         }
@@ -335,14 +333,13 @@ class Signer
                 foreach ($entries as $entry) {
                     $tagname = $entry->ownerElement->nodeName;
                     break;
-                } 
+                }
             }
-            $node = $dom->getElementsByTagName($tagname)->item(0);            
+            $node = $dom->getElementsByTagName($tagname)->item(0);
             if (empty($node)) {
                 throw SignerException::tagNotFound($tagname);
             }
-        }
-        else {
+        } else {
             $node = $dom->getElementsByTagName($tagname)->item(0);
             if (empty($node)) {
                 throw SignerException::tagNotFound($tagname);
