@@ -323,19 +323,21 @@ class Signer
                     break;
                 }
             }
-            $node = $dom->getElementsByTagName($tagname)->item(0);
+            $node = $dom->getElementsByTagName($tagname)->item(0);            
+            if (empty($node))
+                throw SignerException::tagNotFound($tagname);
         }
         else {
             $node = $dom->getElementsByTagName($tagname)->item(0);
+            if (empty($node))
+                throw SignerException::tagNotFound($tagname);
+            
             $signature = $node->nextSibling;
             if ($signature->nodeName !== 'Signature')
                 throw SignerException::tagNotFound('Signature');
             
             $sigURI = $signature->getElementsByTagName('Reference')->item(0)->getAttribute('URI');
         }
-
-        if (empty($node))
-            throw SignerException::tagNotFound($tagname);
 
         $sigMethAlgo = $signature->getElementsByTagName('SignatureMethod')->item(0)->getAttribute('Algorithm');
         $algorithm = 'sha256';

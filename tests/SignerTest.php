@@ -5,6 +5,8 @@ namespace NFePHP\Common\Tests;
 use NFePHP\Common\Signer;
 use NFePHP\Common\SignerException;
 use NFePHP\Common\Certificate;
+use DOMDocument;
+use DOMNode;
 
 class SignerTest extends \PHPUnit\Framework\TestCase
 {
@@ -17,11 +19,13 @@ class SignerTest extends \PHPUnit\Framework\TestCase
      */
     public function testSign()
     {
-        $content = file_get_contents(__DIR__. '/fixtures/xml/NFe/35101158716523000119550010000000011003000000-nfe.xml');
-        $pfx = file_get_contents(__DIR__. '/fixtures/certs/certificado_teste.pfx');
-        $certificate = Certificate::readPfx($pfx, 'associacao');
-        $xmlsign = Signer::sign($certificate, $content, 'infNFe', 'Id');
-        $actual = Signer::isSigned($xmlsign);
+        $doc = $this->getNFeDOMDocument();
+        $node = $doc->getElementsByTagName('infNFe')->item(0);
+        $certificate = $this->getCertificate();
+
+        $xmlsign = Signer::sign($certificate, $doc, $node);
+        $actual = Signer::isSigned($xmlsign->saveXml());
+
         $this->assertTrue($actual);
     }
     
@@ -39,18 +43,6 @@ class SignerTest extends \PHPUnit\Framework\TestCase
         $xml = file_get_contents($file);
         $actual = Signer::isSigned($xml);
         $this->assertTrue($actual);
-    }
-
-    /**
-     * @covers Signer::existsSignature
-     * @expectedException NFePHP\Common\Exception\SignerException
-     */
-    public function testSignFailNotXML()
-    {
-        $pfx = file_get_contents(__DIR__. '/fixtures/certs/certificado_teste.pfx');
-        $certificate = Certificate::readPfx($pfx, 'associacao');
-        $content = "<html><body></body></html>";
-        $xmlsign = Signer::sign($certificate, $content, 'infNFe', 'Id');
     }
     
     /**
@@ -105,5 +97,25 @@ class SignerTest extends \PHPUnit\Framework\TestCase
         $nosigned = Signer::removeSignature($xml);
         $actual = Signer::isSigned($nosigned);
         $this->assertFalse($actual);
+    }
+
+    private static function getNFeDOMDocument(): DOMDocument
+    {
+        $content = file_get_contents(__DIR__. '/fixtures/xml/NFe/35101158716523000119550010000000011003000000-nfe.xml');
+
+        $doc = new DOMDocument('1.0', 'UTF-8');
+        $doc->preserveWhiteSpace = false;
+        $doc->formatOutput = false;
+        $doc->loadXML($content);
+
+        return $doc;
+    }
+
+    private static function getCertificate(): Certificate
+    {
+        $pfx = file_get_contents(__DIR__. '/fixtures/certs/certificado_teste.pfx');
+        $certificate = Certificate::readPfx($pfx, 'associacao');
+
+        return $certificate;
     }
 }
