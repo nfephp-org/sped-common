@@ -154,11 +154,6 @@ abstract class SoapBase implements SoapInterface
     ) {
         $this->logger = $logger;
         $this->loadCertificate($certificate);
-        $this->setTemporaryFolder(sys_get_temp_dir() . '/sped/');
-
-        if (null !== $certificate) {
-            $this->saveTemporarilyKeyFiles();
-        }
     }
 
     /**
@@ -237,21 +232,16 @@ abstract class SoapBase implements SoapInterface
 
     /**
      * Set another temporayfolder for saving certificates for SOAP utilization
-     * @param string $folderRealPath
+     * @param string | null $folderRealPath
      * @return void
      */
-    public function setTemporaryFolder($folderRealPath)
+    public function setTemporaryFolder($folderRealPath = null)
     {
-        if (null !== $this->filesystem) {
-            $this->removeTemporarilyFiles();
+        if (empty($folderRealPath)) {
+            $folderRealPath = sys_get_temp_dir() . '/sped/';
         }
-
         $this->tempdir = $folderRealPath;
         $this->setLocalFolder($folderRealPath);
-
-        if (null !== $this->certificate) {
-            $this->saveTemporarilyKeyFiles();
-        }
     }
 
     /**
@@ -461,10 +451,16 @@ abstract class SoapBase implements SoapInterface
      */
     public function saveTemporarilyKeyFiles()
     {
+        if (!empty($this->certsdir)) {
+            return;
+        }
         if (!is_object($this->certificate)) {
             throw new RuntimeException(
                 'Certificate not found.'
             );
+        }
+        if (empty($this->filesystem)) {
+            $this->setTemporaryFolder();
         }
         $this->certsdir = $this->certificate->getCnpj() . '/certs/';
         $this->prifile = $this->certsdir . Strings::randomString(10) . '.pem';
@@ -509,6 +505,9 @@ abstract class SoapBase implements SoapInterface
      */
     public function removeTemporarilyFiles()
     {
+        if (empty($this->filesystem) || empty($this->certsdir)) {
+            return;
+        }
         $contents = $this->filesystem->listContents($this->certsdir, true);
         //define um limite de $waitingTime min, ou seja qualquer arquivo criado a mais
         //de $waitingTime min será removido
