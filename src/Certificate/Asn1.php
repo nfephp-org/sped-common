@@ -31,7 +31,7 @@ class Asn1
         //OID = 2.16.76.1.3.3
         return self::getOIDdata('2.16.76.1.3.3', $publickeyUnformated);
     }
-    
+
     /**
      * CPF
      * OID = 2.16.76.1.3.1 e
@@ -48,6 +48,18 @@ class Asn1
      * as siglas do órgão expedidor do RG
      * e respectiva UF.
      */
+    /**
+     * Get CPF owner number from digital certificate
+     * (more specifically, from public key)
+     * @param string $publickeyUnformated
+     * @return string CPF
+     */
+    public static function getCPF($publickeyUnformated)
+    {
+        //CPF
+        //OID = 2.16.76.1.3.1
+        return self::getOIDdata('2.16.76.1.3.1', $publickeyUnformated);
+    }
 
     /**
      * Recovers information regarding the OID contained in the certificate
