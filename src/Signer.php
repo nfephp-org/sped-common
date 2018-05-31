@@ -83,7 +83,7 @@ class Signer
                 $algorithm,
                 $canonical
             );
-        };
+        }
         return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
             . $dom->saveXML($dom->documentElement, LIBXML_NOXMLDECL);
     }
@@ -202,14 +202,13 @@ class Signer
         $tagname = '',
         $canonical = self::CANONICAL
     ) {
-        if (self::existsSignature($content)) {
-            if (self::digestCheck($content, $tagname, $canonical)) {
-                if (self::signatureCheck($content, $canonical)) {
-                    return true;
-                }
-            }
+        if (!self::existsSignature($content)) {
+            return false;
         }
-        return false;
+        if (!self::digestCheck($content, $tagname, $canonical)) {
+            return false;
+        }
+        return self::signatureCheck($content, $canonical);
     }
     
     /**
@@ -227,10 +226,7 @@ class Signer
         $dom->preserveWhiteSpace = false;
         $dom->loadXML($content);
         $signature = $dom->getElementsByTagName('Signature')->item(0);
-        if (empty($signature)) {
-            return false;
-        }
-        return true;
+        return !empty($signature);
     }
     
     /**
