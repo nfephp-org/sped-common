@@ -238,7 +238,11 @@ abstract class SoapBase implements SoapInterface
     public function setTemporaryFolder($folderRealPath = null)
     {
         if (empty($folderRealPath)) {
-            $folderRealPath = sys_get_temp_dir() . '/sped/';
+            $path = '/sped-'. getmyuid() .'/';
+            if(function_exists('posix_getuid')) {
+                $path = '/sped-'. posix_getuid() .'/';
+            }
+            $folderRealPath = sys_get_temp_dir() . $path;
         }
         $this->tempdir = $folderRealPath;
         $this->setLocalFolder($folderRealPath);
