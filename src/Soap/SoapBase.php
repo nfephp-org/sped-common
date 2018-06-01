@@ -239,7 +239,7 @@ abstract class SoapBase implements SoapInterface
     {
         if (empty($folderRealPath)) {
             $path = '/sped-'. getmyuid() .'/';
-            if(function_exists('posix_getuid')) {
+            if (function_exists('posix_getuid')) {
                 $path = '/sped-'. posix_getuid() .'/';
             }
             $folderRealPath = sys_get_temp_dir() . $path;
