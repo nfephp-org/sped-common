@@ -155,7 +155,7 @@ class DOMImproved extends DOMDocument
      * Serão inclusos erros na array $erros[] sempre que a tag for obrigatória e
      * nenhum parâmetro for passado na variável $content e $force for false
      * @param \DOMElement $parent
-     * @param string $name
+     * @param string|null $name
      * @param string|float|null $content
      * @param boolean $obrigatorio
      * @param string $descricao
@@ -170,7 +170,7 @@ class DOMImproved extends DOMDocument
         $descricao = '',
         $force = false
     ) {
-        if ($content === null) {
+        if ($content === null || empty($name)) {
             return;
         }
         $content = (string) $content;
