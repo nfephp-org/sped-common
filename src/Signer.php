@@ -42,7 +42,6 @@ class Signer
      * @param string $mark for URI (opcional)
      * @param int $algorithm (opcional)
      * @param array $canonical parameters to format node for signature (opcional)
-     * @param string $rootname name of tag to insert signature block (opcional)
      * @return string
      * @throws SignerException
      */
@@ -52,8 +51,7 @@ class Signer
         $tagname,
         $mark = 'Id',
         $algorithm = OPENSSL_ALGO_SHA1,
-        $canonical = self::CANONICAL,
-        $rootname = ''
+        $canonical = self::CANONICAL
     ) {
         if (empty($content)) {
             throw SignerException::isNotXml();
@@ -65,19 +63,14 @@ class Signer
         $dom->loadXML($content);
         $dom->preserveWhiteSpace = false;
         $dom->formatOutput = false;
-        $root = $dom->documentElement;
-        if (!empty($rootname)) {
-            $root = $dom->getElementsByTagName($rootname)->item(0);
-        }
         $node = $dom->getElementsByTagName($tagname)->item(0);
-        if (empty($node) || empty($root)) {
+        if (empty($node)) {
             throw SignerException::tagNotFound($tagname);
         }
         if (! self::existsSignature($content)) {
             $dom = self::createSignature(
                 $certificate,
                 $dom,
-                $root,
                 $node,
                 $mark,
                 $algorithm,
@@ -92,7 +85,6 @@ class Signer
      * Method that provides the signature of xml as standard SEFAZ
      * @param Certificate $certificate
      * @param \DOMDocument $dom
-     * @param \DOMNode $root xml root
      * @param \DOMElement $node node to be signed
      * @param string $mark Marker signed attribute
      * @param int $algorithm cryptographic algorithm (opcional)
@@ -102,7 +94,6 @@ class Signer
     private static function createSignature(
         Certificate $certificate,
         DOMDocument $dom,
-        DOMNode $root,
         DOMElement $node,
         $mark,
         $algorithm = OPENSSL_ALGO_SHA1,
@@ -121,9 +112,8 @@ class Signer
         $nsTransformMethod1 ='http://www.w3.org/2000/09/xmldsig#enveloped-signature';
         $nsTransformMethod2 = 'http://www.w3.org/TR/2001/REC-xml-c14n-20010315';
         $idSigned = trim($node->getAttribute($mark));
-        $digestValue = self::makeDigest($node, $digestAlgorithm, $canonical);
         $signatureNode = $dom->createElementNS($nsDSIG, 'Signature');
-        $root->appendChild($signatureNode);
+        $node->parentNode->appendChild($signatureNode);
         $signedInfoNode = $dom->createElement('SignedInfo');
         $signatureNode->appendChild($signedInfoNode);
         $canonicalNode = $dom->createElement('CanonicalizationMethod');
@@ -149,6 +139,7 @@ class Signer
         $digestMethodNode = $dom->createElement('DigestMethod');
         $referenceNode->appendChild($digestMethodNode);
         $digestMethodNode->setAttribute('Algorithm', $nsDigestMethod);
+        $digestValue = self::makeDigest($node, $digestAlgorithm, $canonical);
         $digestValueNode = $dom->createElement('DigestValue', $digestValue);
         $referenceNode->appendChild($digestValueNode);
         $c14n = self::canonize($signedInfoNode, $canonical);
