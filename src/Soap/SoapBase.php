@@ -221,12 +221,6 @@ abstract class SoapBase implements SoapInterface
     public function setEncriptPrivateKey($encript = true)
     {
         $this->encriptPrivateKey = $encript;
-        if (null !== $this->filesystem) {
-            $this->removeTemporarilyFiles();
-        }
-        if (null !== $this->certificate) {
-            $this->saveTemporarilyKeyFiles();
-        }
         return $this->encriptPrivateKey;
     }
 
@@ -455,6 +449,7 @@ abstract class SoapBase implements SoapInterface
      */
     public function saveTemporarilyKeyFiles()
     {
+        //certs already exists
         if (!empty($this->certsdir)) {
             return;
         }
@@ -466,16 +461,17 @@ abstract class SoapBase implements SoapInterface
         if (empty($this->filesystem)) {
             $this->setTemporaryFolder();
         }
+        //clear dir cert
+        $this->removeTemporarilyFiles();
         $this->certsdir = $this->certificate->getCnpj() . '/certs/';
         $this->prifile = $this->certsdir . Strings::randomString(10) . '.pem';
         $this->pubfile = $this->certsdir . Strings::randomString(10) . '.pem';
         $this->certfile = $this->certsdir . Strings::randomString(10) . '.pem';
         $ret = true;
+        //load private key pem
         $private = $this->certificate->privateKey;
         if ($this->encriptPrivateKey) {
-            //cria uma senha temporária ALEATÓRIA para salvar a chave primaria
-            //portanto mesmo que localizada e identificada não estará acessível
-            //pois sua senha não existe além do tempo de execução desta classe
+            //replace private key pem with password
             $this->temppass = Strings::randomString(16);
             //encripta a chave privada entes da gravação do filesystem
             openssl_pkey_export(
@@ -513,35 +509,8 @@ abstract class SoapBase implements SoapInterface
             return;
         }
         $contents = $this->filesystem->listContents($this->certsdir, true);
-        //define um limite de $waitingTime min, ou seja qualquer arquivo criado a mais
-        //de $waitingTime min será removido
-        //NOTA: quando ocorre algum erro interno na execução do script, alguns
-        //arquivos temporários podem permanecer
-        //NOTA: O tempo default é de 45 minutos e pode ser alterado diretamente nas
-        //propriedades da classe, esse tempo entre 5 a 45 min é recomendável pois
-        //podem haver processos concorrentes para um mesmo usuário. Esses processos
-        //como o DFe podem ser mais longos, dependendo a forma que o aplicativo
-        //utilize a API. Outra solução para remover arquivos "perdidos" pode ser
-        //encontrada oportunamente.
-        $dt = new \DateTime();
-        $tint = new \DateInterval("PT" . $this->waitingTime . "M");
-        $tint->invert = 1;
-        $tsLimit = $dt->add($tint)->getTimestamp();
         foreach ($contents as $item) {
-            if ($item['type'] == 'file') {
-                if ($item['path'] == $this->prifile
-                    || $item['path'] == $this->pubfile
-                    || $item['path'] == $this->certfile
-                ) {
-                    $this->filesystem->delete($item['path']);
-                    continue;
-                }
-                $timestamp = $this->filesystem->getTimestamp($item['path']);
-                if ($timestamp < $tsLimit) {
-                    //remove arquivos criados a mais de 45 min
-                    $this->filesystem->delete($item['path']);
-                }
-            }
+            $this->filesystem->delete($item['path']);
         }
     }
 
