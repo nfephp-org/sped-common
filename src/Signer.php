@@ -43,6 +43,7 @@ class Signer
      * @param int $algorithm (opcional)
      * @param array $canonical parameters to format node for signature (opcional)
      * @param string $rootname name of tag to insert signature block (opcional)
+     * @param bool $secondSignature utilize for nfs-e with signture in RPS and Lote (optional)
      * @return string
      * @throws SignerException
      */
@@ -53,7 +54,8 @@ class Signer
         $mark = 'Id',
         $algorithm = OPENSSL_ALGO_SHA1,
         $canonical = self::CANONICAL,
-        $rootname = ''
+        $rootname = '',
+        $secondSignature = false
     ) {
         if (empty($content)) {
             throw SignerException::isNotXml();
@@ -73,7 +75,7 @@ class Signer
         if (empty($node) || empty($root)) {
             throw SignerException::tagNotFound($tagname);
         }
-        if (! self::existsSignature($content)) {
+        if (!self::existsSignature($content) || $secondSignature) {
             $dom = self::createSignature(
                 $certificate,
                 $dom,
