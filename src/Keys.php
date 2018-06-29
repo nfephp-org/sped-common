@@ -37,10 +37,10 @@ class Keys
         $serie,
         $numero,
         $tpEmis,
-        $codigo = ''
+        $codigo = null
     ) {
-        if ($codigo == '') {
-            $codigo = $numero;
+        if (empty($codigo)) {
+            $codigo = self::random();
         }
         $format = "%02d%02d%02d%s%02d%03d%09d%01d%08d";
         $key = sprintf(
@@ -100,5 +100,15 @@ class Keys
             $vdigit = 0;
         }
         return (string) $vdigit;
+    }
+    
+    /**
+     * Generate and return a 8 digits random number
+     * for cNF tag
+     * @return string
+     */
+    public static function random()
+    {
+        return str_pad(mt_rand(0, 99999999), 8, '0', STR_PAD_LEFT);
     }
 }
