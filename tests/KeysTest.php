@@ -21,20 +21,6 @@ class KeysTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($key, '35170458716523000119550010000000121000123458');
     }
     
-    public function testBuildWithOutCod()
-    {
-        $cUF = 35;
-        $ano = 17;
-        $mes = 4;
-        $cnpj = '58716523000119';
-        $mod = 55;
-        $serie = 1;
-        $numero = 12;
-        $tpEmis = 1;
-        $key = Keys::build($cUF, $ano, $mes, $cnpj, $mod, $serie, $numero, $tpEmis);
-        $this->assertEquals($key, '35170458716523000119550010000000121000000127');
-    }
-    
     public function testIsValidTrue()
     {
         $key = "35170358716523000119550010000000301000000300";
