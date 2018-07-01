@@ -45,7 +45,22 @@ class PublicKeyTest extends \PHPUnit\Framework\TestCase
     public function testGetCNPJ()
     {
         $expected = '99999090910270';
-        $actual = $this->key->cnpj;
+        $actual = $this->key->cnpj();
+        $this->assertEquals($expected, $actual);
+    }
+    
+    public function testGetNonExistCPF()
+    {
+        $expected = 'Não existe CPF neste certificado.';
+        $actual = $this->key->cpf();
+        $this->assertEquals($expected, $actual);
+    }
+    
+    public function testGetCPF()
+    {
+        $key = new PublicKey(file_get_contents(__DIR__.'/../fixtures/certs/e-CPF_pubkey.pem'));
+        $expected = '80767940130';
+        $actual = $key->cpf();
         $this->assertEquals($expected, $actual);
     }
     
