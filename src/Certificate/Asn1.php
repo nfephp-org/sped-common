@@ -29,7 +29,11 @@ class Asn1
     {
         //CNPJ
         //OID = 2.16.76.1.3.3
-        return self::getOIDdata('2.16.76.1.3.3', $publickeyUnformated);
+        $cnpj = self::getOIDdata('2.16.76.1.3.3', $publickeyUnformated);
+        if (empty($cnpj)) {
+            return "Não existe CNPJ neste certificado.";
+        }
+        return $cnpj;
     }
 
     /**
@@ -58,7 +62,13 @@ class Asn1
     {
         //CPF
         //OID = 2.16.76.1.3.1
-        return self::getOIDdata('2.16.76.1.3.1', $publickeyUnformated);
+        $resp = self::getOIDdata('2.16.76.1.3.1', $publickeyUnformated);
+        if (empty($resp)) {
+            return "Não existe CPF neste certificado.";
+        }
+        $dataNascimento = substr($resp, 0, 8);
+        $cpf = substr($resp, 8, 11);
+        return $cpf;
     }
 
     /**

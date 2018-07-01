@@ -25,10 +25,6 @@ class PublicKey implements VerificationInterface
      */
     public $commonName;
     /**
-     * @var string
-     */
-    public $cnpj;
-    /**
      * @var \DateTime
      */
     public $validFrom;
@@ -102,7 +98,6 @@ CONTENT;
         $this->serialNumber = $detail['serialNumber'];
         $this->validFrom = \DateTime::createFromFormat('ymdHis\Z', $detail['validFrom']);
         $this->validTo = \DateTime::createFromFormat('ymdHis\Z', $detail['validTo']);
-        $this->cnpj = Asn1::getCNPJ($this->unFormated());
     }
 
     /**
@@ -149,5 +144,23 @@ CONTENT;
     public function __toString()
     {
         return $this->rawKey;
+    }
+    
+    /**
+     * Extract CNPJ number by OID
+     * @return string
+     */
+    public function cnpj()
+    {
+        return Asn1::getCNPJ($this->unFormated());
+    }
+
+    /**
+     * Extract CPF number by OID
+     * @return string
+     */
+    public function cpf()
+    {
+        return Asn1::getCPF($this->unFormated());
     }
 }
