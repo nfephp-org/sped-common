@@ -4,8 +4,8 @@ Auxiliar class for strings treatment
 
 # Methods
 
-## replaceSpecialsChars()
-Replace all specials characters from string and retuns only 128 basic characters. [a-z] [A-Z] [0-9] @ space , - . ; :
+## replaceSpecialsChars($string)
+Replace all specials characters from string and retuns only 128 basic characters. [a-z] [A-Z] [0-9] @ space , - . ; : $ %
 
 > NOTE: only UTF-8
 
@@ -17,6 +17,27 @@ Replace all specials characters from string and retuns only 128 basic characters
     $ret = Strings::replaceSpecialsChars($str);
     echo $ret; //A e c
 ```
+
+##replaceUnacceptableCharacters($string)
+Clear inputs for build in XML, convert all characters to UTF-8,
+Replace & isolated, less than, greater than, quotation marks and apostrophes in html entities
+Remove Carriage Return, Tab and Line Feed
+Remove Multiple spaces is not acceptable in strings
+Remove all other control character
+
+> NOTE: string may be mixed UTF-8 and Latin1 (iso 8859-1) or Windows-1252
+
+- @param string $string
+- @return  string 
+
+```php
+    $string = "Contribuições R$   200,00   IPI:   15% Caixa D'agua Rico & Rich < > \"   \t \r \n ";
+    $string .= mb_convert_encoding(" teste ç Á ã é ø", 'ISO-8859-1'); 
+    $ret = Strings::replaceUnacceptableCharacters($string);
+    echo $ret; //Contribuições R$ 200,00 IPI: 15% Caixa D'agua Rico & Rich < > " teste ç Á ã é ø
+```
+
+
 ## clearXml()
 Remove some attributes, prefixes, sulfixes and other control characters like \r \n \s \t
 
