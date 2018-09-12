@@ -5,12 +5,13 @@ namespace NFePHP\Common;
 /**
  * Class to create and validate the identification keys of electronic documents
  * from SPED
+ * NT 2018.001 Emitente com CPF e IE
  * @category   NFePHP
  * @package    NFePHP\Common\Keys
- * @copyright  Copyright (c) 2008-2016
+ * @copyright  Copyright (c) 2008-2018
  * @license    http://www.gnu.org/licenses/lesser.html LGPL v3
- * @author     Roberto L. Machado <linux.rlm at gmail dot com>
- * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
+ * @author     Roberto L. Machado <linux dot rlm at gmail dot com>
+ * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
  */
 
 class Keys
@@ -20,7 +21,7 @@ class Keys
      * @param string $cUF UF number
      * @param string $ano year
      * @param string $mes month
-     * @param string $cnpj
+     * @param string $cnpj or CPF
      * @param string $mod model of document 55, 65, 57 etc
      * @param string $serie
      * @param string $numero document number
@@ -41,6 +42,11 @@ class Keys
     ) {
         if (empty($codigo)) {
             $codigo = self::random();
+        }
+        //if a cpf with 11 digits is passed then complete with leading zeros
+        //up to the 14 digits
+        if (strlen($cnpj) < 14) {
+            $cnpj = str_pad($cnpj, 14, '0', STR_PAD_LEFT);
         }
         $format = "%02d%02d%02d%s%02d%03d%09d%01d%08d";
         $key = sprintf(

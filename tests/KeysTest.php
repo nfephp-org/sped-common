@@ -21,6 +21,21 @@ class KeysTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($key, '35170458716523000119550010000000121000123458');
     }
     
+    public function testBuildWithCPF()
+    {
+        $cUF = 35;
+        $ano = 17;
+        $mes = 4;
+        $cnpj = '99999999999';
+        $mod = 55;
+        $serie = 1;
+        $numero = 12;
+        $tpEmis = 1;
+        $codigo = '12345';
+        $key = Keys::build($cUF, $ano, $mes, $cnpj, $mod, $serie, $numero, $tpEmis, $codigo);
+        $this->assertEquals($key, '35170400099999999999550010000000121000123459');
+    }
+    
     public function testIsValidTrue()
     {
         $key = "35170358716523000119550010000000301000000300";
@@ -41,7 +56,6 @@ class KeysTest extends \PHPUnit\Framework\TestCase
         $actual = Keys::verifyingDigit($key);
         $expected = '0';
         $this->assertEquals($expected, $actual);
-        
     }
     
     public function testVerifyingDigitEmpty()

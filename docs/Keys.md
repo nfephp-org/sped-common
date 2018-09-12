@@ -4,20 +4,23 @@ Classe auxiliar para a geração e verficação das chaves de 44 digitos
 
 > NOTA: Pode ser usado para NFe, NFCe, CTe, e MDFe
 
+> NOTA: Inclusa possibilidade de emissão com CPF no lugar do CNPJ,
+> conforme NT 2018.001
+
 ## Métodos Estáticos
 
 
 ### (string) Keys::build(
-                (string) $cUF,
-                (string) $ano,
-                (string) $mes,
-                (string) $cnpj,
-                (string) $mod,
-                (string) $serie,
-                (string) $numero,
-                (string) $tpEmis,
-                (string) $codigo
-             )
+    (string) $cUF,
+    (string) $ano,
+    (string) $mes,
+    (string) $cnpj ou cpf,
+    (string) $mod,
+    (string) $serie,
+    (string) $numero,
+    (string) $tpEmis,
+    (string) $codigo
+    )
 
 Este método é o construtor das chaves de 44 digitos.
 
