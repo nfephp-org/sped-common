@@ -26,9 +26,8 @@ class Strings
     {
         $string = self::squashCharacters($string);
         $string = str_replace('&', 'e', $string);
-        $newstr = preg_replace("/[^a-zA-Z0-9 @#,-_.;:$%\/]/", "", $newstr);
-        $newstr = preg_replace("/[<>]/", "", $newstr);
-        return $newstr;
+        $string = preg_replace("/[^a-zA-Z0-9 @#,-_.;:$%\/]/", "", $string);
+        return preg_replace("/[<>]/", "", $string);
     }
     
     /**
@@ -54,7 +53,7 @@ class Strings
             ['&amp; ','&lt;','&gt;','&quot;','&#39;'],
             $input
         );
-        $imput = self::normalize($input);
+        $input = self::normalize($input);
         return trim($input);
     }
     
@@ -113,7 +112,7 @@ class Strings
             '|\xED[\xA0-\xBF][\x80-\xBF]/S', '', $input);
         //And no other control character is acceptable either
         return preg_replace('/[[:cntrl:]]/', '', $input);
-   }
+    }
 
     /**
      * Remove all non numeric characters from string
