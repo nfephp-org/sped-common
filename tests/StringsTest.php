@@ -82,4 +82,12 @@ class StringsTest extends \PHPUnit\Framework\TestCase
         $expected .= "ZV|\n";
         $this->assertEquals($expected, $actual);
     }
+
+    public function testReplaceLineBreak()
+    {
+        $txt = "Texto com quebra de linha \n e mais uma quebra de linha \r e outra quebra de linha \r\n, nossa, como tem quebras de linhas nesse texto r n teste";
+        $txtOk = "Texto com quebra de linha ; e mais uma quebra de linha ; e outra quebra de linha ;, nossa, como tem quebras de linhas nesse texto r n teste";
+        $resp = Strings::replaceLineBreak($txt);
+        $this->assertEquals($txtOk, $resp);
+    }
 }

@@ -219,4 +219,15 @@ class Strings
         }
         return $str;
     }
+
+    /**
+     * Swaps all line breaks per character ';'
+     * @param string $txt
+     * @return string
+     */
+    public static function replaceLineBreak($txt)
+    {
+		$str = preg_replace('/\r\n?/', ';', $txt);
+		return preg_replace('/\r|\n/', ';', $str);
+    }
 }
