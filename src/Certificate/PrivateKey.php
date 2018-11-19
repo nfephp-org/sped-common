@@ -86,10 +86,10 @@ class PrivateKey implements SignatureInterface
      */
     public function expoent()
     {
-        if (empty($this->details['e'])) {
+        if (empty($this->details['rsa']['e'])) {
             return '';
         }
-        return base64_encode($this->details['e']);
+        return base64_encode($this->details['rsa']['e']);
     }
     
     /**
