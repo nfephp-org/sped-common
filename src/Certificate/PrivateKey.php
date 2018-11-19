@@ -25,6 +25,11 @@ class PrivateKey implements SignatureInterface
      * @var resource
      */
     private $resource;
+    
+    /**
+     * @var array
+     */
+    private $details = [];
 
     /**
      * PublicKey constructor.
@@ -47,6 +52,7 @@ class PrivateKey implements SignatureInterface
         if (!$resource = openssl_pkey_get_private($this->rawKey)) {
             throw CertificateException::getPrivateKey();
         }
+        $this->details = openssl_pkey_get_details($resource);
         $this->resource = $resource;
     }
 
@@ -61,7 +67,35 @@ class PrivateKey implements SignatureInterface
         }
         return $encryptedData;
     }
-
+    
+    /**
+     * Return the modulus of private key
+     * @return string
+     */
+    public function modulus()
+    {
+        if (empty($this->details['n'])) {
+            return '';
+        }
+        return base64_encode($this->details['n']);
+    }
+    
+    /**
+     * Return the expoent of private key
+     * @return string
+     */
+    public function expoent()
+    {
+        if (empty($this->details['e'])) {
+            return '';
+        }
+        return base64_encode($this->details['e']);
+    }
+    
+    /**
+     * Return raw private key
+     * @return string
+     */
     public function __toString()
     {
         return $this->rawKey;
