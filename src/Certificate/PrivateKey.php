@@ -74,10 +74,10 @@ class PrivateKey implements SignatureInterface
      */
     public function modulus()
     {
-        if (empty($this->details['n'])) {
+        if (empty($this->details['rsa']['n'])) {
             return '';
         }
-        return base64_encode($this->details['n']);
+        return base64_encode($this->details['rsa']['n']);
     }
     
     /**
