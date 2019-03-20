@@ -165,7 +165,6 @@ class Signer
         $x509DataNode->appendChild($x509CertificateNode);
         return $dom;
     }
-
     /**
      * Remove old signature from document to replace it
      * @param string $content
@@ -188,7 +187,6 @@ class Signer
         }
         return $dom->saveXML();
     }
-
     /**
      * Verify if xml signature is valid
      * @param string $content

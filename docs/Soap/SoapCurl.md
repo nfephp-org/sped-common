@@ -171,3 +171,23 @@ Este método permite a configuração para uso de proxy na rede interna.
 $soap->proxy('192.168.0.1', '3128', 'fulano', '1234');
 
 ```
+
+## function httpVersion($version): void
+
+Este método permite a configuração da versão do padrão HTTP a ser usado pelo cURL.
+
+Normalmente não é necessário seu uso, porém em casos de servidores mal formados que não passam de forma correta a informação ao cURL durante o handshake, o mesmo pode usar um protocolo HTTP incorreto para o servidor, resultado em codigo de erro.
+
+Ex. Uncaught NFePHP\Common\Exception\SoapException: An error occurred while trying to communication via soap, HTTP/2 stream 0 was not closed cleanly: HTTP_1_1_REQUIRED (err 13) e nesse caso especifico, deve ser passado o parâmetro 1.1.
+
+|Valor|Representa|Comentário|
+|-----|----------|----------|
+|1.0|CURL_HTTP_VERSION_1_0|Http 1.0|
+|1.1|CURL_HTTP_VERSION_1_1|Http 1.1|
+|2.0|CURL_HTTP_VERSION_2_0|Http 2.0|
+|qualquer|CURL_HTTP_VERSION_NONE|o cURL identifica qual protocolo usar. Default|
+
+```php
+$soap->httpVersion('1.1');
+
+```
