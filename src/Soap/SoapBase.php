@@ -207,7 +207,7 @@ abstract class SoapBase implements SoapInterface
     
     /**
      * Force http protocol version
-     * 
+     *
      * @param null|string $version
      */
     public function httpVersion($version = null)
