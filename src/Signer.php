@@ -84,8 +84,7 @@ class Signer
                 $canonical
             );
         }
-        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-            . $dom->saveXML($dom->documentElement, LIBXML_NOXMLDECL);
+        return $dom->saveXML($dom->documentElement, LIBXML_NOXMLDECL);
     }
     
     /**
