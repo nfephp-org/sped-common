@@ -170,14 +170,17 @@ class DOMImproved extends DOMDocument
         $descricao = '',
         $force = false
     ) {
-        if ($content === null || empty($name)) {
+        if (empty($name)) {
+            $this->errors[] = "O nome da TAG é Obrigatório!";
             return;
+        }
+        if (!$obrigatorio && $content === null) {
+            return;
+        } elseif ($obrigatorio && ($content === null || $content === '')) {
+            $this->errors[] = "Preenchimento Obrigatório! [$name] $descricao";
         }
         $content = (string) $content;
         $content = trim($content);
-        if ($obrigatorio && $content === '' && !$force) {
-            $this->errors[] = "Preenchimento Obrigatório! [$name] $descricao";
-        }
         if ($obrigatorio || $content !== '' || $force) {
             $content = htmlspecialchars($content, ENT_QUOTES);
             $temp = $this->createElement($name, $content);
