@@ -1,6 +1,6 @@
 # NFePHP\Common\Keys.md
 
-Classe auxiliar para a geração e verficação das chaves de 44 digitos
+Classe auxiliar para a geração e verficação das chaves de 44 dígitos
 
 > NOTA: Pode ser usado para NFe, NFCe, CTe, e MDFe
 
@@ -22,7 +22,7 @@ Classe auxiliar para a geração e verficação das chaves de 44 digitos
     (string) $codigo
     )
 
-Este método é o construtor das chaves de 44 digitos.
+Este método é o construtor das chaves de 44 dígitos.
 
 ```php
 
@@ -43,14 +43,14 @@ $key = Keys::build($cUF, $ano, $mes, $cnpj, $mod, $serie, $numero, $tpEmis, $cod
 //$key = '35170458716523000119550010000000121000123458';
 
 ```
-> NOTA: se não for passado o codigo numero ($codigo) será usado o numero do documento fiscal ($numero).
+> NOTA: se não for passado o código número ($codigo) será usado o número do documento fiscal ($numero).
 > Isso as vezes é até melhor pois facilita a recriação da chave caso haja algum problema e se percam os dados das notas.
 
 
 
 ### (bool) Keys::isValid(string $key)
 
-Este mátodo irá verificar a validade da chave de 44 digitos, usando o digito de verificação para fazer a avaliação.
+Este método irá verificar a validade da chave de 44 dígitos, usando o dígito de verificação para fazer a avaliação.
 
 ```php
 
@@ -66,9 +66,9 @@ $response = Keys::isValid($key);
 
 ### (string) Keys::verifyingDigit(string $key)
 
-Este método irá retornar o digito de verificação da chave passada.
+Este método irá retornar o dígito de verificação da chave passada.
 
-> NOTA: apenas os 43 primeiros digitos serão usados, evidentemente.
+> NOTA: apenas os 43 primeiros dígitos serão usados, evidentemente.
 
 ```php
 
