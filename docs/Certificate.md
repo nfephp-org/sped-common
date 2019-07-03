@@ -1,10 +1,10 @@
 # NFePHP\Common\Certificate::class
 
-Esta classe é responsável por tratar a utilizar os certificados digitais modelo A1 (PKCS#12).
+Esta classe é responsável por tratar a utilização dos certificados digitais modelo A1 (PKCS#12).
 
-Com o uso dessas classes não mais é necessário que existam certificados em arquivo, ou seja você pode optar por manter os certificados em base de dados, arquivo, arquivo remoto, repositório ou qualquer outra forma que deseje.
+Com o uso dessas classes não mais é necessário que existam certificados em arquivo, ou seja, você pode optar por manter os certificados em base de dados, arquivo, arquivo remoto, repositório ou qualquer outra forma que deseje.
 
-Para usar um certificado PFX basta obter seu conteudo e passar para a classe com sua respectiva senha.
+Para usar um certificado PFX basta obter seu conteúdo e passar para a classe com sua respectiva senha.
 
 # DEPENDÊNCIAS
 
@@ -34,11 +34,11 @@ use NFePHP\Common\Certificate;
 use NFePHP\Common\Certificate\CertificationChain;
 
 
-$pfx = file_get_contents('<PATH TO PFX FILE>');
-$cert = Certificate::readPfx($pfx, '<PASSWORD>');
+$pfx = file_get_contents('<CAMINHO PARA O ARQUIVO PFX>');
+$cert = Certificate::readPfx($pfx, '<SENHA>');
 
 //carrega a cadeia de certificados, usar apenas se necessário
-$strchain = file_get_contents('<PATH TO CHAIN IN PEM FORMAT>');
+$strchain = file_get_contents('<CAMINHO PARA CADEIA NO FORMATO PEM>');
 $chain = new CertificationChain($strchain);
 
 $cert->chainKeys = $chain;
@@ -80,21 +80,19 @@ try {
 
 Alternativamente essa classe pode ser carregada estaticamente com a chamada readPfx().
 
-| Parametro | Tipo | Descrição |
+| Parâmetro | Tipo | Descrição |
 | :---  | :---: | :--- |
-| $content | string | conteudo do arquivo PFX |
+| $content | string | conteúdo do arquivo PFX |
 | $password | string | senha de acesso ao certificado |
 
->NOTA: $content com é uma string com o conteudo do PFX (Certificado A1) esse conteúdo pode ser mantido em tabela no banco de dados ou em arquivo (local ou remoto). O único cuidado é lembrar que um PFX é um registro binário então ao tentar mante-lo em base de dados converta para base64.
+>NOTA: $content é uma string com o conteúdo do PFX (Certificado A1) esse conteúdo pode ser mantido em tabela no banco de dados ou em arquivo (local ou remoto). O único cuidado é lembrar que um PFX é um registro binário então ao tentar mante-lo em base de dados converta para base64.
 
 ```php
 use NFePHP\Common\Certificate;
 use NFePHP\Common\Exception\CertificateException;
 
 try {
-
     $cert = Certificate::readPfx($content, $password);
-
 } catch (\Exception $e) {
     //aqui você trata a exceção
     $e->getMessage();
@@ -103,9 +101,9 @@ try {
 
 ## writePfx($password):string
 
-Esse método permite que o PFX seja recriado com base em sua chave publica, privada e irá incluir toda a cadeia de certificação, se fornecida.
+Esse método permite que o PFX seja recriado com base em sua chave pública, privada e irá incluir toda a cadeia de certificação, se fornecida.
 
-$password = senha de acesso ao certificado pfx, parametro obrigatório
+$password = senha de acesso ao certificado pfx (parâmetro obrigatório)
 
 ```php
 
@@ -116,7 +114,7 @@ $novopfx = $cert->writePfx('senha');
 
 ## public function getCompanyName()::string
 
-Método irá retorna a Razão Social gravada no certificado
+Esse método irá retorna a Razão Social gravada no certificado
 
 ```php
 
@@ -126,7 +124,7 @@ $razao = $cert->getCompanyName();
 
 ## public function getValidFrom()::\DateTime
 
-Método irá retornar uma classe \DateTime com a a data de inicio da validade, ou seja a data de criação do certificado.
+Esse método irá retornar uma classe \DateTime com a a data de início da validade, ou seja a data de criação do certificado.
 
 ```php
 
@@ -138,7 +136,7 @@ echo $validFrom->format('Y-m-d');
 
 ## public function getValidTo()::\DateTime
 
-Método irá retornar uma classe \DateTime com a a data de FIM da validade, ou seja a data limite de uso, em geral um ano após a emissão.
+Esse método irá retornar uma classe \DateTime com a a data FINAL da validade, ou seja, a data limite de uso. Em geral um ano após a emissão.
 
 ```php
 
@@ -150,22 +148,22 @@ echo $validTo->format('Y-m-d');
 
 ## public function isExpired()::bool
 
-Método irá retornar TRUE, se o certificado tiver a data expirada ou seja não está mais válido
+Esse método irá retornar TRUE se o certificado tiver a data expirada, ou seja, não está mais válido,
 ou FALSE se ainda estiver válido.
 
 ```php
 
 if ($cert->isExpired()) {
-    echo "Certificado VENCIDO! Não é possivel mais usa-lo";
+    echo "Certificado VENCIDO! Não é possivel mais usá-lo";
 } else {
-    echo "Certificado VALIDO!";
+    echo "Certificado VÁLIDO!";
 }
 
 ```
 
 ## public function getCnpj()::string
 
-Método irá retornar o numero do CNPJ
+Esse método irá retornar o número do CNPJ
 
 ```php
 
@@ -177,7 +175,7 @@ echo "CNPJ: " . $cert->getCnpj();
 
 Este método cria a assinatura digital usando a chave Privada.
 
-> NOTA: usualmente é usado o algoritimo OPENSSL_ALGO_SHA1, mas existem casos em que poderemos ter que usar outros algoritimos como o OPENSSL_ALGO_SHA256, por exemplo.
+> NOTA: usualmente é usado o algoritmo OPENSSL_ALGO_SHA1, mas existem casos em que poderemos ter que usar outros algoritmos como o OPENSSL_ALGO_SHA256, por exemplo.
 
 ```php
 
@@ -190,7 +188,7 @@ echo base64_encode($cert->sign($content, OPENSSL_ALGO_SHA1));
 
 ## public function verify($data, $signature, $algorithm = OPENSSL_ALGO_SHA1)
 
-Este método valida a assinatura usando a chave Publica.
+Este método valida a assinatura usando a chave Pública.
 
 ```php
 
@@ -208,11 +206,10 @@ if ($cert->verify($data, base64_decode($signature), OPENSSL_ALGO_SHA1)) {
 
 ## public function __toString()::string
 
-Este método retorna a chave publica e a cadeia de certificação, se houver em uma string no formato PEM 
+Este método retorna a chave pública e a cadeia de certificação, se houver em uma string no formato PEM 
 
 ```php
 
 echo "{$cert}";
 
 ```
-
