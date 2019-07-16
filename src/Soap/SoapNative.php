@@ -87,7 +87,21 @@ class SoapNative extends SoapBase implements SoapInterface
         }
         return $this->responseBody;
     }
-    
+
+    /**
+     * @return resource
+     */
+    private function createSslStreamContext()
+    {
+        return stream_context_create([
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true,
+            ]
+        ]);
+    }
+
     /**
      * Prepare connection
      * @param string $url
@@ -105,6 +119,7 @@ class SoapNative extends SoapBase implements SoapInterface
         }
         $this->saveTemporarilyKeyFiles();
         $params = [
+            'stream_context' => $this->createSslStreamContext(),
             'local_cert' => $this->tempdir . $this->certfile,
             'connection_timeout' => $this->soaptimeout,
             'encoding' => 'UTF-8',
