@@ -70,7 +70,8 @@ class SoapNative extends SoapBase implements SoapInterface
             if (!empty($soapheader)) {
                 $this->connection->__setSoapHeaders(array($soapheader));
             }
-            $this->connection->$operation($parameters);
+            $params = new \SoapVar(str_replace([':v1', 'v1:'], '', $request), XSD_ANYXML);
+            $this->connection->$operation($params);
             $this->requestHead = $this->connection->__getLastRequestHeaders();
             $this->requestBody = $this->connection->__getLastRequest();
             $this->responseHead = $this->connection->__getLastResponseHeaders();
