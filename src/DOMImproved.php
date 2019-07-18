@@ -191,16 +191,16 @@ class DOMImproved extends DOMDocument
     /**
      * Acrescenta DOMElement a pai DOMElement
      * Caso o pai esteja vazio retorna uma exception com a mensagem
-     * O parametro "child" pode ser vazio
+     * O parametro "child" pode ser null
      * @param DOMElement $parent
-     * @param DOMElement $child
+     * @param DOMElement|null $child
      * @param string $msg
      * @return void
      */
     public function appChild(DOMElement &$parent, DOMElement $child = null, $msg = '')
     {
         if (empty($child)) {
-            $this->errors[] = $msg;
+            //$this->errors[] = $msg;
             return;
         }
         $parent->appendChild($child);
