@@ -111,10 +111,36 @@ class Keys
     /**
      * Generate and return a 8 digits random number
      * for cNF tag
+     * @param string|null $nnf
      * @return string
      */
-    public static function random()
+    public static function random($nnf = null)
     {
-        return str_pad(mt_rand(0, 99999999), 8, '0', STR_PAD_LEFT);
+        $loop = true;
+        while ($loop) {
+            $cnf = str_pad(mt_rand(0, 99999999), 8, '0', STR_PAD_LEFT);
+            $loop = !self::cNFIsValid($cnf);
+            if (!empty($nnf)) {
+                if (intval($cnf) === intval($nnf)) {
+                    $loop = true;
+                }
+            }
+        }
+        return $cnf;
+    }
+    
+    /**
+     * Verify if cNF number is valid NT2019.001
+     * @param string $cnf
+     */
+    public static function cNFIsValid($cnf)
+    {
+        $defs = [
+            '00000000', '11111111', '22222222', '33333333', '44444444',
+            '55555555', '66666666', '77777777', '88888888', '99999999',
+            '12345678', '23456789', '34567890', '45678901', '56789012',
+            '67890123', '78901234', '89012345', '90123456', '01234567'
+        ];
+        return !in_array($cnf, $defs);
     }
 }
