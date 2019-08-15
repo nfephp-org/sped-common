@@ -18,11 +18,11 @@ abstract class MakeBase
      */
     protected $dom;
     /**
-     * @var \DOMElement 
+     * @var \DOMElement
      */
     protected $root;
     /**
-     * @var string 
+     * @var string
      */
     protected $id;
     /**
@@ -55,7 +55,7 @@ abstract class MakeBase
     }
     
     /**
-     * To force convertion strings to ASCII 
+     * To force convertion strings to ASCII
      * @param bool $flag
      * @return bool
      */
