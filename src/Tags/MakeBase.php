@@ -2,20 +2,49 @@
 
 namespace NFePHP\Common\Tags;
 
+/**
+ * Abstract class to build Make::class
+ */
+
 use NFePHP\Common\DOMImproved as Dom;
+use \DOMElement;
 use NFePHP\Common\Keys;
 use NFePHP\Common\Tags\TagInterface;
 
 abstract class MakeBase
 {
+    /**
+     * @var NFePHP\Common\DOMImproved
+     */
     protected $dom;
+    /**
+     * @var \DOMElement 
+     */
     protected $root;
+    /**
+     * @var string 
+     */
     protected $id;
+    /**
+     * @var string
+     */
     protected $rootname = '';
+    /**
+     * @var string
+     */
     protected $xmlns = '';
+    /**
+     * @var bool
+     */
     protected $onlyAscii = false;
+    /**
+     * @var array
+     */
     private $available = [];
-
+    
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         $this->dom = new Dom('1.0', 'UTF-8');
@@ -24,8 +53,13 @@ abstract class MakeBase
         $this->root = $this->dom->createElement($this->rootname);
         $this->root->setAttribute("xmlns", $this->xmlns);
     }
-
-    public function setOnlyAscii($flag = null)
+    
+    /**
+     * To force convertion strings to ASCII 
+     * @param bool $flag
+     * @return bool
+     */
+    public function setToAscii($flag = null)
     {
         if (isset($flag) && is_bool($flag)) {
             $this->onlyAscii = $flag;
@@ -33,6 +67,9 @@ abstract class MakeBase
         return $this->onlyAscii;
     }
     
+    /**
+     * Abstract function to convert Tag::classes into DOM objects
+     */
     abstract public function parse();
 
     /**
@@ -78,7 +115,7 @@ abstract class MakeBase
     }
     
     /**
-     * Calculate and replace NFe Id
+     * Calculate and replace document Id
      * @return string
      */
     protected function checkIdKey()

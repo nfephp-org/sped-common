@@ -4,14 +4,28 @@ namespace NFePHP\Common\Tags;
 
 use NFePHP\Common\DOMImproved as Dom;
 use NFePHP\Common\Strings;
-use stdClass;
+use \DOMElement;
+use \stdClass;
 
 abstract class Tag
 {
+    /**
+     * @var DOMElement
+     */
     protected $node;
+    /**
+     * @var NFePHP\Common\DOMImproved
+     */
     protected $dom;
+    /**
+     * @var bool
+     */
     protected $onlyAscii = false;
     
+    /**
+     * Constructor
+     * @param NFePHP\Common\DOMImproved $dom
+     */
     public function __construct($dom = null)
     {
         $this->dom = $dom;
@@ -21,7 +35,19 @@ abstract class Tag
             $this->dom->formatOutput = false;
         }
     }
-
+    
+    /**
+     * Set to convert all string to have only ASCII characters
+     * @param bool $option
+     */
+    public function setToASCII($option = false)
+    {
+        $this->onlyAscii = $option;
+    }
+    
+    /**
+     * Convert tag classes into nodes
+     */
     abstract public function toNode();
     
     /**
