@@ -46,6 +46,12 @@ abstract class Tag
     }
     
     /**
+     * Load class parameters
+     */
+    abstract public function loadParameters(\stdClass $std);
+
+
+    /**
      * Convert tag classes into nodes
      */
     abstract public function toNode();
@@ -73,7 +79,6 @@ abstract class Tag
         $errors = [];
         $arr = array_change_key_case(get_object_vars($std), CASE_LOWER);
         $std = json_decode(json_encode($arr));
-        $this->onlyAscii = isset($std->onlyascii) ? $std->onlyascii : false;
         $possibles = array_keys($possible);
         $psstd = json_decode(json_encode($possible));
         $newstd = new \stdClass();
@@ -92,9 +97,10 @@ abstract class Tag
                     $errors[] = $err;
                 }
                 $newstd->$possibleKeyLower = (string) $newstd->$possibleKeyLower;
-                $newstd->$possibleKeyLower = Strings::replaceUnacceptableCharacters($newstd->$possibleKeyLower);
                 if ($this->onlyAscii) {
                     $newstd->$possibleKeyLower = Strings::replaceSpecialsChars($newstd->$possibleKeyLower);
+                } else {
+                    $newstd->$possibleKeyLower = Strings::replaceUnacceptableCharacters($newstd->$possibleKeyLower);
                 }
                 $param = $possible[$key];
                 $newstd->$possibleKeyLower = $this->formater($newstd->$possibleKeyLower, $param['format']);
@@ -241,5 +247,16 @@ abstract class Tag
             }
         }
         return number_format($value, $n[1], '.', '');
+    }
+    
+    /**
+     * Add left zeros if necessary
+     * @param string $value
+     * @param integer $length
+     * @return string
+     */
+    protected function zeroLeft($value, $length)
+    {
+        return str_pad($value, $length, '0', STR_PAD_LEFT);
     }
 }
