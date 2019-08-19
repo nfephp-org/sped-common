@@ -7,9 +7,9 @@ namespace NFePHP\Common\Tags;
  */
 
 use NFePHP\Common\DOMImproved as Dom;
-use \DOMElement;
 use NFePHP\Common\Keys;
 use NFePHP\Common\Tags\TagInterface;
+use \DOMElement;
 
 abstract class MakeBase
 {
@@ -40,7 +40,7 @@ abstract class MakeBase
     /**
      * @var array
      */
-    private $available = [];
+    protected $available = [];
     
     /**
      * Constructor
@@ -92,16 +92,30 @@ abstract class MakeBase
             throw new \Exception("Sem dados passados para o método [$name].");
         }
         $propname = str_replace('tag', '', $name);
+        $c = $this->loadTagClass($className, $arguments);
         if ($this->available[$realname]['type'] == 'multiple') {
             if (!isset($this->$propname)) {
                 $this->createProperty($propname, []);
             }
-            $c = new $className($arguments[0], $this->dom);
             array_push($this->$propname, $c);
         } else {
-            $this->createProperty($propname, new $className($arguments[0], $this->dom));
+            $this->createProperty($propname, $c);
         }
         return $this->$propname;
+    }
+    
+    /**
+     * Load Tag::class
+     * @param string $className
+     * @param array $arguments
+     * @return \NFePHP\Common\Tags\className
+     */
+    protected function loadTagClass($className, $arguments)
+    {
+        $c = new $className($this->dom);
+        $c->setToASCII($this->onlyAscii);
+        $c->loadParameters($arguments[0]);
+        return $c;
     }
 
     /**
