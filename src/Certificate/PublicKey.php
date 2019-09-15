@@ -105,6 +105,7 @@ CONTENT;
         if (isset($detail['name'])) {
             $arrayName = explode("/",$detail["name"]);
             $arrayName = array_reverse($arrayName);
+            $arrayName = array_filter($arrayName);
             $name = implode(",",$arrayName);
             $this->subjectNameValue = $name;
         }
