@@ -44,6 +44,10 @@ class PublicKey implements VerificationInterface
      * @var string
      */
     public $serialNumber;
+    /**
+     * @var string
+     */
+    public $subjectNameValue;
 
     /**
      * PublicKey constructor.
@@ -98,6 +102,12 @@ CONTENT;
         $this->serialNumber = $detail['serialNumber'];
         $this->validFrom = \DateTime::createFromFormat('ymdHis\Z', $detail['validFrom']);
         $this->validTo = \DateTime::createFromFormat('ymdHis\Z', $detail['validTo']);
+        if (isset($detail['name'])) {
+            $arrayName = explode("/",$detail["name"]);
+            $arrayName = array_reverse($arrayName);
+            $name = implode(",",$arrayName);
+            $this->subjectNameValue = $name;
+        }
     }
 
     /**

@@ -53,7 +53,8 @@ class Signer
         $mark = 'Id',
         $algorithm = OPENSSL_ALGO_SHA1,
         $canonical = self::CANONICAL,
-        $rootname = ''
+        $rootname = '',
+        $options = []
     ) {
         if (empty($content)) {
             throw SignerException::isNotXml();
@@ -81,7 +82,8 @@ class Signer
                 $node,
                 $mark,
                 $algorithm,
-                $canonical
+                $canonical,
+                $options
             );
         }
         return $dom->saveXML($dom->documentElement, LIBXML_NOXMLDECL);
@@ -105,7 +107,8 @@ class Signer
         DOMElement $node,
         $mark,
         $algorithm = OPENSSL_ALGO_SHA1,
-        $canonical = self::CANONICAL
+        $canonical = self::CANONICAL,
+        $options = []
     ) {
         $nsDSIG = 'http://www.w3.org/2000/09/xmldsig#';
         $nsCannonMethod = 'http://www.w3.org/TR/2001/REC-xml-c14n-20010315';
@@ -159,6 +162,13 @@ class Signer
         $signatureNode->appendChild($keyInfoNode);
         $x509DataNode = $dom->createElement('X509Data');
         $keyInfoNode->appendChild($x509DataNode);
+
+        if(!empty($options["subjectName"])) {
+            $subjectName = $certificate->publicKey->subjectNameValue;
+            $x509SubjectNode = $dom->createElement('X509SubjectName', $subjectName);
+            $x509DataNode->appendChild($x509SubjectNode);
+        }
+
         $pubKeyClean = $certificate->publicKey->unFormated();
         $x509CertificateNode = $dom->createElement('X509Certificate', $pubKeyClean);
         $x509DataNode->appendChild($x509CertificateNode);
