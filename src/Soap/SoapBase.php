@@ -258,11 +258,17 @@ abstract class SoapBase implements SoapInterface
      */
     public function setTemporaryFolder($folderRealPath = null)
     {
+        $mapto = $this->certificate->getCnpj() ?? $this->certificate->getCpf();
+        if (empty($mapto)) {
+            throw new RuntimeException(
+                'Foi impossivel identificar o OID do CNPJ ou do CPF.'
+            );
+        }
         if (empty($folderRealPath)) {
             $path = '/sped-'
                 . $this->uid()
                 .'/'
-                . $this->certificate->getCnpj()
+                . $mapto
                 . '/' ;
             $folderRealPath = sys_get_temp_dir().$path;
         }
