@@ -56,7 +56,7 @@ class Asn1
      * Get CPF owner number from digital certificate
      * (more specifically, from public key)
      * @param string $publickeyUnformated
-     * @return string|null CPF 
+     * @return string|null CPF
      */
     public static function getCPF($publickeyUnformated)
     {
