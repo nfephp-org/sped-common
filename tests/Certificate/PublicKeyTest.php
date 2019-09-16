@@ -15,6 +15,7 @@ class PublicKeyTest extends \PHPUnit\Framework\TestCase
     {
         $this->key = new PublicKey(file_get_contents(__DIR__ . self::TEST_PUBLIC_KEY));
     }
+
     /**
      * @covers PublicKey::read
      */
@@ -51,7 +52,7 @@ class PublicKeyTest extends \PHPUnit\Framework\TestCase
     
     public function testGetNonExistCPF()
     {
-        $expected = 'Não existe CPF neste certificado.';
+        $expected = null;
         $actual = $this->key->cpf();
         $this->assertEquals($expected, $actual);
     }
