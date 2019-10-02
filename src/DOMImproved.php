@@ -176,7 +176,7 @@ class DOMImproved extends DOMDocument
         }
         if (!$obrigatorio && $content === null) {
             return;
-        } elseif ($obrigatorio && ($content === null || $content === '')) {
+        } elseif ($obrigatorio && ($content === null || $content === '') && !$force) {
             $this->errors[] = "Preenchimento Obrigatório! [$name] $descricao";
         }
         $content = (string) $content;
