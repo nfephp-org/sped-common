@@ -32,7 +32,7 @@ class SoapCurl extends SoapBase implements SoapInterface
     {
         parent::__construct($certificate, $logger);
     }
-    
+
     /**
      * Send soap message to url
      * @param string $url
@@ -67,32 +67,29 @@ class SoapCurl extends SoapBase implements SoapInterface
             $soapheader
         );
         $msgSize = strlen($envelope);
-        
+
         switch ($soapver) {
             case SOAP_1_1:
                 $parameters[] = "Content-Type: text/xml;charset=UTF-8;";
-                if(!empty($action)) $parameters[] = "SOAPAction: \"$action\"";
+                if (!empty($action)) {
+                    $parameters[] = "SOAPAction: \"$action\"";
+                }
                 $parameters[] = "Content-length: $msgSize";
                 break;
             case SOAP_1_2:
-                $parameters = [
-                    "Content-Type: application/soap+xml;charset=utf-8;",
-                    "Content-length: $msgSize"
-                ];
-                if(!empty($action)) $parameter[0] .= "action=$action";
-                break;
             default:
                 $parameters = [
                     "Content-Type: application/soap+xml;charset=utf-8;",
                     "Content-length: $msgSize"
                 ];
-                if(!empty($action)) $parameter[0] .= "action=$action";
+                if (!empty($action)) {
+                    $parameters[0] .= "action=$action";
+                }
                 break;
         }
-        
         $this->requestHead = implode("\n", $parameters);
         $this->requestBody = $envelope;
-        
+
         try {
             $oCurl = curl_init();
             $this->setCurlProxy($oCurl);
@@ -149,7 +146,7 @@ class SoapCurl extends SoapBase implements SoapInterface
         }
         return $this->responseBody;
     }
-    
+
     /**
      * Set proxy into cURL parameters
      * @param resource $oCurl

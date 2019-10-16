@@ -14,6 +14,7 @@ namespace NFePHP\Common\Soap;
  * @author    Roberto L. Machado <linux.rlm at gmail dot com>
  * @link      http://github.com/nfephp-org/sped-common for the canonical source repository
  */
+
 use NFePHP\Common\Soap\SoapBase;
 use NFePHP\Common\Soap\SoapInterface;
 use NFePHP\Common\Exception\SoapException;
@@ -31,7 +32,7 @@ class SoapFake extends SoapBase implements SoapInterface
     {
         parent::__construct($certificate, $logger);
     }
-    
+
     public function send(
         $url,
         $operation = '',
@@ -53,28 +54,25 @@ class SoapFake extends SoapBase implements SoapInterface
         switch ($soapver) {
             case SOAP_1_1:
                 $parameters[] = "Content-Type: text/xml;charset=UTF-8;";
-                if(!empty($action)) $parameters[] = "SOAPAction: \"$action\"";
+                if (!empty($action)) {
+                    $parameters[] = "SOAPAction: \"$action\"";
+                }
                 $parameters[] = "Content-length: $msgSize";
                 break;
             case SOAP_1_2:
-                $parameters = [
-                    "Content-Type: application/soap+xml;charset=utf-8;",
-                    "Content-length: $msgSize"
-                ];
-                if(!empty($action)) $parameter[0] .= "action=$action";
-                break;
             default:
                 $parameters = [
                     "Content-Type: application/soap+xml;charset=utf-8;",
                     "Content-length: $msgSize"
                 ];
-                if(!empty($action)) $parameter[0] .= "action=$action";
+                if (!empty($action)) {
+                    $parameters[0] .= "action=$action";
+                }
                 break;
         }
-        
         $requestHead = implode("\n", $parameters);
         $requestBody = $envelope;
-        
+
         return json_encode([
             'url' => $url,
             'operation' => $operation,
