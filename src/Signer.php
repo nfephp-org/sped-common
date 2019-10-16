@@ -163,7 +163,7 @@ class Signer
         $x509DataNode = $dom->createElement('X509Data');
         $keyInfoNode->appendChild($x509DataNode);
 
-        if(!empty($options["subjectName"])) {
+        if (!empty($options["subjectName"])) {
             $subjectName = $certificate->publicKey->subjectNameValue;
             $x509SubjectNode = $dom->createElement('X509SubjectName', $subjectName);
             $x509DataNode->appendChild($x509SubjectNode);

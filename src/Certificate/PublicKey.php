@@ -103,10 +103,10 @@ CONTENT;
         $this->validFrom = \DateTime::createFromFormat('ymdHis\Z', $detail['validFrom']);
         $this->validTo = \DateTime::createFromFormat('ymdHis\Z', $detail['validTo']);
         if (isset($detail['name'])) {
-            $arrayName = explode("/",$detail["name"]);
+            $arrayName = explode("/", $detail["name"]);
             $arrayName = array_reverse($arrayName);
             $arrayName = array_filter($arrayName);
-            $name = implode(",",$arrayName);
+            $name = implode(",", $arrayName);
             $this->subjectNameValue = $name;
         }
     }
