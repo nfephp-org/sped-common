@@ -461,7 +461,11 @@ abstract class SoapBase implements SoapInterface
     private function mountSoapHeaders($envelopPrefix, $header = null)
     {
         if (null === $header) {
-            return '';
+            //return '';
+            return sprintf(
+                '<%s:Header/>',
+                $envelopPrefix
+            );
         }
         $headerItems = '';
         foreach ($header->data as $key => $value) {
