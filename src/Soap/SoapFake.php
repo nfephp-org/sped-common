@@ -49,13 +49,29 @@ class SoapFake extends SoapBase implements SoapInterface
             $soapheader
         );
         $msgSize = strlen($envelope);
-        $parameters = [
-            "Content-Type: application/soap+xml;charset=utf-8;",
-            "Content-length: $msgSize"
-        ];
-        if (!empty($action)) {
-            $parameters[0] .= "action=$action";
+
+        switch ($soapver) {
+            case SOAP_1_1:
+                $parameters[] = "Content-Type: text/xml;charset=UTF-8;";
+                if(!empty($action)) $parameters[] = "SOAPAction: \"$action\"";
+                $parameters[] = "Content-length: $msgSize";
+                break;
+            case SOAP_1_2:
+                $parameters = [
+                    "Content-Type: application/soap+xml;charset=utf-8;",
+                    "Content-length: $msgSize"
+                ];
+                if(!empty($action)) $parameter[0] .= "action=$action";
+                break;
+            default:
+                $parameters = [
+                    "Content-Type: application/soap+xml;charset=utf-8;",
+                    "Content-length: $msgSize"
+                ];
+                if(!empty($action)) $parameter[0] .= "action=$action";
+                break;
         }
+        
         $requestHead = implode("\n", $parameters);
         $requestBody = $envelope;
         
