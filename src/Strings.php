@@ -16,6 +16,36 @@ use ForceUTF8\Encoding;
 
 class Strings
 {
+    
+    /**
+     * Includes missing or unsupported properties in stdClass inputs
+     * and Replace all unsuported chars
+     * 
+     * @param \stdClass $std
+     * @param array $possible
+     * @return \stdClass
+     */
+    public static function equilizeParameters(
+        \stdClass $std,
+        $possible,
+        $replaceAccentedChars = false
+    ) {
+        $arr = get_object_vars($std);
+        foreach ($possible as $key) {
+            if (!array_key_exists($key, $arr)) {
+                $std->$key = null;
+            } else {
+                if (is_string($std->$key)) {
+                    $std->$key = trim(self::replaceUnacceptableCharacters($std->$key));
+                    if ($replaceAccentedChars) {
+                        $std->$key = self::toASCII($std->$key);
+                    }
+                }
+            }
+        }
+        return $std;
+    }
+
     /**
      * Replace all specials characters from string and retuns only 128 basics
      * NOTE: only for UTF-8
