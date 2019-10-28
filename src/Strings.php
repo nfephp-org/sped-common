@@ -20,7 +20,7 @@ class Strings
     /**
      * Includes missing or unsupported properties in stdClass inputs
      * and Replace all unsuported chars
-     * 
+     *
      * @param \stdClass $std
      * @param array $possible
      * @return \stdClass
