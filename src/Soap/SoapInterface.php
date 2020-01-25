@@ -64,6 +64,55 @@ interface SoapInterface
     public function proxy($ip, $port, $user, $password);
     
     /**
+     * Force http protocol version
+     * @param null|string $version '1.0', '1.1', '2.0'
+     */
+    public function httpVersion($version = null);
+    
+    /**
+     * Disables the security checking of host and peer certificates
+     * @param bool $flag
+     * @return bool
+     */
+    public function disableSecurity($flag = false);
+
+    /**
+     * ONlY for tests
+     * @param bool $flag
+     * @return bool
+     */
+    public function disableCertValidation($flag = true);
+    
+    /**
+     * Set option to encrypt private key before save in filesystem
+     * for an additional layer of protection
+     * @param bool $encript
+     * @return bool
+     */
+    public function setEncriptPrivateKey($encript = true);
+    
+    /**
+     * Set another temporayfolder for saving certificates for SOAP utilization
+     * @param string | null $folderRealPath
+     * @return void
+     */
+    public function setTemporaryFolder($folderRealPath = null);
+    
+    /**
+     * Set debug mode, this mode will save soap envelopes in temporary directory
+     * @param bool $value
+     * @return bool
+     */
+    public function setDebugMode($value = false);
+    
+    /**
+     * Set prefixes
+     * @param array $prefixes
+     * @return string[]
+     */
+    public function setSoapPrefix($prefixes = []);
+    
+    /**
      * Send soap message
      * @param string $url
      * @param string $operation
