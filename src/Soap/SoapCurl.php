@@ -82,6 +82,8 @@ class SoapCurl extends SoapBase implements SoapInterface
             $this->setCurlProxy($oCurl);
             curl_setopt($oCurl, CURLOPT_URL, $url);
             curl_setopt($oCurl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+            //curl_setopt($oCurl, CURLOPT_CONNECTTIMEOUT_MS, 1);
+            //curl_setopt($oCurl, CURLOPT_TIMEOUT_MS, 1);
             curl_setopt($oCurl, CURLOPT_CONNECTTIMEOUT, $this->soaptimeout);
             curl_setopt($oCurl, CURLOPT_TIMEOUT, $this->soaptimeout + 20);
             curl_setopt($oCurl, CURLOPT_HEADER, 1);
@@ -108,6 +110,7 @@ class SoapCurl extends SoapBase implements SoapInterface
             }
             $response = curl_exec($oCurl);
             $this->soaperror = curl_error($oCurl);
+            $this->soaperror_code = curl_errno($oCurl);
             $ainfo = curl_getinfo($oCurl);
             if (is_array($ainfo)) {
                 $this->soapinfo = $ainfo;
@@ -126,10 +129,10 @@ class SoapCurl extends SoapBase implements SoapInterface
             throw SoapException::unableToLoadCurl($e->getMessage());
         }
         if ($this->soaperror != '') {
-            throw SoapException::soapFault($this->soaperror . " [$url]");
+            throw SoapException::soapFault($this->soaperror . " [$url]", $this->soaperror_code);
         }
         if ($httpcode != 200) {
-            throw SoapException::soapFault(" [$url]" . $this->responseHead);
+            throw SoapException::soapFault(" [$url]" . $this->responseHead, $httpcode);
         }
         return $this->responseBody;
     }
