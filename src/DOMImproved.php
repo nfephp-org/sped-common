@@ -182,8 +182,13 @@ class DOMImproved extends DOMDocument
         $content = (string) $content;
         $content = trim($content);
         if ($obrigatorio || $content !== '' || $force) {
-            $temp = $this->createElement($name, '');
-            $temp->{$name} = $content;
+            if(stristr($content, '&') !== false ) {
+                $temp = $this->createElement($name);
+                $nodeTxt = $this->createTextNode($content);
+                $temp->appendChild($nodeTxt);                
+            } else {
+                $temp = $this->createElement($name, $content);
+            }
             $parent->appendChild($temp);
         }
     }
