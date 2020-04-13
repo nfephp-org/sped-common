@@ -9,7 +9,7 @@ class Expired extends RuntimeException implements ExceptionInterface
 {
     public function __construct(Certificate $certificate)
     {
-        $invalidDate = $certificate->getValidFrom()->format('Y-m-d H:i');
-        parent::__construct('Certificate invalid from '.$invalidDate, 0, null);
+        $invalidDate = $certificate->getValidTo()->format('Y-m-d H:i:s');
+        parent::__construct('Certificate era válido até '.$invalidDate, 0, null);
     }
 }
