@@ -129,9 +129,15 @@ class SoapCurl extends SoapBase implements SoapInterface
             throw SoapException::unableToLoadCurl($e->getMessage());
         }
         if ($this->soaperror != '') {
+            if (intval($this->soaperror_code) == 0) {
+                $this->soaperror_code = 7;
+            }
             throw SoapException::soapFault($this->soaperror . " [$url]", $this->soaperror_code);
         }
         if ($httpcode != 200) {
+            if (intval($httpcode) == 0) {
+                $httpcode = 52;
+            }
             throw SoapException::soapFault(" [$url]" . $this->responseHead, $httpcode);
         }
         return $this->responseBody;
