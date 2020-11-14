@@ -76,6 +76,8 @@ class Strings
         if (empty($input)) {
             return $input;
         }
+        $input = str_replace('&', ' & ', $input);
+        $input = preg_replace('/(?:\s\s+)/', ' ', $input);
         //& isolated, less than, greater than, quotation marks and apostrophes
         //should be replaced by their html equivalent
         $input = str_replace(
@@ -107,10 +109,10 @@ class Strings
     public static function squashCharacters($input)
     {
         $input = trim($input);
-        $aFind = ['á','à','ã','â','é','ê','í','ó','ô','õ','ú','ü',
-            'ç','Á','À','Ã','Â','É','Ê','Í','Ó','Ô','Õ','Ú','Ü','Ç'];
-        $aSubs = ['a','a','a','a','e','e','i','o','o','o','u','u',
-            'c','A','A','A','A','E','E','I','O','O','O','U','U','C'];
+        $aFind = ['á','à','ã','â','é','ê','í','ó','ô','õ','ö','ú','ü',
+            'ç','Á','À','Ã','Â','É','Ê','Í','Ó','Ô','Õ','Ö','Ú','Ü','Ç'];
+        $aSubs = ['a','a','a','a','e','e','i','o','o','o','o','u','u',
+            'c','A','A','A','A','E','E','I','O','O','O','O','U','U','C'];
         return str_replace($aFind, $aSubs, $input);
     }
     
