@@ -5,7 +5,7 @@ use NFePHP\Common\Strings;
 class StringsTest extends \PHPUnit\Framework\TestCase
 {
     const TEST_XML_PATH = '/fixtures/xml/';
-    
+
     public function testReplaceSpecialsChars()
     {
         $txtSujo = "Esse é um código cheio de @$#$! , - . ; : / COISAS e 12093876486";
@@ -13,7 +13,7 @@ class StringsTest extends \PHPUnit\Framework\TestCase
         $resp = Strings::replaceSpecialsChars($txtSujo);
         $this->assertEquals($txtLimpo, $resp);
     }
-    
+
     public function testReplaceUnacceptableCharacters()
     {
         $txtSujo = "Contribuições R$   200,00  @ # * IPI: 15% Caixa D'agua Rico   & Rich < > \"   \t \r \n ";
@@ -22,7 +22,7 @@ class StringsTest extends \PHPUnit\Framework\TestCase
         $resp = Strings::replaceUnacceptableCharacters($txtSujo);
         $this->assertEquals($txtLimpo, $resp);
     }
-    
+
     public function testClearXmlString()
     {
         $xmlSujo = file_get_contents(__DIR__. self::TEST_XML_PATH . 'NFe/xml-sujo.xml');
@@ -37,7 +37,7 @@ class StringsTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($xmlLimpo2, $resp2);
         $this->assertEquals($txtLimpo, $resp3);
     }
-    
+
     public function testClearProtocoledXML()
     {
         $xmlSujo = '';
@@ -45,21 +45,21 @@ class StringsTest extends \PHPUnit\Framework\TestCase
         $resp1 = Strings::clearProtocoledXML($xmlSujo);
         $this->assertEquals($xmlLimpo, $resp1);
     }
-    
+
     public function testOnlyNumbers()
     {
         $expected = '123657788';
         $actual = Strings::onlyNumbers('123-65af77./88 Ç $#');
         $this->assertEquals($expected, $actual);
     }
-    
+
     public function testRandomString()
     {
         $str = Strings::randomString(10);
         $len = strlen($str);
         $this->assertEquals($len, 10);
     }
-    
+
     public function testDeleteAllBetween()
     {
         $str = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
@@ -70,7 +70,7 @@ class StringsTest extends \PHPUnit\Framework\TestCase
         $expected = "<soap:Envelope><soap:Body></soap:Body></soap:Envelope>";
         $this->assertEquals($expected, $actual);
     }
-    
+
     public function testRemoveSomeAlienCharsfromTxt()
     {
         $txt = "C|PLASTFOAM                   IND. E       COM DE PLASTICOS LTDA|PLASTFOAM| 336546371113||184394 |2222600|3 |\n";
@@ -82,4 +82,27 @@ class StringsTest extends \PHPUnit\Framework\TestCase
         $expected .= "ZV|\n";
         $this->assertEquals($expected, $actual);
     }
+
+    public function testNormalize()
+    {
+        $input = 'CABEÇÃO';
+        $actual = Strings::normalize($input);
+        $this->assertEquals($input, $actual);
+
+        $input = "\tREPÚBLICA FEDERATIVA DO BRASIL\r\n";
+        $expected = 'REPÚBLICA FEDERATIVA DO BRASIL';
+        $actual = Strings::normalize($input);
+        $this->assertEquals($expected, $actual);
+
+        $input = " REPÚBLICA  FEDERATIVA   DO    BRASIL";
+        $expected = ' REPÚBLICA FEDERATIVA DO BRASIL';
+        $actual = Strings::normalize($input);
+        $this->assertEquals($expected, $actual);
+
+        $input = "REPÚBLICA \u{001F} FEDERATIVA DO BRASIL \u{000A}";
+        $expected = 'REPÚBLICA  FEDERATIVA DO BRASIL ';
+        $actual = Strings::normalize($input);
+        $this->assertEquals($expected, $actual);
+    }
+
 }
