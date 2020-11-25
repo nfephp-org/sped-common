@@ -24,7 +24,7 @@ class SignerTest extends \PHPUnit\Framework\TestCase
         $actual = Signer::isSigned($xmlsign);
         $this->assertTrue($actual);
     }
-    
+
     /**
      * @covers Signer::isSigned
      * @covers Signer::existsSignature
@@ -43,57 +43,57 @@ class SignerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers Signer::existsSignature
-     * @expectedException NFePHP\Common\Exception\SignerException
      */
     public function testSignFailNotXML()
     {
+        $this->expectException(\NFePHP\Common\Exception\SignerException::class);
         $pfx = file_get_contents(__DIR__. '/fixtures/certs/certificado_teste.pfx');
         $certificate = Certificate::readPfx($pfx, 'associacao');
         $content = "<html><body></body></html>";
         $xmlsign = Signer::sign($certificate, $content, 'infNFe', 'Id');
     }
-    
+
     /**
      * @covers Signer::existsSignature
      * @covers Signer::digestCheck
-     * @expectedException NFePHP\Common\Exception\SignerException
      */
     public function testIsSignedFailTagNotFound()
     {
+        $this->expectException(\NFePHP\Common\Exception\SignerException::class);
         $file = __DIR__ .'/fixtures/xml/NFe/2017signed.xml';
         $xml = file_get_contents($file);
         $actual = Signer::isSigned($xml, 'infCTe');
     }
-    
+
     /**
      * @covers Signer::existsSignature
      * @covers Signer::digestCheck
      * @covers Signer::canonize
      * @covers Signer::makeDigest
-     * @expectedException NFePHP\Common\Exception\SignerException
      */
     public function testIsSignedFailDigest()
     {
+        $this->expectException(\NFePHP\Common\Exception\SignerException::class);
         $file = __DIR__ .'/fixtures/xml/NFe/2017signedDigestFail.xml';
         $xml = file_get_contents($file);
         $actual = Signer::isSigned($xml);
     }
-    
+
     /**
      * @covers Signer::existsSignature
      * @covers Signer::digestCheck
      * @covers Signer::signatureCheck
      * @covers Signer::canonize
      * @covers Signer::makeDigest
-     * @expectedException NFePHP\Common\Exception\SignerException
      */
     public function testIsSignedFailSignature()
     {
+        $this->expectException(\NFePHP\Common\Exception\SignerException::class);
         $file = __DIR__ .'/fixtures/xml/NFe/2017signedSignatureFail.xml';
         $xml = file_get_contents($file);
         $actual = Signer::isSigned($xml);
     }
-    
+
     /**
      * @covers Signer::removeSignature
      * @covers Signer::existsSignature

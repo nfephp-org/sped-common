@@ -38,42 +38,38 @@ class UFListTest extends \PHPUnit\Framework\TestCase
         92=>'SVCAN',
         93=>'SVCRS'
     ];
-    
+
     public function testgetUFByCode()
     {
         $uf = UFList::getUFByCode(35);
         $this->assertEquals('SP', $uf);
     }
-    
-    /**
-     * @expectedException InvalidArgumentException
-     */
+
     public function testgetUFByCodeFail()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $uf = UFList::getUFByCode(77);
     }
-    
+
     public function testgetUFByUF()
     {
         $code = UFList::getCodeByUF('Sp');
         $this->assertEquals(35, $code);
     }
-    
-    /**
-     * @expectedException InvalidArgumentException
-     */
+
     public function testgetUFByUFFail()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $code = UFList::getCodeByUF('aa');
     }
-    
+
     public function testGetListByUF()
     {
         $actual = UFList::getListByUF();
         $expected = array_flip($this->uflist);
         $this->assertEquals($expected, $actual);
     }
-    
+
     public function testGetListByCode()
     {
         $actual = UFList::getListByCode();
