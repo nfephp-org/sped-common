@@ -29,7 +29,7 @@
         "ext-openssl": "*",
         "ext-mbstring": "*",
         "psr/log": "^1.0",
-        "league/flysystem": "^1.0|^2.0",
+        "league/flysystem": "^1.0",
         "neitanod/forceutf8": "^2.0"
     },
     "require-dev": {
