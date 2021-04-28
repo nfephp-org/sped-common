@@ -159,4 +159,71 @@ class SoapCurl extends SoapBase implements SoapInterface
             }
         }
     }
+    
+    /**
+     * Verify if URL is active
+     * @param string $url
+     * @return boolean
+     * @throws \NFePHP\Common\Exception\SoapException
+     */
+    public function checkWsdlActive($url)
+    {
+        $last = substr($url, -4);
+        if (strtoupper(substr($url, -5)) != '?WSDL') {
+            $url .= "?WSDL";
+        }
+        $this->saveTemporarilyKeyFiles();
+        try {
+            $oCurl = curl_init();
+            $this->setCurlProxy($oCurl);
+            curl_setopt($oCurl, CURLOPT_URL, $url);
+            curl_setopt($oCurl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+            curl_setopt($oCurl, CURLOPT_CONNECTTIMEOUT, $this->soaptimeout);
+            curl_setopt($oCurl, CURLOPT_TIMEOUT, $this->soaptimeout + 20);
+            curl_setopt($oCurl, CURLOPT_HEADER, 1);
+            curl_setopt($oCurl, CURLOPT_HTTP_VERSION, $this->httpver);
+            curl_setopt($oCurl, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($oCurl, CURLOPT_SSL_VERIFYPEER, 0);
+            if (!$this->disablesec) {
+                curl_setopt($oCurl, CURLOPT_SSL_VERIFYHOST, 2);
+                if (is_file($this->casefaz)) {
+                    curl_setopt($oCurl, CURLOPT_CAINFO, $this->casefaz);
+                }
+            }
+            curl_setopt($oCurl, CURLOPT_SSLVERSION, $this->soapprotocol);
+            curl_setopt($oCurl, CURLOPT_SSLCERT, $this->tempdir . $this->certfile);
+            curl_setopt($oCurl, CURLOPT_SSLKEY, $this->tempdir . $this->prifile);
+            if (!empty($this->temppass)) {
+                curl_setopt($oCurl, CURLOPT_KEYPASSWD, $this->temppass);
+            }
+            curl_setopt($oCurl, CURLOPT_RETURNTRANSFER, 1);
+            $response = curl_exec($oCurl);
+            $this->soaperror = curl_error($oCurl);
+            $this->soaperror_code = curl_errno($oCurl);
+            $ainfo = curl_getinfo($oCurl);
+            if (is_array($ainfo)) {
+                $this->soapinfo = $ainfo;
+            }
+            $headsize = curl_getinfo($oCurl, CURLINFO_HEADER_SIZE);
+            $httpcode = curl_getinfo($oCurl, CURLINFO_HTTP_CODE);
+            curl_close($oCurl);
+            $this->responseHead = trim(substr($response, 0, $headsize));
+            $this->responseBody = trim(substr($response, $headsize));
+        } catch (\Exception $e) {
+            throw SoapException::unableToLoadCurl($e->getMessage());
+        }
+        if ($this->soaperror != '') {
+            if (intval($this->soaperror_code) == 0) {
+                $this->soaperror_code = 7;
+            }
+            throw SoapException::soapFault($this->soaperror . " [$url]", $this->soaperror_code);
+        }
+        if ($httpcode != 200) {
+            if (intval($httpcode) == 0) {
+                $httpcode = 52;
+            }
+            throw SoapException::soapFault(" [$url]" . $this->responseHead, $httpcode);
+        }
+        return true;
+    }
 }
