@@ -55,7 +55,6 @@ class Strings
     public static function replaceSpecialsChars($string)
     {
         $string = self::squashCharacters($string);
-        $string = str_replace('&', 'e', $string);
         $string = preg_replace("/[^a-zA-Z0-9 @#,-_.;:$%\/]/", "", $string);
         return preg_replace("/[<>]/", "", $string);
     }
@@ -82,7 +81,7 @@ class Strings
         //& isolated, less than, greater than, quotation marks and apostrophes
         //should be replaced by their html equivalent
         $input = str_replace(
-            ['& ','<','>','"',"'"],
+            ['&','<','>','"',"'"],
             ['&amp;','&lt;','&gt;','&quot;','&#39;'],
             $input
         );
