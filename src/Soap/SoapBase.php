@@ -533,15 +533,15 @@ abstract class SoapBase implements SoapInterface
                 $this->temppass
             );
         }
-        $ret &= $this->filesystem->put(
+        $ret &= $this->filesystem->write(
             $this->prifile,
             $private
         );
-        $ret &= $this->filesystem->put(
+        $ret &= $this->filesystem->write(
             $this->pubfile,
             $this->certificate->publicKey
         );
-        $ret &= $this->filesystem->put(
+        $ret &= $this->filesystem->write(
             $this->certfile,
             $private . "{$this->certificate}"
         );
@@ -560,7 +560,7 @@ abstract class SoapBase implements SoapInterface
     protected function randomName($n = 10)
     {
         $name = $this->certsdir . Strings::randomString($n) . '.pem';
-        if (!$this->filesystem->has($name)) {
+        if (!$this->filesystem->fileExists($name)) {
             return $name;
         }
         $this->randomName($n+5);
@@ -589,7 +589,7 @@ abstract class SoapBase implements SoapInterface
             foreach ($contents as $item) {
                 if ($item['type'] == 'file') {
                     if ($this->filesystem->fileExists($item['path'])) {
-                        $timestamp = $this->filesystem->getTimestamp($item['path']);
+                        $timestamp = $this->filesystem->lastModified($item['path']);
                         if ($timestamp < $tsLimit) {
                             $this->filesystem->delete($item['path']);
                         }
@@ -619,11 +619,11 @@ abstract class SoapBase implements SoapInterface
         $now = \DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''));
         $time = substr($now->format("ymdHisu"), 0, 16);
         try {
-            $this->filesystem->put(
+            $this->filesystem->write(
                 $this->debugdir . $time . "_" . $operation . "_sol.txt",
                 $request
             );
-            $this->filesystem->put(
+            $this->filesystem->write(
                 $this->debugdir . $time . "_" . $operation . "_res.txt",
                 $response
             );
