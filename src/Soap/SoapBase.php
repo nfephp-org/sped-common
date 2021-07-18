@@ -112,9 +112,10 @@ abstract class SoapBase implements SoapInterface
      */
     protected $encriptPrivateKey = false;
     /**
+     * CURL_HTTP_VERSION_NONE == 0 - deixa o cURL decidir que protocolo usar 
      * @var integer
      */
-    protected $httpver;
+    protected $httpver = 0;
     /**
      * @var bool
      */

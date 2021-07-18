@@ -168,7 +168,6 @@ class SoapCurl extends SoapBase implements SoapInterface
      */
     public function checkWsdlActive($url)
     {
-        $last = substr($url, -4);
         if (strtoupper(substr($url, -5)) != '?WSDL') {
             $url .= "?WSDL";
         }
