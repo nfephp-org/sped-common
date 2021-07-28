@@ -5,8 +5,9 @@ namespace NFePHP\Common\Soap;
 use NFePHP\Common\Certificate;
 use NFePHP\Common\Exception\RuntimeException;
 use NFePHP\Common\Strings;
-use League\Flysystem\Filesystem;
-use League\Flysystem\Adapter\Local;
+use NFePHP\Common\Files;
+//use League\Flysystem\Filesystem;
+//use League\Flysystem\Adapter\Local;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -96,11 +97,7 @@ abstract class SoapBase implements SoapInterface
      */
     protected $disableCertValidation = false;
     /**
-     * @var \League\Flysystem\Adapter\Local
-     */
-    protected $adapter;
-    /**
-     * @var \League\Flysystem\Filesystem
+     * @var Files
      */
     protected $filesystem;
     /**
@@ -112,7 +109,7 @@ abstract class SoapBase implements SoapInterface
      */
     protected $encriptPrivateKey = false;
     /**
-     * CURL_HTTP_VERSION_NONE == 0 - deixa o cURL decidir que protocolo usar 
+     * CURL_HTTP_VERSION_NONE == 0 - deixa o cURL decidir que protocolo usar
      * @var integer
      */
     protected $httpver = 0;
@@ -303,8 +300,7 @@ abstract class SoapBase implements SoapInterface
      */
     protected function setLocalFolder($folder = '')
     {
-        $this->adapter = new Local($folder);
-        $this->filesystem = new Filesystem($this->adapter);
+        $this->filesystem = new Files($folder);
     }
 
     /**
