@@ -140,7 +140,7 @@ Esse método irá retornar uma classe \DateTime com a a data FINAL da validade, 
 
 ```php
 
-$validFrom = $cert->getValidTo();
+$validTo = $cert->getValidTo();
 
 echo $validTo->format('Y-m-d');
 
