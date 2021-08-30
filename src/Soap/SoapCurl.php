@@ -18,6 +18,7 @@ namespace NFePHP\Common\Soap;
 use NFePHP\Common\Soap\SoapBase;
 use NFePHP\Common\Soap\SoapInterface;
 use NFePHP\Common\Exception\SoapException;
+use NFePHP\Common\Validator;
 use NFePHP\Common\Certificate;
 use Psr\Log\LoggerInterface;
 
@@ -32,7 +33,7 @@ class SoapCurl extends SoapBase implements SoapInterface
     {
         parent::__construct($certificate, $logger);
     }
-    
+
     /**
      * Send soap message to url
      * @param string $url
@@ -76,7 +77,7 @@ class SoapCurl extends SoapBase implements SoapInterface
         }
         $this->requestHead = implode("\n", $parameters);
         $this->requestBody = $envelope;
-        
+
         try {
             $oCurl = curl_init();
             $this->setCurlProxy($oCurl);
@@ -137,12 +138,14 @@ class SoapCurl extends SoapBase implements SoapInterface
         if ($httpcode != 200) {
             if (intval($httpcode) == 0) {
                 $httpcode = 52;
+            } elseif ($httpcode == 500) {
+                $httpcode == 89;
             }
             throw SoapException::soapFault(" [$url]" . $this->responseHead, $httpcode);
         }
         return $this->responseBody;
     }
-    
+
     /**
      * Set proxy into cURL parameters
      * @param resource $oCurl
@@ -159,7 +162,7 @@ class SoapCurl extends SoapBase implements SoapInterface
             }
         }
     }
-    
+
     /**
      * Verify if URL is active
      * @param string $url
@@ -168,8 +171,8 @@ class SoapCurl extends SoapBase implements SoapInterface
      */
     public function checkWsdlActive($url)
     {
-        if (strtoupper(substr($url, -5)) != '?WSDL') {
-            $url .= "?WSDL";
+        if (strtoupper(substr($url, -5)) != '?wsdl') {
+            $url .= "?wsdl";
         }
         $this->saveTemporarilyKeyFiles();
         try {
@@ -183,12 +186,6 @@ class SoapCurl extends SoapBase implements SoapInterface
             curl_setopt($oCurl, CURLOPT_HTTP_VERSION, $this->httpver);
             curl_setopt($oCurl, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($oCurl, CURLOPT_SSL_VERIFYPEER, 0);
-            if (!$this->disablesec) {
-                curl_setopt($oCurl, CURLOPT_SSL_VERIFYHOST, 2);
-                if (is_file($this->casefaz)) {
-                    curl_setopt($oCurl, CURLOPT_CAINFO, $this->casefaz);
-                }
-            }
             curl_setopt($oCurl, CURLOPT_SSLVERSION, $this->soapprotocol);
             curl_setopt($oCurl, CURLOPT_SSLCERT, $this->tempdir . $this->certfile);
             curl_setopt($oCurl, CURLOPT_SSLKEY, $this->tempdir . $this->prifile);
@@ -219,9 +216,20 @@ class SoapCurl extends SoapBase implements SoapInterface
         }
         if ($httpcode != 200) {
             if (intval($httpcode) == 0) {
-                $httpcode = 52;
+                $httpcode = 500;
             }
             throw SoapException::soapFault(" [$url]" . $this->responseHead, $httpcode);
+        }
+        if (!Validator::isXml($this->responseBody)) {
+            throw SoapException::soapFault(" [$url]" . $this->responseHead, 500);
+        }
+        $dom = new \DOMDocument('1.0', 'utf-8');
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = false;
+        $dom->loadXML($this->responseBody, LIBXML_NOBLANKS | LIBXML_NOEMPTYTAG);
+        $node = $dom->getElementsByTagName('definitions')->item(0);
+        if (empty($node)) {
+            throw SoapException::soapFault("Erro interno do Servidor", 500);
         }
         return true;
     }
