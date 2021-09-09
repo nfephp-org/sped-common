@@ -36,7 +36,8 @@ class UFListTest extends \PHPUnit\Framework\TestCase
         35=>'SP',
         17=>'TO',
         92=>'SVCAN',
-        93=>'SVCRS'
+        93=>'SVCRS',
+        99=>'EX'
     ];
     
     public function testgetUFByCode()
