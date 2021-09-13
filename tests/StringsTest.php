@@ -18,7 +18,7 @@ class StringsTest extends \PHPUnit\Framework\TestCase
     {
         $txtSujo = "Contribuições R$   200,00  @ # * IPI: 15% Caixa D'agua Rico   & Rich < > \"   \t \r \n ";
         $txtSujo .= mb_convert_encoding(" teste ç Á ã é ø", 'ISO-8859-1');
-        $txtLimpo = "Contribuições R$ 200,00 @ # * IPI: 15% Caixa Dagua Rico &amp; Rich &lt; &gt; &quot; teste ç Á ã é ø";
+        $txtLimpo = "Contribuições R$ 200,00 @ # * IPI: 15% Caixa Dagua Rico &amp; Rich &quot; teste ç Á ã é ø";
         $resp = Strings::replaceUnacceptableCharacters($txtSujo);
         $this->assertEquals($txtLimpo, $resp);
     }
