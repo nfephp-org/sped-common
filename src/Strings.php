@@ -75,6 +75,7 @@ class Strings
         if (empty($input)) {
             return $input;
         }
+        $input = str_replace(['<', '>'], '', $input);
         $input = str_replace('&', ' & ', $input);
         $input = str_replace("'", '', $input);
         $input = preg_replace('/(?:\s\s+)/', ' ', $input);
