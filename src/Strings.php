@@ -78,6 +78,7 @@ class Strings
         $input = str_replace(['<', '>'], '', $input);
         $input = str_replace('&', ' & ', $input);
         $input = str_replace("'", '', $input);
+        $input = str_replace('"', '', $input);
         $input = preg_replace('/(?:\s\s+)/', ' ', $input);
         //& isolated, less than, greater than, quotation marks and apostrophes
         //should be replaced by their html equivalent
@@ -128,6 +129,12 @@ class Strings
     {
         //Carriage Return, Tab and Line Feed is not acceptable in strings
         $input = str_replace(["\r","\t","\n"], "", $input);
+        //remove aspas simples
+        $input = str_replace("'", '', $input);
+        //remove aspas duplas
+        $input = str_replace('"', '', $input);
+        //remove sinal de menor e maior
+        $input = str_replace(['<', '>'], '', $input);
         //Multiple spaces is not acceptable in strings
         $input = preg_replace('/(?:\s\s+)/', ' ', $input);
         //Only UTF-8 characters is acceptable
