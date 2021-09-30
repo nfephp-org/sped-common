@@ -14,36 +14,36 @@ class CertificateException extends \RuntimeException implements ExceptionInterfa
 {
     public static function unableToRead()
     {
-        return new static('Unable to read certificate, ' . static::getOpenSSLError());
+        return new static('Impossivel ler o certificado, ' . static::getOpenSSLError());
     }
 
     public static function unableToOpen()
     {
-        return new static('Unable to open certificate, ' . static::getOpenSSLError());
+        return new static('Impossivel abrir o certificado, ' . static::getOpenSSLError());
     }
 
     public static function signContent()
     {
         return new static(
-            'An unexpected error has occurred when sign a content, ' . static::getOpenSSLError()
+            'Ocorreu um erro inesperado durante o processo de assinatura, ' . static::getOpenSSLError()
         );
     }
 
     public static function getPrivateKey()
     {
-        return new static('An error has occurred when get private key, ' . static::getOpenSSLError());
+        return new static('Ocorreu um erro ao recuperar a chave privada, ' . static::getOpenSSLError());
     }
 
     public static function signatureFailed()
     {
         return new static(
-            'An error has occurred when verify signature, ' . static::getOpenSSLError()
+            'Ocorreu um erro enquento verificava a assinatura, ' . static::getOpenSSLError()
         );
     }
     
     protected static function getOpenSSLError()
     {
-        $error = 'get follow error: ';
+        $error = 'ocorreu o seguinte erro: ';
         while ($msg = openssl_error_string()) {
             $error .= "($msg)";
         }
