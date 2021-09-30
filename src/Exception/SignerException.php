@@ -14,24 +14,24 @@ class SignerException extends \RuntimeException implements ExceptionInterface
 {
     public static function isNotXml()
     {
-        return new static('The content not is a valid XML.');
+        return new static('O conteudo não é um XML válido.');
     }
     
     public static function digestComparisonFailed()
     {
-        return new static('The XML content does not match the Digest Value. '
-           . 'Probably modified after it was signed');
+        return new static('O conteúdo do XML não corresponde ao Digest Value. '
+           . 'Provavelmente foi alterado após ter sido assinado');
     }
     
     public static function signatureComparisonFailed()
     {
-        return new static('The XML SIGNATURE does not match. '
-           . 'Probably modified after it was signed.');
+        return new static('A assinatura do XML não combina. '
+           . 'O conteúdo provavelmente foi alterado após ter sido assinado.');
     }
     
     
     public static function tagNotFound($tagname)
     {
-        return new static("The specified tag &lt;$tagname&gt; was not found in xml.");
+        return new static("A tag especificada &lt;$tagname&gt; não foi localizada no xml.");
     }
 }

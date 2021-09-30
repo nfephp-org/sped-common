@@ -77,14 +77,11 @@ class SoapCurl extends SoapBase implements SoapInterface
         }
         $this->requestHead = implode("\n", $parameters);
         $this->requestBody = $envelope;
-
         try {
             $oCurl = curl_init();
             $this->setCurlProxy($oCurl);
             curl_setopt($oCurl, CURLOPT_URL, $url);
             curl_setopt($oCurl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
-            //curl_setopt($oCurl, CURLOPT_CONNECTTIMEOUT_MS, 1);
-            //curl_setopt($oCurl, CURLOPT_TIMEOUT_MS, 1);
             curl_setopt($oCurl, CURLOPT_CONNECTTIMEOUT, $this->soaptimeout);
             curl_setopt($oCurl, CURLOPT_TIMEOUT, $this->soaptimeout + 20);
             curl_setopt($oCurl, CURLOPT_HEADER, 1);
@@ -136,14 +133,29 @@ class SoapCurl extends SoapBase implements SoapInterface
             throw SoapException::soapFault($this->soaperror . " [$url]", $this->soaperror_code);
         }
         if ($httpcode != 200) {
+            $msg = $this->getCodeMessage($httpcode);
             if (intval($httpcode) == 0) {
                 $httpcode = 52;
             } elseif ($httpcode == 500) {
-                $httpcode == 89;
+                $httpcode = 89;
             }
-            throw SoapException::soapFault(" [$url]" . $this->responseHead, $httpcode);
+            throw SoapException::soapFault($msg, $httpcode);
         }
         return $this->responseBody;
+    }
+    
+    /**
+     * Extrai mensagem da liste de erros HTTP
+     * @param integer $code
+     * @return string
+     */
+    private function getCodeMessage($code)
+    {
+        $codes = json_decode(file_get_contents(__DIR__.'/httpcodes.json'), true);
+        if (!empty($codes[$code])) {
+            return $codes[$code]['description'];
+        }
+        return "Erro desconhecido.";
     }
 
     /**
