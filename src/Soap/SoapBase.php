@@ -6,8 +6,6 @@ use NFePHP\Common\Certificate;
 use NFePHP\Common\Exception\RuntimeException;
 use NFePHP\Common\Strings;
 use NFePHP\Common\Files;
-//use League\Flysystem\Filesystem;
-//use League\Flysystem\Adapter\Local;
 use Psr\Log\LoggerInterface;
 
 /**
