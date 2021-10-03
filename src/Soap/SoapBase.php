@@ -585,7 +585,7 @@ abstract class SoapBase implements SoapInterface
             $tsLimit = $dt->add($tint)->getTimestamp();
             foreach ($contents as $item) {
                 if ($item['type'] == 'file') {
-                    if ($this->filesystem->fileExists($item['path'])) {
+                    if ($this->filesystem->has($item['path'])) {
                         $timestamp = $this->filesystem->getTimestamp($item['path']);
                         if ($timestamp < $tsLimit) {
                             $this->filesystem->delete($item['path']);
