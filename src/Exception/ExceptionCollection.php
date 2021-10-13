@@ -15,7 +15,7 @@ class ExceptionCollection extends \Exception implements ExceptionInterface, Iter
      * @var string
      */
     private $shortMessage;
-    
+
     /**
      * Constructor
      * @param string $message
@@ -27,7 +27,7 @@ class ExceptionCollection extends \Exception implements ExceptionInterface, Iter
         parent::__construct($message, $code, $previous);
         $this->shortMessage = $message;
     }
-    
+
     /**
      * Set all of the exceptions
      * @param array $exceptions Array of exceptions
@@ -41,7 +41,7 @@ class ExceptionCollection extends \Exception implements ExceptionInterface, Iter
         }
         return $this;
     }
-    
+
     /**
      * Add exceptions to the collection
      * @param \Exception $exception Exception to add
@@ -53,7 +53,7 @@ class ExceptionCollection extends \Exception implements ExceptionInterface, Iter
         $this->message = $this->__toString();
         return $this;
     }
-    
+
     /**
      * Get the total number of request exceptions
      * @return int
@@ -62,7 +62,7 @@ class ExceptionCollection extends \Exception implements ExceptionInterface, Iter
     {
         return count($this->exceptions);
     }
-    
+
     /**
      * Allows array-like iteration over the request exceptions
      * @return \ArrayIterator
@@ -71,7 +71,7 @@ class ExceptionCollection extends \Exception implements ExceptionInterface, Iter
     {
         return new \ArrayIterator($this->exceptions);
     }
-    
+
     /**
      * Get the first exception in the collection
      * @return \Exception
@@ -80,7 +80,7 @@ class ExceptionCollection extends \Exception implements ExceptionInterface, Iter
     {
         return $this->exceptions ? $this->exceptions[0] : null;
     }
-    
+
     /**
      * Convert to string
      * @return string

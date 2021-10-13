@@ -1,7 +1,5 @@
 <?php
 
-namespace NFePHP\Common;
-
 /**
  * Class to signner a Xml
  * Meets packages :
@@ -24,6 +22,8 @@ namespace NFePHP\Common;
  * @link      http://github.com/nfephp-org/sped-common for the canonical source repository
  */
 
+namespace NFePHP\Common;
+
 use NFePHP\Common\Certificate\PublicKey;
 use NFePHP\Common\Exception\SignerException;
 use DOMDocument;
@@ -33,7 +33,7 @@ use DOMElement;
 class Signer
 {
     const CANONICAL = [true,false,null,null];
-    
+
     /**
      * Make Signature tag
      * @param Certificate $certificate
@@ -88,7 +88,7 @@ class Signer
         }
         return $dom->saveXML($dom->documentElement, LIBXML_NOXMLDECL);
     }
-    
+
     /**
      * Method that provides the signature of xml as standard SEFAZ
      * @param Certificate $certificate
@@ -120,7 +120,7 @@ class Signer
             $nsSignatureMethod = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
             $nsDigestMethod = 'http://www.w3.org/2001/04/xmlenc#sha256';
         }
-        $nsTransformMethod1 ='http://www.w3.org/2000/09/xmldsig#enveloped-signature';
+        $nsTransformMethod1 = 'http://www.w3.org/2000/09/xmldsig#enveloped-signature';
         $nsTransformMethod2 = 'http://www.w3.org/TR/2001/REC-xml-c14n-20010315';
         $idSigned = trim($node->getAttribute($mark));
         $digestValue = self::makeDigest($node, $digestAlgorithm, $canonical);
@@ -214,7 +214,7 @@ class Signer
         }
         return self::signatureCheck($content, $canonical);
     }
-    
+
     /**
      * Check if Signature tag already exists
      * @param string $content
@@ -232,7 +232,7 @@ class Signer
         $signature = $dom->getElementsByTagName('Signature')->item(0);
         return !empty($signature);
     }
-    
+
     /**
      * Verify signature value from SignatureInfo node and public key
      * @param string $xml
@@ -245,7 +245,7 @@ class Signer
         $dom->formatOutput = false;
         $dom->preserveWhiteSpace = false;
         $dom->loadXML($xml);
-        
+
         $signature = $dom->getElementsByTagName('Signature')->item(0);
         $sigMethAlgo = $signature->getElementsByTagName('SignatureMethod')->item(0)->getAttribute('Algorithm');
         $algorithm = OPENSSL_ALGO_SHA256;
@@ -262,7 +262,7 @@ class Signer
         }
         return true;
     }
-    
+
     /**
      * Verify digest value of data node
      * @param string $xml
@@ -311,7 +311,7 @@ class Signer
         }
         return true;
     }
-    
+
     /**
      * Calculate digest value for given node
      * @param DOMNode $node
@@ -326,7 +326,7 @@ class Signer
         $hashValue = hash($algorithm, $c14n, true);
         return base64_encode($hashValue);
     }
-    
+
     /**
      * Reduced to the canonical form
      * @param DOMNode $node

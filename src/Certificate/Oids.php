@@ -21,7 +21,7 @@ class Oids
      * @var array
      */
     private static $oidsTable = array();
-            
+
     /**
      * Return Oid name
      * @param string $key formated OID numeric key
@@ -35,7 +35,7 @@ class Oids
         }
         return '';
     }
-    
+
     /**
      * Returns all oids in the list
      * @return array
@@ -45,13 +45,13 @@ class Oids
         self::loadOids();
         return self::$oidsTable;
     }
-    
+
     /**
      * Load list of oids
      */
     private static function loadOids()
     {
-        $json = file_get_contents(__DIR__ .'/oids.json');
+        $json = file_get_contents(__DIR__ . '/oids.json');
         self::$oidsTable = (array) json_decode($json, true);
     }
 }

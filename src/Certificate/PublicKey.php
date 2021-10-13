@@ -1,7 +1,5 @@
 <?php
 
-namespace NFePHP\Common\Certificate;
-
 /**
  * Management and use of digital certificates A1 (PKCS # 12).
  * @category   NFePHP
@@ -11,6 +9,8 @@ namespace NFePHP\Common\Certificate;
  * @author     Antonio Spinelli <tonicospinelli85 at gmail dot com>
  * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
  */
+
+namespace NFePHP\Common\Certificate;
 
 use NFePHP\Common\Exception\CertificateException;
 
@@ -58,7 +58,7 @@ class PublicKey implements VerificationInterface
         $this->rawKey = $publicKey;
         $this->read();
     }
-    
+
     /**
      * Load class with certificate content
      * @param string $content
@@ -76,7 +76,7 @@ CONTENT;
 
         return new static($certificate);
     }
-    
+
     /**
      * Parse an X509 certificate and define the information in object
      * @link http://php.net/manual/en/function.openssl-x509-read.php
@@ -147,7 +147,7 @@ CONTENT;
         $ret = preg_replace('/-----.*[\n]?/', '', $this->rawKey);
         return preg_replace('/[\n\r]/', '', $ret);
     }
-    
+
     /**
      * Returns raw public key
      * @return string
@@ -156,7 +156,7 @@ CONTENT;
     {
         return $this->rawKey;
     }
-    
+
     /**
      * Extract CNPJ number by OID
      * @return string

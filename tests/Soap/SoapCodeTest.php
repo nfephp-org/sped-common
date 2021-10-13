@@ -11,7 +11,8 @@ class SoapCodeTest extends \PHPUnit\Framework\TestCase
         $expected = [
             'level' => 'Client ERROR',
             'description' => 'Não encontrado',
-            'means' => 'O recurso requisitado não foi encontrado, mas pode ser disponibilizado novamente no futuro. As solicitações subsequentes pelo cliente são permitidas'
+            'means' => 'O recurso requisitado não foi encontrado, mas pode ser disponibilizado novamente no futuro. ' .
+                'As solicitações subsequentes pelo cliente são permitidas'
         ];
         $actual = SoapCode::info(404);
         $this->assertEquals($expected, $actual);

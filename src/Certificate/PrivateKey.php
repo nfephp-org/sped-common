@@ -1,7 +1,5 @@
 <?php
 
-namespace NFePHP\Common\Certificate;
-
 /**
  * Class for management and use of digital certificates A1 (PKCS # 12)
  * @category   NFePHP
@@ -11,6 +9,8 @@ namespace NFePHP\Common\Certificate;
  * @author     Antonio Spinelli <tonicospinelli85 at gmail dot com>
  * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
  */
+
+namespace NFePHP\Common\Certificate;
 
 use NFePHP\Common\Exception\CertificateException;
 
@@ -25,7 +25,7 @@ class PrivateKey implements SignatureInterface
      * @var resource
      */
     private $resource;
-    
+
     /**
      * @var array
      */
@@ -67,7 +67,7 @@ class PrivateKey implements SignatureInterface
         }
         return $encryptedData;
     }
-    
+
     /**
      * Return the modulus of private key
      * @return string
@@ -79,7 +79,7 @@ class PrivateKey implements SignatureInterface
         }
         return base64_encode($this->details['rsa']['n']);
     }
-    
+
     /**
      * Return the expoent of private key
      * @return string
@@ -91,7 +91,7 @@ class PrivateKey implements SignatureInterface
         }
         return base64_encode($this->details['rsa']['e']);
     }
-    
+
     /**
      * Return raw private key
      * @return string

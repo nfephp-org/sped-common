@@ -1,4 +1,5 @@
 <?php
+
 namespace NFePHP\Common\Certificate\Exception;
 
 use NFePHP\Common\Certificate;
@@ -10,6 +11,6 @@ class Expired extends RuntimeException implements ExceptionInterface
     public function __construct(Certificate $certificate)
     {
         $invalidDate = $certificate->getValidTo()->format('Y-m-d H:i:s');
-        parent::__construct('Certificate era válido até '.$invalidDate, 0, null);
+        parent::__construct('Certificate era válido até ' . $invalidDate, 0, null);
     }
 }

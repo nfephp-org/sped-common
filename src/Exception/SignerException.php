@@ -1,4 +1,5 @@
 <?php
+
 namespace NFePHP\Common\Exception;
 
 /**
@@ -16,20 +17,20 @@ class SignerException extends \RuntimeException implements ExceptionInterface
     {
         return new static('O conteudo não é um XML válido.');
     }
-    
+
     public static function digestComparisonFailed()
     {
         return new static('O conteúdo do XML não corresponde ao Digest Value. '
            . 'Provavelmente foi alterado após ter sido assinado');
     }
-    
+
     public static function signatureComparisonFailed()
     {
         return new static('A assinatura do XML não combina. '
            . 'O conteúdo provavelmente foi alterado após ter sido assinado.');
     }
-    
-    
+
+
     public static function tagNotFound($tagname)
     {
         return new static("A tag especificada &lt;$tagname&gt; não foi localizada no xml.");

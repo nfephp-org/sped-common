@@ -1,7 +1,5 @@
 <?php
 
-namespace NFePHP\Common;
-
 /**
  * Classe auxiliar para o tratamento de strings
  * @category   NFePHP
@@ -11,6 +9,8 @@ namespace NFePHP\Common;
  * @author     Roberto L. Machado <linux dot rlm at gmail dot com>
  * @link       http://github.com/nfephp-org/nfephp for the canonical source repository
  */
+
+namespace NFePHP\Common;
 
 use ForceUTF8\Encoding;
 
@@ -134,15 +134,15 @@ class Strings
         //Only UTF-8 characters is acceptable
         $input = Encoding::fixUTF8($input);
         $input = preg_replace(
-            '/[\x00-\x08\x10\x0B\x0C\x0E-\x19\x7F]'.
-            '|[\x00-\x7F][\x80-\xBF]+'.
-            '|([\xC0\xC1]|[\xF0-\xFF])[\x80-\xBF]*'.
-            '|[\xC2-\xDF]((?![\x80-\xBF])|[\x80-\xBF]{2,})'.
+            '/[\x00-\x08\x10\x0B\x0C\x0E-\x19\x7F]' .
+            '|[\x00-\x7F][\x80-\xBF]+' .
+            '|([\xC0\xC1]|[\xF0-\xFF])[\x80-\xBF]*' .
+            '|[\xC2-\xDF]((?![\x80-\xBF])|[\x80-\xBF]{2,})' .
             '|[\xE0-\xEF](([\x80-\xBF](?![\x80-\xBF]))|(?![\x80-\xBF]{2})|[\x80-\xBF]{3,})/S',
             '',
             $input
         );
-        $input = preg_replace('/\xE0[\x80-\x9F][\x80-\xBF]'.
+        $input = preg_replace('/\xE0[\x80-\x9F][\x80-\xBF]' .
             '|\xED[\xA0-\xBF][\x80-\xBF]/S', '', $input);
         //And no other control character is acceptable either
         return preg_replace('/[[:cntrl:]]/', '', $input);
@@ -213,8 +213,8 @@ class Strings
         $aApp = array('nfe','cte','mdfe');
         foreach ($aApp as $app) {
             $procXML = str_replace(
-                'xmlns="http://www.portalfiscal.inf.br/'.$app.'" xmlns="http://www.w3.org/2000/09/xmldsig#"',
-                'xmlns="http://www.portalfiscal.inf.br/'.$app.'"',
+                'xmlns="http://www.portalfiscal.inf.br/' . $app . '" xmlns="http://www.w3.org/2000/09/xmldsig#"',
+                'xmlns="http://www.portalfiscal.inf.br/' . $app . '"',
                 $procXML
             );
         }

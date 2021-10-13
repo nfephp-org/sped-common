@@ -1,7 +1,5 @@
 <?php
 
-namespace NFePHP\Common\Soap;
-
 /**
  * Soap class interface
  *
@@ -15,12 +13,14 @@ namespace NFePHP\Common\Soap;
  * @link      http://github.com/nfephp-org/sped-nfse for the canonical source repository
  */
 
+namespace NFePHP\Common\Soap;
+
 use NFePHP\Common\Certificate;
 use Psr\Log\LoggerInterface;
 
 interface SoapInterface
 {
-    
+
     //constants
     const SSL_DEFAULT = 0; //default
     const SSL_TLSV1 = 1; //TLSv1
@@ -29,31 +29,31 @@ interface SoapInterface
     const SSL_TLSV1_0 = 4; //TLSv1.0
     const SSL_TLSV1_1 = 5; //TLSv1.1
     const SSL_TLSV1_2 = 6; //TLSv1.2
-    
+
     /**
      *
      * @param Certificate $certificate
      */
     public function loadCertificate(Certificate $certificate);
-    
+
     /**
      * Set logger class
      * @param LoggerInterface $logger
      */
     public function loadLogger(LoggerInterface $logger);
-    
+
     /**
      * Set timeout for connection
      * @param int $timesecs
      */
     public function timeout($timesecs);
-    
+
     /**
      * Set security protocol for soap communications
      * @param int $protocol
      */
     public function protocol($protocol = self::SSL_DEFAULT);
-    
+
     /**
      * Set proxy parameters
      * @param string $ip
@@ -62,13 +62,13 @@ interface SoapInterface
      * @param string $password
      */
     public function proxy($ip, $port, $user, $password);
-    
+
     /**
      * Force http protocol version
      * @param null|string $version '1.0', '1.1', '2.0'
      */
     public function httpVersion($version = null);
-    
+
     /**
      * Disables the security checking of host and peer certificates
      * @param bool $flag
@@ -82,7 +82,7 @@ interface SoapInterface
      * @return bool
      */
     public function disableCertValidation($flag = true);
-    
+
     /**
      * Set option to encrypt private key before save in filesystem
      * for an additional layer of protection
@@ -90,28 +90,28 @@ interface SoapInterface
      * @return bool
      */
     public function setEncriptPrivateKey($encript = true);
-    
+
     /**
      * Set another temporayfolder for saving certificates for SOAP utilization
      * @param string | null $folderRealPath
      * @return void
      */
     public function setTemporaryFolder($folderRealPath = null);
-    
+
     /**
      * Set debug mode, this mode will save soap envelopes in temporary directory
      * @param bool $value
      * @return bool
      */
     public function setDebugMode($value = false);
-    
+
     /**
      * Set prefixes
      * @param array $prefixes
      * @return string[]
      */
     public function setSoapPrefix($prefixes = []);
-    
+
     /**
      * Send soap message
      * @param string $url

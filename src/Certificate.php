@@ -1,7 +1,5 @@
 <?php
 
-namespace NFePHP\Common;
-
 /**
  * Certificate class for management and use of digital certificates A1 (PKCS # 12)
  * @category   NFePHP
@@ -11,6 +9,8 @@ namespace NFePHP\Common;
  * @author     Antonio Spinelli <tonicospinelli85 at gmail dot com>
  * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
  */
+
+namespace NFePHP\Common;
 
 use NFePHP\Common\Certificate\PrivateKey;
 use NFePHP\Common\Certificate\PublicKey;
@@ -30,12 +30,12 @@ class Certificate implements SignatureInterface, VerificationInterface
      * @var \NFePHP\Common\Certificate\PublicKey
      */
     public $publicKey;
-    
+
     /**
      * @var \NFePHP\Common\Certificate\CertificationChain
      */
     public $chainKeys;
-    
+
     /**
      * Constructor
      * @param \NFePHP\Common\Certificate\PrivateKey $privateKey
@@ -48,7 +48,7 @@ class Certificate implements SignatureInterface, VerificationInterface
         $this->publicKey = $publicKey;
         $this->chainKeys = $chainKeys;
     }
-    
+
     /**
      * Read PFX and return this class
      * @param string $content
@@ -74,7 +74,7 @@ class Certificate implements SignatureInterface, VerificationInterface
             new CertificationChain($chain)
         );
     }
-    
+
     /**
      * Returns a PFX string with certification chain if exists
      * @param string $password
@@ -134,7 +134,7 @@ class Certificate implements SignatureInterface, VerificationInterface
     {
         return $this->publicKey->isExpired();
     }
-    
+
     /**
      * Gets CNPJ by OID '2.16.76.1.3.3' from ASN.1 certificate struture
      * @return string
@@ -168,7 +168,7 @@ class Certificate implements SignatureInterface, VerificationInterface
     {
         return $this->publicKey->verify($data, $signature, $algorithm);
     }
-    
+
     /**
      * Returns public key and chain in PEM format
      * @return string

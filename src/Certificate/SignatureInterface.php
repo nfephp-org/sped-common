@@ -1,7 +1,5 @@
 <?php
 
-namespace NFePHP\Common\Certificate;
-
 /**
  * Interface for signature using digital certificates A1 (PKCS#12)
  * @category   NFePHP
@@ -11,6 +9,8 @@ namespace NFePHP\Common\Certificate;
  * @author     Antonio Spinelli <tonicospinelli85 at gmail dot com>
  * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
  */
+
+namespace NFePHP\Common\Certificate;
 
 use NFePHP\Common\Exception\CertificateException;
 

@@ -4,8 +4,8 @@ namespace NFePHP\Common\Tags;
 
 use NFePHP\Common\DOMImproved as Dom;
 use NFePHP\Common\Strings;
-use \DOMElement;
-use \stdClass;
+use DOMElement;
+use stdClass;
 
 abstract class Tag
 {
@@ -21,7 +21,7 @@ abstract class Tag
      * @var bool
      */
     protected $onlyAscii = false;
-    
+
     /**
      * Constructor
      * @param NFePHP\Common\DOMImproved $dom
@@ -35,7 +35,7 @@ abstract class Tag
             $this->dom->formatOutput = false;
         }
     }
-    
+
     /**
      * Set to convert all string to have only ASCII characters
      * @param bool $option
@@ -44,7 +44,7 @@ abstract class Tag
     {
         $this->onlyAscii = $option;
     }
-    
+
     /**
      * Load class parameters
      */
@@ -55,7 +55,7 @@ abstract class Tag
      * Convert tag classes into nodes
      */
     abstract public function toNode();
-    
+
     /**
      * Retruns node as string
      * @return string
@@ -67,7 +67,7 @@ abstract class Tag
         }
         return preg_replace("/<\\?xml.*\\?>/", '', $this->dom->saveXML($this->node));
     }
-    
+
     /**
      * Includes missing or unsupported default properties in stdClass
      * @param stdClass $std  fields
@@ -111,7 +111,7 @@ abstract class Tag
         }
         return $newstd;
     }
-    
+
     /**
      * Check if the data given meets the parameters
      * if false is no errors
@@ -167,7 +167,7 @@ abstract class Tag
         }
         return false;
     }
-   
+
     /**
      * DOM constructor based in parameters
      * @param \DOMElement $node
@@ -207,7 +207,7 @@ abstract class Tag
             }
         }
     }
-    
+
     /**
      * Format float numbers if necessary
      * @param string $value
@@ -225,7 +225,7 @@ abstract class Tag
         $n = explode('v', $format);
         $mdec = strpos($n[1], '-');
         $p = explode('.', $value);
-        
+
         $ndec = !empty($p[1]) ? strlen($p[1]) : 0;//decimal digits
         $nint = strlen($p[0]);//integer digits
         if ($nint > $n[0]) {
@@ -248,7 +248,7 @@ abstract class Tag
         }
         return number_format($value, $n[1], '.', '');
     }
-    
+
     /**
      * Add left zeros if necessary
      * @param string $value

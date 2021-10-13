@@ -147,7 +147,7 @@ abstract class SoapBase implements SoapInterface
      * @var int
      */
     public $waitingTime = 45;
-    
+
     /**
      * SoapBase constructor.
      * @param Certificate|null $certificate
@@ -204,7 +204,7 @@ abstract class SoapBase implements SoapInterface
     {
         return $this->disableCertValidation = $flag;
     }
-    
+
     /**
      * Force http protocol version
      *
@@ -226,7 +226,7 @@ abstract class SoapBase implements SoapInterface
                 $this->httpver = CURL_HTTP_VERSION_NONE;
         }
     }
-    
+
     /**
      * Load path to CA and enable to use on SOAP
      * @param string $capath
@@ -250,7 +250,7 @@ abstract class SoapBase implements SoapInterface
         $this->encriptPrivateKey = $encript;
         return $this->encriptPrivateKey;
     }
-   
+
     /**
      * Set another temporayfolder for saving certificates for SOAP utilization
      * @param string | null $folderRealPath
@@ -267,10 +267,10 @@ abstract class SoapBase implements SoapInterface
         if (empty($folderRealPath)) {
             $path = '/sped-'
                 . $this->uid()
-                .'/'
+                . '/'
                 . $mapto
                 . '/' ;
-            $folderRealPath = sys_get_temp_dir().$path;
+            $folderRealPath = sys_get_temp_dir() . $path;
         }
         if (substr($folderRealPath, -1) !== '/') {
             $folderRealPath .= '/';
@@ -278,7 +278,7 @@ abstract class SoapBase implements SoapInterface
         $this->tempdir = $folderRealPath;
         $this->setLocalFolder($folderRealPath);
     }
-    
+
     /**
      * Return uid from user
      * @return string
@@ -291,7 +291,7 @@ abstract class SoapBase implements SoapInterface
             return getmyuid();
         }
     }
- 
+
     /**
      * Set Local folder for flysystem
      * @param string $folder
@@ -546,7 +546,7 @@ abstract class SoapBase implements SoapInterface
             );
         }
     }
-    
+
     /**
      * Create a unique random file name
      * @param integer $n
@@ -558,7 +558,7 @@ abstract class SoapBase implements SoapInterface
         if (!$this->filesystem->has($name)) {
             return $name;
         }
-        $this->randomName($n+5);
+        $this->randomName($n + 5);
     }
 
     /**
@@ -578,7 +578,7 @@ abstract class SoapBase implements SoapInterface
             //remove todos os arquivos antigos
             $contents = $this->filesystem->listContents($this->certsdir, true);
             $dt = new \DateTime();
-            $tint = new \DateInterval("PT".$this->waitingTime."M");
+            $tint = new \DateInterval("PT" . $this->waitingTime . "M");
             $tint->invert = 1;
             $tsLimit = $dt->add($tint)->getTimestamp();
             foreach ($contents as $item) {

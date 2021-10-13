@@ -119,14 +119,14 @@ class Asn1
             //get length of OID data
             $len = self::getLength($data);
             //get only a string with bytes belongs to OID
-            $oidData = substr($data, 2 + $bytes, $len-($bytes));
+            $oidData = substr($data, 2 + $bytes, $len - ($bytes));
             //parse OID data many possibel formats and structures
             $head = strlen($oidData) - strlen($xcv) - 2;
             $ret = substr($oidData, -$head);
         }
         return $ret;
     }
-    
+
     /**
      * Get length of data field of a sequency from certifcate
      * @param string $data
@@ -146,7 +146,7 @@ class Asn1
         }
         return $len;
     }
-    
+
     /**
      * Convert number OID in ASC Hex representation includes
      * in DER format certificate
@@ -166,7 +166,7 @@ class Asn1
                 $bun +=  $partes[$num];
                 $abBinary[] = $bun;
             } else {
-                $abBinary = self::xBase128($abBinary, (integer) $partes[$num], true);
+                $abBinary = self::xBase128($abBinary, (int) $partes[$num], true);
             }
         }
         $value = chr(0x06) . chr(count($abBinary));
@@ -187,7 +187,7 @@ class Asn1
     {
         $abc = $abIn;
         if ($qIn > 127) {
-            $abc = self::xBase128($abc, floor($qIn/128), false);
+            $abc = self::xBase128($abc, floor($qIn / 128), false);
         }
         $qIn2 = $qIn % 128;
         if ($flag) {
