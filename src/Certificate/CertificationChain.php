@@ -1,7 +1,5 @@
 <?php
 
-namespace NFePHP\Common\Certificate;
-
 /**
  * Class for management and inclusion of certification chains to the public keys
  * of digital certificates model A1 (PKCS # 12)
@@ -12,6 +10,8 @@ namespace NFePHP\Common\Certificate;
  * @author     Roberto L. Machado <linux.rlm at gmail dot com>
  * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
  */
+
+namespace NFePHP\Common\Certificate;
 
 use NFePHP\Common\Certificate\PublicKey;
 
@@ -25,7 +25,7 @@ class CertificationChain
      * @var array of PublicKeys::class
      */
     private $chainKeys = [];
-    
+
     /**
      * Certification Chain Keys constructor
      * @param string $chainkeysstring
@@ -37,7 +37,7 @@ class CertificationChain
             $this->loadListChain();
         }
     }
-    
+
     /**
      * Add new certificate to certification chain
      * @param string $content Certificate in DER, CER or PEM format
@@ -58,7 +58,7 @@ CONTENT;
         }
         return $this->loadList($content);
     }
-    
+
     /**
      * Detects if string contains binary characters
      * @param string $str
@@ -68,7 +68,7 @@ CONTENT;
     {
         return preg_match('~[^\x20-\x7E\t\r\n]~', $str) > 0;
     }
-    
+
     /**
      * Remove certificate from certification chain by there common name
      */
@@ -80,7 +80,7 @@ CONTENT;
             }
         }
     }
-    
+
     /**
      * List certificates from actual certification chain
      * @return array
@@ -89,7 +89,7 @@ CONTENT;
     {
         return $this->chainKeys;
     }
-    
+
     /**
      * Retuns all certificates in chain as string
      * @return string
@@ -99,7 +99,7 @@ CONTENT;
         $this->rawString();
         return $this->rawKey;
     }
-    
+
     /**
      * Returns a array for build extracerts in PFX files
      * @return array
@@ -117,7 +117,7 @@ CONTENT;
         }
         return $args;
     }
-    
+
     /**
      * Load chain certificates from string to array of PublicKey::class
      */
@@ -131,7 +131,7 @@ CONTENT;
             }
         }
     }
-    
+
     /**
      * Load PublicKey::class with certificates from chain
      * @param string $certificate
@@ -143,7 +143,7 @@ CONTENT;
         $this->chainKeys[$publickey->commonName] = $publickey;
         return $this->chainKeys;
     }
-    
+
     /**
      * Generate chain certificates as raw string
      */

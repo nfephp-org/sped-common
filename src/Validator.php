@@ -1,7 +1,5 @@
 <?php
 
-namespace NFePHP\Common;
-
 /**
  * Validation class of XML structures with respect to its established
  * and defined structure in an XSD file
@@ -14,6 +12,8 @@ namespace NFePHP\Common;
  * @author     Roberto L. Machado <linux.rlm at gmail dot com>
  * @link       http://github.com/nfephp-org/sped-common for the canonical source repository
  */
+
+namespace NFePHP\Common;
 
 use NFePHP\Common\Exception\ValidatorException;
 use DOMDocument;
@@ -48,7 +48,7 @@ class Validator
         }
         return true;
     }
-    
+
     /**
      * Check if string is a XML
      * @param string $content
@@ -60,8 +60,9 @@ class Validator
         if (empty($content)) {
             return false;
         }
-        if (stripos($content, '<!DOCTYPE html>') !== false
-           || stripos($content, '</html>') !== false
+        if (
+            stripos($content, '<!DOCTYPE html>') !== false
+            || stripos($content, '</html>') !== false
         ) {
             return false;
         }

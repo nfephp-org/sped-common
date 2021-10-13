@@ -59,7 +59,7 @@ class PublicKeyTest extends \PHPUnit\Framework\TestCase
 
     public function testGetCPF()
     {
-        $key = new PublicKey(file_get_contents(__DIR__.'/../fixtures/certs/e-CPF_pubkey.pem'));
+        $key = new PublicKey(file_get_contents(__DIR__ . '/../fixtures/certs/e-CPF_pubkey.pem'));
         $expected = '80767940130';
         $actual = $key->cpf();
         $this->assertEquals($expected, $actual);

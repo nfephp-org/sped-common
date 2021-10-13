@@ -63,7 +63,7 @@ class Keys
         );
         return $key . self::verifyingDigit($key);
     }
-    
+
     /**
      * Verifies that the key provided is valid
      * @param string $key
@@ -81,7 +81,7 @@ class Keys
         }
         return false;
     }
-    
+
     /**
      * This method calculates verifying digit
      * @param string $key
@@ -107,7 +107,7 @@ class Keys
         }
         return (string) $vdigit;
     }
-    
+
     /**
      * Generate and return a 8 digits random number
      * for cNF tag
@@ -128,7 +128,7 @@ class Keys
         }
         return $cnf;
     }
-    
+
     /**
      * Verify if cNF number is valid NT2019.001
      * @param string $cnf

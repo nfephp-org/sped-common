@@ -1,5 +1,7 @@
 <?php
 
+namespace NFePHP\Common\Tests;
+
 use NFePHP\Common\Strings;
 
 class StringsTest extends \PHPUnit\Framework\TestCase
@@ -25,9 +27,9 @@ class StringsTest extends \PHPUnit\Framework\TestCase
 
     public function testClearXmlString()
     {
-        $xmlSujo = file_get_contents(__DIR__. self::TEST_XML_PATH . 'NFe/xml-sujo.xml');
-        $xmlLimpo1 = file_get_contents(__DIR__. self::TEST_XML_PATH . 'NFe/xml-limpo1.xml');
-        $xmlLimpo2 = file_get_contents(__DIR__. self::TEST_XML_PATH . 'NFe/xml-limpo2.xml');
+        $xmlSujo = file_get_contents(__DIR__ . self::TEST_XML_PATH . 'NFe/xml-sujo.xml');
+        $xmlLimpo1 = file_get_contents(__DIR__ . self::TEST_XML_PATH . 'NFe/xml-limpo1.xml');
+        $xmlLimpo2 = file_get_contents(__DIR__ . self::TEST_XML_PATH . 'NFe/xml-limpo2.xml');
         $txtSujo = "AKJKJ >    < \n JKJS \t lkdlkd \r default:";
         $txtLimpo = "AKJKJ ><  JKJS  lkdlkd  ";
         $resp1 = Strings::clearXmlString($xmlSujo, false);
@@ -73,7 +75,8 @@ class StringsTest extends \PHPUnit\Framework\TestCase
 
     public function testRemoveSomeAlienCharsfromTxt()
     {
-        $txt = "C|PLASTFOAM                   IND. E       COM DE PLASTICOS LTDA|PLASTFOAM| 336546371113||184394 |2222600|3 |\n";
+        $txt = "C|PLASTFOAM                   IND. E       COM DE PLASTICOS LTDA|PLASTFOAM|" .
+            " 336546371113||184394 |2222600|3 |\n";
         $txt .= "V|\r\n";
         $txt .= "ZV|\t\n";
         $actual = Strings::removeSomeAlienCharsfromTxt($txt);

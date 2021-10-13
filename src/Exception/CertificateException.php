@@ -40,7 +40,7 @@ class CertificateException extends \RuntimeException implements ExceptionInterfa
             'Ocorreu um erro enquento verificava a assinatura, ' . static::getOpenSSLError()
         );
     }
-    
+
     protected static function getOpenSSLError()
     {
         $error = 'ocorreu o seguinte erro: ';

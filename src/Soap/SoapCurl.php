@@ -1,7 +1,5 @@
 <?php
 
-namespace NFePHP\Common\Soap;
-
 /**
  * SoapClient based in cURL class
  *
@@ -14,6 +12,8 @@ namespace NFePHP\Common\Soap;
  * @author    Roberto L. Machado <linux.rlm at gmail dot com>
  * @link      http://github.com/nfephp-org/sped-common for the canonical source repository
  */
+
+namespace NFePHP\Common\Soap;
 
 use NFePHP\Common\Soap\SoapBase;
 use NFePHP\Common\Soap\SoapInterface;
@@ -143,7 +143,7 @@ class SoapCurl extends SoapBase implements SoapInterface
         }
         return $this->responseBody;
     }
-    
+
     /**
      * Extrai mensagem da liste de erros HTTP
      * @param integer $code
@@ -151,7 +151,7 @@ class SoapCurl extends SoapBase implements SoapInterface
      */
     private function getCodeMessage($code)
     {
-        $codes = json_decode(file_get_contents(__DIR__.'/httpcodes.json'), true);
+        $codes = json_decode(file_get_contents(__DIR__ . '/httpcodes.json'), true);
         if (!empty($codes[$code])) {
             return $codes[$code]['description'];
         }

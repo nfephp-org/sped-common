@@ -15,7 +15,7 @@ class Files
      * @var string
      */
     protected $path;
-    
+
     /**
      * Construto
      * @param string $folder
@@ -30,7 +30,7 @@ class Files
         }
         $this->path = $folder;
     }
-    
+
     /**
      * Grava o arquivo e cria os diretorios inclusos no filename
      *
@@ -45,7 +45,7 @@ class Files
         if (count($par) > 1) {
             //tem mais diretorios
             $dir = '';
-            for ($x = 0; $x < (count($par)-1); $x++) {
+            for ($x = 0; $x < (count($par) - 1); $x++) {
                 $dir .= $par[$x] . "/";
             }
             if (!is_dir($this->path . $dir)) {
@@ -60,7 +60,7 @@ class Files
         }
         return true;
     }
-    
+
     /**
      * Remove o arquivo, se exisitr
      * @param string $filename
@@ -80,7 +80,7 @@ class Files
         }
         return true;
     }
-    
+
     /**
      * Lista o conteúdo da pasta indicada
      * @param string $folder
@@ -89,7 +89,7 @@ class Files
     public function listContents(string $folder = '')
     {
         $new = [];
-        if (is_dir($this->path. DIRECTORY_SEPARATOR . $folder)) {
+        if (is_dir($this->path . DIRECTORY_SEPARATOR . $folder)) {
             if (empty($folder)) {
                 $list = glob($this->path . "*.*");
             } else {
@@ -104,7 +104,7 @@ class Files
         }
         return $new;
     }
-    
+
     /**
      * Obtêm o timestamp da última alteração do arquivo indicado
      * @param string $path
@@ -117,7 +117,7 @@ class Files
         }
         return 0;
     }
-    
+
     /**
      * Verifica que o arquivo ou pasta existe
      * @param string $path
@@ -129,7 +129,7 @@ class Files
             return true;
         } elseif (is_file($path)) {
             return true;
-        } elseif (is_file($this->path. DIRECTORY_SEPARATOR . $path)) {
+        } elseif (is_file($this->path . DIRECTORY_SEPARATOR . $path)) {
             return true;
         }
         return false;
