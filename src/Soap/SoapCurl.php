@@ -118,6 +118,7 @@ class SoapCurl extends SoapBase implements SoapInterface
             curl_close($oCurl);
             $this->responseHead = trim(substr($response, 0, $headsize));
             $this->responseBody = trim(substr($response, $headsize));
+            $this->setDebugMode(true);
             $this->saveDebugFiles(
                 $operation,
                 $this->requestHead . "\n" . $this->requestBody,
