@@ -143,4 +143,28 @@ class Keys
         ];
         return !in_array($cnf, $defs);
     }
+
+    /**
+     * Return elements of key
+     * @param string $key
+     * @return array
+     */
+    public static function decompile($key)
+    {
+        if (strlen($key) != 44) {
+            return [];
+        }
+        return [
+            'cuf'       => substr($key, 0, 2),
+            'ano'       => substr($key, 2, 2),
+            'mes'       => substr($key, 4, 2),
+            'cnpj'      => substr($key, 6, 14),
+            'modelo'    => substr($key, 20, 2),
+            'serie'     => substr($key, 22, 3),
+            'nnf'       => substr($key, 25, 9),
+            'tpemis'    => substr($key, 34, 1),
+            'cnf'       => substr($key, 35, 8),
+            'dv'        => substr($key, -1)
+        ];
+    }
 }
