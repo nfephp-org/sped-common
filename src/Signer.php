@@ -63,9 +63,9 @@ class Signer
             throw SignerException::isNotXml();
         }
         $dom = new DOMDocument('1.0', 'UTF-8');
-        $dom->loadXML($content);
         $dom->preserveWhiteSpace = false;
         $dom->formatOutput = false;
+        $dom->loadXML($content);
         $root = $dom->documentElement;
         if (!empty($rootname)) {
             $root = $dom->getElementsByTagName($rootname)->item(0);
