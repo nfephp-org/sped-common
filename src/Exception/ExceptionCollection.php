@@ -4,6 +4,7 @@ namespace NFePHP\Common\Exception;
 
 use IteratorAggregate;
 use Countable;
+use Traversable;
 
 class ExceptionCollection extends \Exception implements ExceptionInterface, IteratorAggregate, Countable
 {
@@ -13,8 +14,9 @@ class ExceptionCollection extends \Exception implements ExceptionInterface, Iter
     protected $exceptions = [];
     /**
      * @var string
+     * stan: Property NFePHP\Common\Exception\ExceptionCollection::$shortMessage is never read, only written.
      */
-    private $shortMessage;
+    // private $shortMessage;
 
     /**
      * Constructor
@@ -25,7 +27,7 @@ class ExceptionCollection extends \Exception implements ExceptionInterface, Iter
     public function __construct($message = '', $code = 0, \Exception $previous = null)
     {
         parent::__construct($message, $code, $previous);
-        $this->shortMessage = $message;
+        // $this->shortMessage = $message;
     }
 
     /**
@@ -58,7 +60,7 @@ class ExceptionCollection extends \Exception implements ExceptionInterface, Iter
      * Get the total number of request exceptions
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->exceptions);
     }
@@ -67,7 +69,7 @@ class ExceptionCollection extends \Exception implements ExceptionInterface, Iter
      * Allows array-like iteration over the request exceptions
      * @return \ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new \ArrayIterator($this->exceptions);
     }
