@@ -51,7 +51,9 @@ class UFListTest extends \PHPUnit\Framework\TestCase
      */
     public function testgetUFByCodeFail()
     {
-        $uf = UFList::getUFByCode(77);
+        $this->expectException(\InvalidArgumentException::class);
+
+        UFList::getUFByCode(77);
     }
 
     public function testgetUFByUF()
@@ -65,7 +67,9 @@ class UFListTest extends \PHPUnit\Framework\TestCase
      */
     public function testgetUFByUFFail()
     {
-        $code = UFList::getCodeByUF('aa');
+        $this->expectException(\InvalidArgumentException::class);
+
+        UFList::getCodeByUF('aa');
     }
 
     public function testGetListByUF()

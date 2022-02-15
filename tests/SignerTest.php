@@ -3,8 +3,8 @@
 namespace NFePHP\Common\Tests;
 
 use NFePHP\Common\Signer;
-use NFePHP\Common\SignerException;
 use NFePHP\Common\Certificate;
+use NFePHP\Common\Exception\SignerException;
 
 class SignerTest extends \PHPUnit\Framework\TestCase
 {
@@ -48,10 +48,12 @@ class SignerTest extends \PHPUnit\Framework\TestCase
      */
     public function testSignFailNotXML()
     {
+        $this->expectException(SignerException::class);
+
         $pfx = file_get_contents(__DIR__ . '/fixtures/certs/certificado_teste.pfx');
         $certificate = Certificate::readPfx($pfx, 'associacao');
         $content = "<html><body></body></html>";
-        $xmlsign = Signer::sign($certificate, $content, 'infNFe', 'Id');
+        Signer::sign($certificate, $content, 'infNFe', 'Id');
     }
 
     /**
@@ -61,9 +63,11 @@ class SignerTest extends \PHPUnit\Framework\TestCase
      */
     public function testIsSignedFailTagNotFound()
     {
+        $this->expectException(SignerException::class);
+
         $file = __DIR__ . '/fixtures/xml/NFe/2017signed.xml';
         $xml = file_get_contents($file);
-        $actual = Signer::isSigned($xml, 'infCTe');
+        Signer::isSigned($xml, 'infCTe');
     }
 
     /**
@@ -75,9 +79,11 @@ class SignerTest extends \PHPUnit\Framework\TestCase
      */
     public function testIsSignedFailDigest()
     {
+        $this->expectException(SignerException::class);
+
         $file = __DIR__ . '/fixtures/xml/NFe/2017signedDigestFail.xml';
         $xml = file_get_contents($file);
-        $actual = Signer::isSigned($xml);
+        Signer::isSigned($xml);
     }
 
     /**
@@ -90,9 +96,11 @@ class SignerTest extends \PHPUnit\Framework\TestCase
      */
     public function testIsSignedFailSignature()
     {
+        $this->expectException(SignerException::class);
+
         $file = __DIR__ . '/fixtures/xml/NFe/2017signedSignatureFail.xml';
         $xml = file_get_contents($file);
-        $actual = Signer::isSigned($xml);
+        Signer::isSigned($xml);
     }
 
     /**

@@ -78,7 +78,7 @@ class PublicKeyTest extends \PHPUnit\Framework\TestCase
         }
         $certificateContent = $signature->getElementsByTagName('X509Certificate')->item(0)->nodeValue;
         $publicKey = PublicKey::createFromContent($certificateContent);
-        $signContent = $signature->getElementsByTagName('SignedInfo')->item(0)->C14N(true, false, null, null);
+        $signContent = $signature->getElementsByTagName('SignedInfo')->item(0)->C14N(true, false);
         $signatureValue = $signature->getElementsByTagName('SignatureValue')->item(0)->nodeValue;
         $decodedSignature = base64_decode(str_replace(array("\r", "\n"), '', $signatureValue));
         $actual = $publicKey->verify($signContent, $decodedSignature, $algorithm);

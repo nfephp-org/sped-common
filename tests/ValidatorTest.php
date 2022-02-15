@@ -22,6 +22,8 @@ class ValidatorTest extends \PHPUnit\Framework\TestCase
      */
     public function testIsValidWithErrors()
     {
+        $this->expectException(\RuntimeException::class);
+
         $xml = file_get_contents(__DIR__ . self::TEST_XML_PATH . 'NFe/' .
             '35101158716523000119550010000000011003000000-nfeSigned.xml');
         $xsd = __DIR__ . self::TEST_XSD_PATH . 'nfe_v3.10.xsd';
@@ -34,6 +36,8 @@ class ValidatorTest extends \PHPUnit\Framework\TestCase
      */
     public function testIsValidWithNoXML()
     {
+        $this->expectException(\RuntimeException::class);
+
         $xml = 'alkjdkjhdshkjshsjhskjshksjh';
         $xsd = __DIR__ . self::TEST_XSD_PATH . 'nfe_v3.10.xsd';
         $actual = Validator::isValid($xml, $xsd);
