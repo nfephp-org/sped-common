@@ -66,8 +66,8 @@
     "minimum-stability": "stable",
     "scripts": {
         "test": "phpunit",
-        "phpcs": "./vendor/bin/phpcs src/ tests/",
-        "phpcbf": "./vendor/bin/phpcbf src/ tests/",
-        "stan": "phpstan analyse src/ tests/"
+        "phpcs": "./vendor/bin/phpcs src/",
+        "phpcbf": "./vendor/bin/phpcbf src/",
+        "stan": "phpstan analyse src/"
     }
 }
