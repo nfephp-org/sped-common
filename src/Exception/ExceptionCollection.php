@@ -13,7 +13,6 @@ class ExceptionCollection extends \Exception implements ExceptionInterface, Iter
      */
     protected $exceptions = [];
     /**
-     * @var string
      * stan: Property NFePHP\Common\Exception\ExceptionCollection::$shortMessage is never read, only written.
      */
     // private $shortMessage;
