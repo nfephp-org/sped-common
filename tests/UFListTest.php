@@ -46,12 +46,11 @@ class UFListTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('SP', $uf);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testgetUFByCodeFail()
     {
-        $uf = UFList::getUFByCode(77);
+        $this->expectException(\NFePHP\Common\Exception\InvalidArgumentException::class);
+
+        UFList::getUFByCode(77);
     }
 
     public function testgetUFByUF()
@@ -60,12 +59,11 @@ class UFListTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(35, $code);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testgetUFByUFFail()
     {
-        $code = UFList::getCodeByUF('aa');
+        $this->expectException(\NFePHP\Common\Exception\InvalidArgumentException::class);
+
+        UFList::getCodeByUF('aa');
     }
 
     public function testGetListByUF()

@@ -1,3 +1,4 @@
+![PHP Supported Version][ico-php]
 [![Build Status](https://travis-ci.org/nfephp-org/sped-common.svg?branch=master)](https://travis-ci.org/nfephp-org/sped-common)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nfephp-org/sped-common/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/nfephp-org/sped-common/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/nfephp-org/sped-common/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/nfephp-org/sped-common/?branch=master)
@@ -13,6 +14,6 @@ Classes comuns usadas nas atividades e classes das API de NFe, CTe, MDFe, e-Fina
 
 # [Documentos](docs/README.md)
 
-
+[ico-php]: https://img.shields.io/packagist/php-v/nfephp-org/sped-common
 [ico-stable]: https://poser.pugx.org/nfephp-org/sped-common/version
 [link-packagist]: https://packagist.org/packages/nfephp-org/sped-common

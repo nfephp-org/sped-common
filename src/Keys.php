@@ -118,7 +118,7 @@ class Keys
     {
         $loop = true;
         while ($loop) {
-            $cnf = str_pad(mt_rand(0, 99999999), 8, '0', STR_PAD_LEFT);
+            $cnf = str_pad(strval(mt_rand(0, 99999999)), 8, '0', STR_PAD_LEFT);
             $loop = !self::cNFIsValid($cnf);
             if (!empty($nnf)) {
                 if (intval($cnf) === intval($nnf)) {

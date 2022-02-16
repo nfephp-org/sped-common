@@ -91,11 +91,11 @@ class SoapFakeTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException NFePHP\Common\Exception\RuntimeException
      */
     public function testDisableCertValidationFail()
     {
+        $this->expectException(\NFePHP\Common\Certificate\Exception\Expired::class);
         $certificate = Certificate::readPfx(file_get_contents(__DIR__ . self::TEST_PFX_FILE), 'associacao');
-        $soap = new SoapFake($certificate);
+        new SoapFake($certificate);
     }
 }

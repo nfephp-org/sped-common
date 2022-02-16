@@ -20,7 +20,6 @@ use Psr\Log\LoggerInterface;
 
 interface SoapInterface
 {
-
     //constants
     const SSL_DEFAULT = 0; //default
     const SSL_TLSV1 = 1; //TLSv1

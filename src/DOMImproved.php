@@ -104,11 +104,11 @@ class DOMImproved extends DOMDocument
 
     /**
      * getValue
-     * @param DOMElement $node
+     * @param ?DOMElement $node
      * @param string $name
      * @return string
      */
-    public function getValue(DOMElement $node, $name)
+    public function getValue(?DOMElement $node, $name)
     {
         if (empty($node)) {
             return '';
@@ -142,7 +142,7 @@ class DOMImproved extends DOMDocument
     public function getChave($nodeName = 'infNFe')
     {
         $node = $this->getElementsByTagName($nodeName)->item(0);
-        if (! empty($node)) {
+        if (!empty($node)) {
             $chaveId = $node->getAttribute("Id");
             $chave =  preg_replace('/[^0-9]/', '', $chaveId);
             return $chave;
@@ -269,10 +269,10 @@ class DOMImproved extends DOMDocument
      * @param array $arr
      * @return int
      */
-    public function addArrayChild(DOMElement &$parent, $arr)
+    public function addArrayChild(?DOMElement &$parent, $arr)
     {
         $num = 0;
-        if (! empty($arr) && ! empty($parent)) {
+        if (!empty($arr) && !empty($parent)) {
             foreach ($arr as $node) {
                 $this->appChild($parent, $node, '');
                 $num++;

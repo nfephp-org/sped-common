@@ -3,7 +3,6 @@
 namespace NFePHP\Common\Tests\Certificate;
 
 use NFePHP\Common\Certificate;
-use NFePHP\Common\Exception\CertificateException;
 
 class CertificateTest extends \PHPUnit\Framework\TestCase
 {
@@ -42,11 +41,9 @@ class CertificateTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($certificate->verify('nfe', $dataSigned));
     }
 
-    /**
-     * @expectedException NFePHP\Common\Exception\CertificateException
-     */
     public function testShouldGetExceptionWhenLoadPfxCertificate()
     {
+        $this->expectException(\NFePHP\Common\Exception\CertificateException::class);
         Certificate::readPfx(file_get_contents(__DIR__ . self::TEST_PFX_FILE), 'error');
     }
 
