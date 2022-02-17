@@ -1,7 +1,5 @@
 ![PHP Supported Version][ico-php]
-[![Build Status](https://travis-ci.org/nfephp-org/sped-common.svg?branch=master)](https://travis-ci.org/nfephp-org/sped-common)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nfephp-org/sped-common/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/nfephp-org/sped-common/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/nfephp-org/sped-common/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/nfephp-org/sped-common/?branch=master)
+![Actions](https://github.com/nfephp-org/sped-common/actions/workflows/ci.yml/badge.svg)
 [![Latest Stable Version][ico-stable]][link-packagist]
 [![Build Status](https://scrutinizer-ci.com/g/nfephp-org/sped-common/badges/build.png?b=master)](https://scrutinizer-ci.com/g/nfephp-org/sped-common/build-status/master)
 [![Join the chat at https://gitter.im/nfephp-org/sped-common](https://badges.gitter.im/nfephp-org/sped-common.svg)](https://gitter.im/nfephp-org/sped-common?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
