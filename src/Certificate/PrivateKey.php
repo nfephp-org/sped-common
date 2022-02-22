@@ -13,8 +13,6 @@
 namespace NFePHP\Common\Certificate;
 
 use NFePHP\Common\Exception\CertificateException;
-use OpenSSLAsymmetricKey;
-use OpenSSLCertificate;
 
 class PrivateKey implements SignatureInterface
 {
@@ -24,7 +22,7 @@ class PrivateKey implements SignatureInterface
     private $rawKey;
 
     /**
-     * @var OpenSSLAsymmetricKey|OpenSSLCertificate|array|string
+     * @var \OpenSSLAsymmetricKey|\OpenSSLCertificate|array|string
      */
     private $resource;
 

@@ -16,6 +16,21 @@ parameters:
 			path: src/Certificate/Asn1.php
 
 		-
+			message: "#^Property NFePHP\\\\Common\\\\Certificate\\\\PrivateKey\\:\\:\\$resource \\(array\\|OpenSSLAsymmetricKey\\|OpenSSLCertificate\\|string\\) does not accept resource\\.$#"
+			count: 1
+			path: src/Certificate/PrivateKey.php
+
+		-
+			message: "#^Property NFePHP\\\\Common\\\\Certificate\\\\PrivateKey\\:\\:\\$resource has unknown class OpenSSLAsymmetricKey as its type\\.$#"
+			count: 1
+			path: src/Certificate/PrivateKey.php
+
+		-
+			message: "#^Property NFePHP\\\\Common\\\\Certificate\\\\PrivateKey\\:\\:\\$resource has unknown class OpenSSLCertificate as its type\\.$#"
+			count: 1
+			path: src/Certificate/PrivateKey.php
+
+		-
 			message: "#^Unsafe usage of new static\\(\\)\\.$#"
 			count: 1
 			path: src/Certificate/PublicKey.php
@@ -51,11 +66,6 @@ parameters:
 			path: src/Keys.php
 
 		-
-			message: "#^Parameter \\#1 \\$input of function str_pad expects string, int given\\.$#"
-			count: 1
-			path: src/Keys.php
-
-		-
 			message: "#^Access to an undefined property SoapHeader\\:\\:\\$data\\.$#"
 			count: 1
 			path: src/Soap/SoapBase.php
@@ -67,6 +77,11 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property SoapHeader\\:\\:\\$namespace\\.$#"
+			count: 1
+			path: src/Soap/SoapBase.php
+
+		-
+			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Soap/SoapBase.php
 
@@ -101,7 +116,17 @@ parameters:
 			path: src/Soap/SoapBase.php
 
 		-
+			message: "#^Property NFePHP\\\\Common\\\\Soap\\\\SoapBase\\:\\:\\$filesystem \\(NFePHP\\\\Common\\\\Files\\) in empty\\(\\) is not falsy\\.$#"
+			count: 2
+			path: src/Soap/SoapBase.php
+
+		-
 			message: "#^Parameter \\#8 \\$soapheader \\(SoapHeader\\) of method NFePHP\\\\Common\\\\Soap\\\\SoapCurl\\:\\:send\\(\\) should be compatible with parameter \\$soapheader \\(null\\) of method NFePHP\\\\Common\\\\Soap\\\\SoapBase\\:\\:send\\(\\)$#"
+			count: 1
+			path: src/Soap/SoapCurl.php
+
+		-
+			message: "#^Parameter \\$oCurl of method NFePHP\\\\Common\\\\Soap\\\\SoapCurl\\:\\:setCurlProxy\\(\\) has invalid type CurlHandle\\.$#"
 			count: 1
 			path: src/Soap/SoapCurl.php
 
@@ -136,27 +161,7 @@ parameters:
 			path: src/Tags/MakeBase.php
 
 		-
-			message: "#^Parameter \\#2 \\$value of method NFePHP\\\\Common\\\\Tags\\\\MakeBase\\:\\:createProperty\\(\\) expects NFePHP\\\\Common\\\\Tags\\\\TagInterface, NFePHP\\\\Common\\\\Tags\\\\className given\\.$#"
-			count: 1
-			path: src/Tags/MakeBase.php
-
-		-
 			message: "#^Parameter \\#2 \\$value of method NFePHP\\\\Common\\\\Tags\\\\MakeBase\\:\\:createProperty\\(\\) expects NFePHP\\\\Common\\\\Tags\\\\TagInterface, array given\\.$#"
-			count: 1
-			path: src/Tags/MakeBase.php
-
-		-
-			message: "#^Property NFePHP\\\\Common\\\\Tags\\\\MakeBase\\:\\:\\$dom \\(NFePHP\\\\Common\\\\Tags\\\\NFePHP\\\\Common\\\\DOMImproved\\) does not accept NFePHP\\\\Common\\\\DOMImproved\\.$#"
-			count: 1
-			path: src/Tags/MakeBase.php
-
-		-
-			message: "#^Property NFePHP\\\\Common\\\\Tags\\\\MakeBase\\:\\:\\$dom has unknown class NFePHP\\\\Common\\\\Tags\\\\NFePHP\\\\Common\\\\DOMImproved as its type\\.$#"
-			count: 1
-			path: src/Tags/MakeBase.php
-
-		-
-			message: "#^Return typehint of method NFePHP\\\\Common\\\\Tags\\\\MakeBase\\:\\:loadTagClass\\(\\) has invalid type NFePHP\\\\Common\\\\Tags\\\\className\\.$#"
 			count: 1
 			path: src/Tags/MakeBase.php
 
@@ -166,117 +171,7 @@ parameters:
 			path: src/Tags/MakeBase.php
 
 		-
-			message: "#^Call to method addChild\\(\\) on an unknown class NFePHP\\\\Common\\\\Tags\\\\NFePHP\\\\Common\\\\DOMImproved\\.$#"
-			count: 1
-			path: src/Tags/Tag.php
-
-		-
-			message: "#^Call to method createCDATASection\\(\\) on an unknown class NFePHP\\\\Common\\\\Tags\\\\NFePHP\\\\Common\\\\DOMImproved\\.$#"
-			count: 1
-			path: src/Tags/Tag.php
-
-		-
-			message: "#^Call to method createElement\\(\\) on an unknown class NFePHP\\\\Common\\\\Tags\\\\NFePHP\\\\Common\\\\DOMImproved\\.$#"
-			count: 1
-			path: src/Tags/Tag.php
-
-		-
-			message: "#^Call to method saveXML\\(\\) on an unknown class NFePHP\\\\Common\\\\Tags\\\\NFePHP\\\\Common\\\\DOMImproved\\.$#"
-			count: 1
-			path: src/Tags/Tag.php
-
-		-
-			message: "#^Parameter \\#1 \\$number of function number_format expects float, string given\\.$#"
-			count: 3
-			path: src/Tags/Tag.php
-
-		-
-			message: "#^Parameter \\#2 \\$num_decimal_places of function number_format expects int, string given\\.$#"
-			count: 3
-			path: src/Tags/Tag.php
-
-		-
-			message: "#^Parameter \\$dom of method NFePHP\\\\Common\\\\Tags\\\\Tag\\:\\:__construct\\(\\) has invalid typehint type NFePHP\\\\Common\\\\Tags\\\\NFePHP\\\\Common\\\\DOMImproved\\.$#"
-			count: 1
-			path: src/Tags/Tag.php
-
-		-
-			message: "#^Property NFePHP\\\\Common\\\\Tags\\\\Tag\\:\\:\\$dom \\(NFePHP\\\\Common\\\\Tags\\\\NFePHP\\\\Common\\\\DOMImproved\\) does not accept NFePHP\\\\Common\\\\DOMImproved\\.$#"
-			count: 1
-			path: src/Tags/Tag.php
-
-		-
-			message: "#^Property NFePHP\\\\Common\\\\Tags\\\\Tag\\:\\:\\$dom has unknown class NFePHP\\\\Common\\\\Tags\\\\NFePHP\\\\Common\\\\DOMImproved as its type\\.$#"
-			count: 1
-			path: src/Tags/Tag.php
-
-		-
 			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: src/Tags/Tag.php
-
-		-
-			message: "#^Parameter \\#3 \\$xpath of method DOMNode\\:\\:C14N\\(\\) expects array, null given\\.$#"
-			count: 1
-			path: tests/Certificate/PublicKeyTest.php
-
-		-
-			message: "#^Parameter \\#4 \\$nsPrefixes of method DOMNode\\:\\:C14N\\(\\) expects array, null given\\.$#"
-			count: 1
-			path: tests/Certificate/PublicKeyTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$cUF of static method NFePHP\\\\Common\\\\Keys\\:\\:build\\(\\) expects string, int given\\.$#"
-			count: 2
-			path: tests/KeysTest.php
-
-		-
-			message: "#^Parameter \\#2 \\$ano of static method NFePHP\\\\Common\\\\Keys\\:\\:build\\(\\) expects string, int given\\.$#"
-			count: 2
-			path: tests/KeysTest.php
-
-		-
-			message: "#^Parameter \\#3 \\$mes of static method NFePHP\\\\Common\\\\Keys\\:\\:build\\(\\) expects string, int given\\.$#"
-			count: 2
-			path: tests/KeysTest.php
-
-		-
-			message: "#^Parameter \\#5 \\$mod of static method NFePHP\\\\Common\\\\Keys\\:\\:build\\(\\) expects string, int given\\.$#"
-			count: 2
-			path: tests/KeysTest.php
-
-		-
-			message: "#^Parameter \\#6 \\$serie of static method NFePHP\\\\Common\\\\Keys\\:\\:build\\(\\) expects string, int given\\.$#"
-			count: 2
-			path: tests/KeysTest.php
-
-		-
-			message: "#^Parameter \\#7 \\$numero of static method NFePHP\\\\Common\\\\Keys\\:\\:build\\(\\) expects string, int given\\.$#"
-			count: 2
-			path: tests/KeysTest.php
-
-		-
-			message: "#^Parameter \\#8 \\$tpEmis of static method NFePHP\\\\Common\\\\Keys\\:\\:build\\(\\) expects string, int given\\.$#"
-			count: 2
-			path: tests/KeysTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$uf of static method NFePHP\\\\Common\\\\TimeZoneByUF\\:\\:get\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: tests/TimeZoneByUFTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$content of static method NFePHP\\\\Common\\\\Validator\\:\\:isXML\\(\\) expects string, false given\\.$#"
-			count: 1
-			path: tests/ValidatorTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$content of static method NFePHP\\\\Common\\\\Validator\\:\\:isXML\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: tests/ValidatorTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$content of static method NFePHP\\\\Common\\\\Validator\\:\\:isXML\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: tests/ValidatorTest.php
 

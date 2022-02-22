@@ -10,11 +10,11 @@ use stdClass;
 abstract class Tag
 {
     /**
-     * @var DOMElement
+     * @var \DOMElement|null
      */
     protected $node;
     /**
-     * @var NFePHP\Common\DOMImproved
+     * @var \NFePHP\Common\DOMImproved
      */
     protected $dom;
     /**
@@ -24,7 +24,7 @@ abstract class Tag
 
     /**
      * Constructor
-     * @param NFePHP\Common\DOMImproved $dom
+     * @param \NFePHP\Common\DOMImproved $dom
      */
     public function __construct($dom = null)
     {
@@ -239,14 +239,14 @@ abstract class Tag
             //verificar a quantidade de decimais informada
             //se menor que o minimo, formata para o minimo
             if ($ndec <= $decmin) {
-                return number_format($value, $decmin, '.', '');
+                return number_format((float)$value, (int)$decmin, '.', '');
             }
             //se maior que o minimo, formata para o maximo
             if ($ndec > $decmin) {
-                return number_format($value, $decmax, '.', '');
+                return number_format((float)$value, (int)$decmax, '.', '');
             }
         }
-        return number_format($value, $n[1], '.', '');
+        return number_format((float)$value, (int)$n[1], '.', '');
     }
 
     /**

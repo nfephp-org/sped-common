@@ -151,7 +151,7 @@ class Asn1
      * Convert number OID in ASC Hex representation includes
      * in DER format certificate
      * @param string $oid OID formated number
-     * @return string hexadecimal representation
+     * @return non-empty-string hexadecimal representation
      */
     protected static function oidHexMarker($oid)
     {

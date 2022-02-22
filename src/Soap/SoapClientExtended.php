@@ -22,7 +22,7 @@ class SoapClientExtended extends SoapClient
      * suffixes and line breaks that are not supported by some webservices
      * due to their particular settings
      * @param  string $request
-     * @param  string$location
+     * @param  string $location
      * @param  string $action
      * @param  int $version
      * @param  int $oneWay

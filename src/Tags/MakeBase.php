@@ -14,7 +14,7 @@ use DOMElement;
 abstract class MakeBase
 {
     /**
-     * @var NFePHP\Common\DOMImproved
+     * @var \NFePHP\Common\DOMImproved
      */
     protected $dom;
     /**
@@ -106,9 +106,10 @@ abstract class MakeBase
 
     /**
      * Load Tag::class
-     * @param string $className
+     * @template T
+     * @param T $className
      * @param array $arguments
-     * @return \NFePHP\Common\Tags\className
+     * @return T Será alguma classe do namespace \NFePHP\Common\Tags\
      */
     protected function loadTagClass($className, $arguments)
     {
