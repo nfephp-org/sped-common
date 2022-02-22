@@ -1,0 +1,152 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: src/Certificate.php
+
+		-
+			message: "#^Binary operation \"\\*\" between 40 and string results in an error\\.$#"
+			count: 1
+			path: src/Certificate/Asn1.php
+
+		-
+			message: "#^Parameter \\#2 \\$qIn of static method NFePHP\\\\Common\\\\Certificate\\\\Asn1\\:\\:xBase128\\(\\) expects int, float given\\.$#"
+			count: 1
+			path: src/Certificate/Asn1.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: src/Certificate/PublicKey.php
+
+		-
+			message: "#^Method NFePHP\\\\Common\\\\DOMImproved\\:\\:loadXMLFile\\(\\) should return bool but return statement is missing\\.$#"
+			count: 1
+			path: src/DOMImproved.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 5
+			path: src/Exception/CertificateException.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 4
+			path: src/Exception/SignerException.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 2
+			path: src/Exception/SoapException.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 2
+			path: src/Exception/ValidatorException.php
+
+		-
+			message: "#^Binary operation \"\\*\" between string and 2\\|3\\|4\\|5\\|6\\|7\\|8\\|9 results in an error\\.$#"
+			count: 1
+			path: src/Keys.php
+
+		-
+			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
+			count: 1
+			path: src/Soap/SoapBase.php
+
+		-
+			message: "#^Method NFePHP\\\\Common\\\\Files\\:\\:listContents\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
+			count: 1
+			path: src/Soap/SoapBase.php
+
+		-
+			message: "#^Method NFePHP\\\\Common\\\\Soap\\\\SoapBase\\:\\:randomName\\(\\) should return string but return statement is missing\\.$#"
+			count: 1
+			path: src/Soap/SoapBase.php
+
+		-
+			message: "#^Method NFePHP\\\\Common\\\\Soap\\\\SoapBase\\:\\:uid\\(\\) should return string but returns int\\.$#"
+			count: 1
+			path: src/Soap/SoapBase.php
+
+		-
+			message: "#^Method NFePHP\\\\Common\\\\Soap\\\\SoapBase\\:\\:uid\\(\\) should return string but returns int\\|false\\.$#"
+			count: 1
+			path: src/Soap/SoapBase.php
+
+		-
+			message: "#^Parameter \\#8 \\$soapheader \\(null\\) of method NFePHP\\\\Common\\\\Soap\\\\SoapBase\\:\\:send\\(\\) should be compatible with parameter \\$soapheader \\(SoapHeader\\) of method NFePHP\\\\Common\\\\Soap\\\\SoapInterface\\:\\:send\\(\\)$#"
+			count: 1
+			path: src/Soap/SoapBase.php
+
+		-
+			message: "#^Property NFePHP\\\\Common\\\\Soap\\\\SoapBase\\:\\:\\$filesystem \\(NFePHP\\\\Common\\\\Files\\) in empty\\(\\) is not falsy\\.$#"
+			count: 2
+			path: src/Soap/SoapBase.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between string and null will always evaluate to false\\.$#"
+			count: 1
+			path: src/Soap/SoapBase.php
+
+		-
+			message: "#^Parameter \\#5 \\$oneWay \\(int\\) of method NFePHP\\\\Common\\\\Soap\\\\SoapClientExtended\\:\\:__doRequest\\(\\) should be compatible with parameter \\$oneWay \\(bool\\) of method SoapClient\\:\\:__doRequest\\(\\)$#"
+			count: 1
+			path: src/Soap/SoapClientExtended.php
+
+		-
+			message: "#^Parameter \\#5 \\$oneWay of method SoapClient\\:\\:__doRequest\\(\\) expects bool, int given\\.$#"
+			count: 1
+			path: src/Soap/SoapClientExtended.php
+
+		-
+			message: "#^Parameter \\#8 \\$soapheader \\(SoapHeader\\) of method NFePHP\\\\Common\\\\Soap\\\\SoapCurl\\:\\:send\\(\\) should be compatible with parameter \\$soapheader \\(null\\) of method NFePHP\\\\Common\\\\Soap\\\\SoapBase\\:\\:send\\(\\)$#"
+			count: 1
+			path: src/Soap/SoapCurl.php
+
+		-
+			message: "#^Parameter \\#8 \\$soapheader \\(null\\) of method NFePHP\\\\Common\\\\Soap\\\\SoapFake\\:\\:send\\(\\) should be compatible with parameter \\$soapheader \\(SoapHeader\\) of method NFePHP\\\\Common\\\\Soap\\\\SoapInterface\\:\\:send\\(\\)$#"
+			count: 1
+			path: src/Soap/SoapFake.php
+
+		-
+			message: "#^Parameter \\#8 \\$soapheader \\(SoapHeader\\) of method NFePHP\\\\Common\\\\Soap\\\\SoapNative\\:\\:send\\(\\) should be compatible with parameter \\$soapheader \\(null\\) of method NFePHP\\\\Common\\\\Soap\\\\SoapBase\\:\\:send\\(\\)$#"
+			count: 1
+			path: src/Soap/SoapNative.php
+
+		-
+			message: "#^Static method NFePHP\\\\Common\\\\Exception\\\\SoapException\\:\\:soapFault\\(\\) invoked with 1 parameter, 2 required\\.$#"
+			count: 4
+			path: src/Soap/SoapNative.php
+
+		-
+			message: "#^Access to an undefined property NFePHP\\\\Common\\\\Tags\\\\MakeBase\\:\\:\\$emit\\.$#"
+			count: 2
+			path: src/Tags/MakeBase.php
+
+		-
+			message: "#^Access to an undefined property NFePHP\\\\Common\\\\Tags\\\\MakeBase\\:\\:\\$ide\\.$#"
+			count: 10
+			path: src/Tags/MakeBase.php
+
+		-
+			message: "#^Access to an undefined property NFePHP\\\\Common\\\\Tags\\\\MakeBase\\:\\:\\$infnfe\\.$#"
+			count: 2
+			path: src/Tags/MakeBase.php
+
+		-
+			message: "#^Parameter \\#2 \\$value of method NFePHP\\\\Common\\\\Tags\\\\MakeBase\\:\\:createProperty\\(\\) expects NFePHP\\\\Common\\\\Tags\\\\TagInterface, array given\\.$#"
+			count: 1
+			path: src/Tags/MakeBase.php
+
+		-
+			message: "#^Undefined variable\\: \\$infId$#"
+			count: 1
+			path: src/Tags/MakeBase.php
+
+		-
+			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: src/Tags/Tag.php
+
