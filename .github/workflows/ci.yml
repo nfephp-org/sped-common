@@ -40,6 +40,16 @@ jobs:
         run: |
           composer stan
 
+      - name: Análises estáticas PHP 8.0
+        if: matrix.php-version == '8.0'
+        run: |
+            composer stan80
+
+      - name: Análises estáticas PHP 8.1
+        if: matrix.php-version == '8.1'
+        run: |
+            composer stan81
+
       - name: Rodando PHPUnit
         run: |
           composer test

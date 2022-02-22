@@ -28,6 +28,7 @@ class SoapClientExtended extends SoapClient
      * @param  int $oneWay
      * @return string
      */
+    #[\ReturnTypeWillChange]
     public function __doRequest($request, $location, $action, $version, $oneWay = 0)
     {
         $search = [":ns1","ns1:","\n","\r"];
