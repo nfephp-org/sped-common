@@ -38,7 +38,7 @@
         "ext-soap": "*",
         "ext-openssl": "*",
         "ext-mbstring": "*",
-        "psr/log": "^1.0",
+        "psr/log": "^1.0||^2.0||^3.0",
         "neitanod/forceutf8": "^2.0"
     },
     "require-dev": {
