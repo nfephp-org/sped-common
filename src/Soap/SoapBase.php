@@ -6,7 +6,6 @@ use NFePHP\Common\Certificate;
 use NFePHP\Common\Exception\RuntimeException;
 use NFePHP\Common\Strings;
 use NFePHP\Common\Files;
-use Psr\Log\LoggerInterface;
 
 /**
  * Soap base class
@@ -54,10 +53,6 @@ abstract class SoapBase implements SoapInterface
      * @var Certificate
      */
     protected $certificate;
-    /**
-     * @var LoggerInterface|null
-     */
-    protected $logger;
     /**
      * @var string
      */
@@ -151,13 +146,10 @@ abstract class SoapBase implements SoapInterface
     /**
      * SoapBase constructor.
      * @param Certificate|null $certificate
-     * @param LoggerInterface|null $logger
      */
     public function __construct(
-        Certificate $certificate = null,
-        LoggerInterface $logger = null
+        Certificate $certificate = null
     ) {
-        $this->logger = $logger;
         $this->loadCertificate($certificate);
     }
 
@@ -322,16 +314,6 @@ abstract class SoapBase implements SoapInterface
         if (null !== $certificate) {
             $this->certificate = $certificate;
         }
-    }
-
-    /**
-     * Set logger class
-     * @param LoggerInterface $logger
-     * @return LoggerInterface
-     */
-    public function loadLogger(LoggerInterface $logger)
-    {
-        return $this->logger = $logger;
     }
 
     /**

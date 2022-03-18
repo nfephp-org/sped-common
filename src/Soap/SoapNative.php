@@ -23,7 +23,6 @@ use Exception;
 use SoapHeader;
 use SoapFault;
 use NFePHP\Common\Certificate;
-use Psr\Log\LoggerInterface;
 
 class SoapNative extends SoapBase implements SoapInterface
 {
@@ -35,11 +34,10 @@ class SoapNative extends SoapBase implements SoapInterface
     /**
      * Constructor
      * @param Certificate $certificate
-     * @param LoggerInterface $logger
      */
-    public function __construct(Certificate $certificate = null, LoggerInterface $logger = null)
+    public function __construct(Certificate $certificate = null)
     {
-        parent::__construct($certificate, $logger);
+        parent::__construct($certificate);
     }
 
     /**

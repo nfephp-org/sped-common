@@ -19,18 +19,16 @@ use NFePHP\Common\Soap\SoapBase;
 use NFePHP\Common\Soap\SoapInterface;
 use NFePHP\Common\Exception\SoapException;
 use NFePHP\Common\Certificate;
-use Psr\Log\LoggerInterface;
 
 class SoapFake extends SoapBase implements SoapInterface
 {
     /**
      * Constructor
      * @param Certificate $certificate
-     * @param LoggerInterface $logger
      */
-    public function __construct(Certificate $certificate = null, LoggerInterface $logger = null)
+    public function __construct(Certificate $certificate = null)
     {
-        parent::__construct($certificate, $logger);
+        parent::__construct($certificate);
     }
 
     public function send(

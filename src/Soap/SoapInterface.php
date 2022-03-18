@@ -16,7 +16,6 @@
 namespace NFePHP\Common\Soap;
 
 use NFePHP\Common\Certificate;
-use Psr\Log\LoggerInterface;
 
 interface SoapInterface
 {
@@ -34,12 +33,6 @@ interface SoapInterface
      * @param Certificate $certificate
      */
     public function loadCertificate(Certificate $certificate);
-
-    /**
-     * Set logger class
-     * @param LoggerInterface $logger
-     */
-    public function loadLogger(LoggerInterface $logger);
 
     /**
      * Set timeout for connection
