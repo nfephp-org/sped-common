@@ -86,6 +86,10 @@ abstract class SoapBase implements SoapInterface
      */
     protected $disablesec = false;
     /**
+     * @var string|null
+     */
+    protected $security_level;
+    /**
      * @var bool
      */
     protected $disableCertValidation = false;
@@ -195,6 +199,30 @@ abstract class SoapBase implements SoapInterface
     public function disableCertValidation($flag = true)
     {
         return $this->disableCertValidation = $flag;
+    }
+
+    /**
+     * Seta o nivel de segurança na comunicação SSL
+     * NOTA: o defaul é DEFAULT@SECLEVEL=2, caso seja passado
+     * o param = 1 então o nivel será alterado para DEFAULT@SECLEVEL=1
+     *
+     * NOTA: somente haverá alteração do nivel de segurança caso seja passado o param=1
+     *
+     * NOTA: esse método pode resolvel o problema de "servidores mal conficurados" com nível de segurança baixo
+     * fornecendo uma chave DH muito pequena com o erro error:141A318A:SSL routines:tls_process_ske_dhe:dh key too small
+     *
+     * NOTA: isso também pode ser resolvido alterando o parametro diretamente na configuração do OpenSSL,
+     * que no caso do Debian fica em /etc/ssl/openssl.cnf, alterando o parâmetro
+     * CipherString = DEFAULT@SECLEVEL=2 para CipherString = DEFAULT@SECLEVEL=1
+     *
+     * @return string
+     */
+    public function setSecurityLevel(bool $param = false)
+    {
+        if ($param) {
+            $this->security_level = 'DEFAULT@SECLEVEL=1';
+        }
+        return $this->security_level ?? 'DEFAULT';
     }
 
     /**
