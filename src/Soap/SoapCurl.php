@@ -128,6 +128,9 @@ class SoapCurl extends SoapBase implements SoapInterface
         } catch (\Exception $e) {
             throw SoapException::unableToLoadCurl($e->getMessage());
         }
+        if (!empty($this->responseBody)) {
+            throw SoapException::soapFault('Retorno da SEFAZ VAZIO', 99);
+        }
         if ($this->soaperror != '') {
             if (intval($this->soaperror_code) == 0) {
                 $this->soaperror_code = 7;
