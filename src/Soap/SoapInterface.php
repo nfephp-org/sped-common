@@ -76,6 +76,13 @@ interface SoapInterface
     public function disableCertValidation($flag = true);
 
     /**
+     * Set security level
+     * @param bool $param
+     * @return string
+     */
+    public function setSecurityLevel(bool $param = false);
+
+    /**
      * Set option to encrypt private key before save in filesystem
      * for an additional layer of protection
      * @param bool $encript

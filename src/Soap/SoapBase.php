@@ -214,10 +214,12 @@ abstract class SoapBase implements SoapInterface
      * NOTA: isso também pode ser resolvido alterando o parametro diretamente na configuração do OpenSSL,
      * que no caso do Debian fica em /etc/ssl/openssl.cnf, alterando o parâmetro
      * CipherString = DEFAULT@SECLEVEL=2 para CipherString = DEFAULT@SECLEVEL=1
+     *
+     * @return string
      */
-    public function securityLevel($param = null)
+    public function setSecurityLevel(bool $param = false)
     {
-        if ($param == 1) {
+        if ($param) {
             $this->security_level = 'DEFAULT@SECLEVEL=1';
         }
         return $this->security_level ?? 'DEFAULT';
