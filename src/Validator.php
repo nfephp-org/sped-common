@@ -56,7 +56,7 @@ class Validator
      */
     public static function isXML($content)
     {
-        $content = trim($content);
+        $content = trim($content ?? '');
         if (empty($content)) {
             return false;
         }
