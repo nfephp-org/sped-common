@@ -252,7 +252,7 @@ abstract class SoapBase implements SoapInterface
      * @param string $capath
      * @return void
      */
-    public function loadCA($capath)
+    public function loadCA(string $capath)
     {
         if (is_file($capath)) {
             $this->casefaz = $capath;

@@ -12,7 +12,7 @@
 
 namespace NFePHP\Common;
 
-use ForceUTF8\Encoding;
+use NFePHP\Common\Encoding;
 
 class Strings
 {

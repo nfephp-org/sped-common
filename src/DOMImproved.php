@@ -74,14 +74,14 @@ class DOMImproved extends DOMDocument
      * @param string $filename
      * @return bool
      */
-    public function loadXMLFile($filename)
+    public function loadXMLFile(string $filename)
     {
         if (!is_file($filename)) {
             $this->errors[] = 'Arquivo não encontrado!';
             return false;
         }
         $content = file_get_contents($filename);
-        $this->loadXMLString($content);
+        return $this->loadXMLString($content);
     }
 
     /**

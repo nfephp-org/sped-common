@@ -96,12 +96,14 @@ class Keys
         $iCount = 42;
         $weightedSum = 0;
         while ($iCount >= 0) {
+            /* @phpstan-ignore-next-line */
             for ($mCount = 0; $mCount < 8 && $iCount >= 0; $mCount++) {
                 $weightedSum += (substr($key, $iCount, 1) * $multipliers[$mCount]);
                 $iCount--;
             }
         }
         $vdigit = 11 - ($weightedSum % 11);
+        /* @phpstan-ignore-next-line */
         if ($vdigit > 9) {
             $vdigit = 0;
         }
