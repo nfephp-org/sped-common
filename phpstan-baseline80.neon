@@ -21,11 +21,6 @@ parameters:
 			path: src/Certificate/PublicKey.php
 
 		-
-			message: "#^Method NFePHP\\\\Common\\\\DOMImproved\\:\\:loadXMLFile\\(\\) should return bool but return statement is missing\\.$#"
-			count: 1
-			path: src/DOMImproved.php
-
-		-
 			message: "#^Unsafe usage of new static\\(\\)\\.$#"
 			count: 5
 			path: src/Exception/CertificateException.php
@@ -44,11 +39,6 @@ parameters:
 			message: "#^Unsafe usage of new static\\(\\)\\.$#"
 			count: 2
 			path: src/Exception/ValidatorException.php
-
-		-
-			message: "#^Binary operation \"\\*\" between string and 2\\|3\\|4\\|5\\|6\\|7\\|8\\|9 results in an error\\.$#"
-			count: 1
-			path: src/Keys.php
 
 		-
 			message: "#^Access to an undefined property SoapHeader\\:\\:\\$data\\.$#"
@@ -129,16 +119,6 @@ parameters:
 			message: "#^Static method NFePHP\\\\Common\\\\Exception\\\\SoapException\\:\\:soapFault\\(\\) invoked with 1 parameter, 2 required\\.$#"
 			count: 4
 			path: src/Soap/SoapNative.php
-
-		-
-			message: "#^Access to an undefined property NFePHP\\\\Common\\\\Tags\\\\MakeBase\\:\\:\\$emit\\.$#"
-			count: 2
-			path: src/Tags/MakeBase.php
-
-		-
-			message: "#^Access to an undefined property NFePHP\\\\Common\\\\Tags\\\\MakeBase\\:\\:\\$ide\\.$#"
-			count: 10
-			path: src/Tags/MakeBase.php
 
 		-
 			message: "#^Access to an undefined property NFePHP\\\\Common\\\\Tags\\\\MakeBase\\:\\:\\$infnfe\\.$#"
