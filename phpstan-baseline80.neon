@@ -121,6 +121,16 @@ parameters:
 			path: src/Soap/SoapNative.php
 
 		-
+			message: "#^Access to an undefined property NFePHP\\\\Common\\\\Tags\\\\MakeBase\\:\\:\\$emit\\.$#"
+			count: 1
+			path: src/Tags/MakeBase.php
+
+		-
+			message: "#^Access to an undefined property NFePHP\\\\Common\\\\Tags\\\\MakeBase\\:\\:\\$ide\\.$#"
+			count: 9
+			path: src/Tags/MakeBase.php
+
+		-
 			message: "#^Access to an undefined property NFePHP\\\\Common\\\\Tags\\\\MakeBase\\:\\:\\$infnfe\\.$#"
 			count: 2
 			path: src/Tags/MakeBase.php
