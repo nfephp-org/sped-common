@@ -258,7 +258,7 @@ class Encoding
                 array_values(self::$utf8ToWin1252),
                 self::toUTF8($text)
             );
-            $o = utf8_decode($str);
+            $o = mb_convert_encoding($str, 'ISO-8859-1', 'UTF-8');
         } else {
             $op = self::ICONV_IGNORE === $option ? '//IGNORE' : '';
             $op = self::ICONV_TRANSLIT === $option ? '//TRANSLIT' : $op;
