@@ -69,6 +69,7 @@
         "phpcbf": "./vendor/bin/phpcbf src/",
         "stan": "phpstan analyse src/",
         "stan80": "phpstan analyse src/ -c phpstan80.neon",
-        "stan81": "phpstan analyse src/ -c phpstan81.neon"
+        "stan81": "phpstan analyse src/ -c phpstan81.neon",
+        "stan82": "phpstan analyse src/ -c phpstan82.neon"
     }
 }
