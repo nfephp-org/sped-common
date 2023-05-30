@@ -41,11 +41,6 @@ parameters:
 			path: src/Exception/ValidatorException.php
 
 		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Soap/SoapBase.php
-
-		-
 			message: "#^Method NFePHP\\\\Common\\\\Files\\:\\:listContents\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
 			count: 1
 			path: src/Soap/SoapBase.php
