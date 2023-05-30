@@ -158,12 +158,9 @@ class Strings
      */
     public static function onlyNumbers($string)
     {
-        if (is_null($string)) {
-            return "";
-        }
-        return preg_replace("/[^0-9]/", "", $string);
+        return preg_replace("/[^0-9]/", "", (string) $string);
     }
-    
+
     /**
      * Remove unwanted attributes, prefixes, sulfixes and other control
      * characters like \r \n \s \t
