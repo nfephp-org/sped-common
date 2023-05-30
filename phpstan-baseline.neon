@@ -155,8 +155,4 @@ parameters:
 			count: 1
 			path: src/Tags/MakeBase.php
 
-		-
-			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: src/Tags/Tag.php
 
