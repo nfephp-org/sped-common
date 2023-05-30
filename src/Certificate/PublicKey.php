@@ -25,6 +25,14 @@ class PublicKey implements VerificationInterface
      */
     public $commonName;
     /**
+     * @var string
+     */
+    public $icp;
+    /**
+     * @var string
+     */
+    public $caurl;
+    /**
      * @var \DateTime
      */
     public $validFrom;
@@ -100,6 +108,12 @@ CONTENT;
                 : $detail['issuer']['organizationalUnitName'];
         }
         $this->serialNumber = $detail['serialNumber'];
+        $this->icp = $detail['subject']['organizationName'];
+        $authority = $detail['extensions']['authorityInfoAccess'] ?? '';
+        if (!empty($authority)) {
+            $txt = explode("\n", $authority);
+            $this->caurl = $this->between($txt[0], 'http', ['.p7b', '.p7c']);
+        }
         $this->validFrom = \DateTime::createFromFormat('ymdHis\Z', $detail['validFrom']);
         $this->validTo = \DateTime::createFromFormat('ymdHis\Z', $detail['validTo']);
         if (isset($detail['name'])) {
@@ -173,5 +187,36 @@ CONTENT;
     public function cpf()
     {
         return Asn1::getCPF($this->unFormated());
+    }
+
+    /**
+     * @param string $string
+     * @param string $start
+     * @param array $end
+     * @return string
+     */
+    protected function between(string $string, string $start, array $end = ['p7b', 'p7c']): string
+    {
+        $string = ' ' . $string;
+        $final = null;
+        foreach($end as $fim) {
+            if (str_contains($string, $fim)) {
+                $final = $fim;
+                break;
+            }
+        }
+        if (empty($final)) {
+            return '';
+        }
+        $ini = strpos($string, $start);
+        if ($ini == 0) {
+            return '';
+        }
+        $fim = strpos($string, $final)-13;
+        $path = substr($string, $ini, $fim);
+        if (substr($path, -4) === $final) {
+            return $path;
+        }
+        return '';
     }
 }
