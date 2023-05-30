@@ -199,7 +199,7 @@ CONTENT;
     {
         $string = ' ' . $string;
         $final = null;
-        foreach($end as $fim) {
+        foreach ($end as $fim) {
             if (str_contains($string, $fim)) {
                 $final = $fim;
                 break;
@@ -212,7 +212,7 @@ CONTENT;
         if ($ini == 0) {
             return '';
         }
-        $fim = strpos($string, $final)-13;
+        $fim = strpos($string, $final) - 13;
         $path = substr($string, $ini, $fim);
         if (substr($path, -4) === $final) {
             return $path;
