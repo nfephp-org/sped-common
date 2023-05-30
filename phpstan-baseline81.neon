@@ -41,11 +41,6 @@ parameters:
 			path: src/Exception/ValidatorException.php
 
 		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Soap/SoapBase.php
-
-		-
 			message: "#^Method NFePHP\\\\Common\\\\Files\\:\\:listContents\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
 			count: 1
 			path: src/Soap/SoapBase.php
@@ -73,11 +68,6 @@ parameters:
 		-
 			message: "#^Property NFePHP\\\\Common\\\\Soap\\\\SoapBase\\:\\:\\$filesystem \\(NFePHP\\\\Common\\\\Files\\) in empty\\(\\) is not falsy\\.$#"
 			count: 2
-			path: src/Soap/SoapBase.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between string and null will always evaluate to false\\.$#"
-			count: 1
 			path: src/Soap/SoapBase.php
 
 		-
@@ -135,8 +125,4 @@ parameters:
 			count: 1
 			path: src/Tags/MakeBase.php
 
-		-
-			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: src/Tags/Tag.php
 

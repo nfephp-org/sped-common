@@ -154,6 +154,24 @@ class Certificate implements SignatureInterface, VerificationInterface
     }
 
     /**
+     * Retorna o nome do ICP (Autoridade Certificadora Raiz)
+     * @return string
+     */
+    public function getICP()
+    {
+        return $this->publicKey->icp;
+    }
+
+    /**
+     * Retorna a URL do para a cadeia de certificação
+     * @return string
+     */
+    public function getCAurl()
+    {
+        return $this->publicKey->caurl;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function sign($content, $algorithm = OPENSSL_ALGO_SHA1)

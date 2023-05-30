@@ -216,7 +216,7 @@ abstract class Tag
      */
     protected function formater($value, $format = null)
     {
-        if (empty($format) || !isset($value)) {
+        if (empty($format) || $value == null) {
             return $value;
         }
         if (!is_numeric($value)) {
