@@ -482,7 +482,7 @@ abstract class SoapBase implements SoapInterface
             '<%s:Header><%s xmlns="%s">%s</%s></%s:Header>',
             $envelopPrefix,
             $header->name,
-            $header->namespace === null ? '' : $header->namespace,
+            $header->namespace == null ? '' : $header->namespace,
             $headerItems,
             $header->name,
             $envelopPrefix
