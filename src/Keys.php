@@ -96,7 +96,6 @@ class Keys
         $iCount = 42;
         $weightedSum = 0;
         while ($iCount >= 0) {
-            /* @phpstan-ignore-next-line */
             for ($mCount = 0; $mCount < 8 && $iCount >= 0; $mCount++) {
                 $sub = (int) $key[$iCount];
                 $weightedSum +=  $sub * $multipliers[$mCount];
