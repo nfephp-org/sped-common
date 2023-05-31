@@ -172,6 +172,15 @@ class Certificate implements SignatureInterface, VerificationInterface
     }
 
     /**
+     * Retorna a certificadora
+     * @return string
+     */
+    public function getCSP()
+    {
+        return $this->publicKey->cspName;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function sign($content, $algorithm = OPENSSL_ALGO_SHA1)
