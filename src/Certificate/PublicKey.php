@@ -104,8 +104,8 @@ CONTENT;
         }
         if (isset($detail['issuer']['organizationalUnitName'])) {
             $this->cspName = is_array($detail['issuer']['organizationalUnitName'])
-                ? implode(', ', $detail['issuer']['organizationalUnitName'])
-                : $detail['issuer']['organizationalUnitName'];
+                ? implode(', ', $detail['issuer']['organizationalUnitName']) . ' - ' . $detail['issuer']['commonName']
+                : $detail['issuer']['organizationalUnitName'] . ' - ' . $detail['issuer']['commonName'];
         }
         $this->serialNumber = $detail['serialNumber'];
         $this->icp = $detail['subject']['organizationName'];
