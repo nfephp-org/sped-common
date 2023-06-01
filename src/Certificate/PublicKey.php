@@ -108,7 +108,7 @@ CONTENT;
                 : $detail['issuer']['organizationalUnitName'] . ' - ' . $detail['issuer']['commonName'];
         }
         $this->serialNumber = $detail['serialNumber'];
-        $this->icp = $detail['subject']['organizationName'];
+        $this->icp = $detail['subject']['organizationName'] ?? '';
         $authority = $detail['extensions']['authorityInfoAccess'] ?? '';
         if (!empty($authority)) {
             $txt = explode("\n", $authority);
