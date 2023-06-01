@@ -200,7 +200,7 @@ CONTENT;
         $string = ' ' . $string;
         $final = null;
         foreach ($end as $fim) {
-            if (str_contains($string, $fim)) {
+            if (strpos($string, $fim) !== false) {
                 $final = $fim;
                 break;
             }
