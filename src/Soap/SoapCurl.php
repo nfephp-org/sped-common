@@ -148,6 +148,9 @@ class SoapCurl extends SoapBase implements SoapInterface
         if (empty($this->responseBody)) {
             throw SoapException::soapFault('Retorno da SEFAZ VAZIO', 99);
         }
+        if (!Validator::isXML($this->responseBody)) {
+            throw SoapException::soapFault('O retorno não é um XML ' . $this->responseBody, 99);
+        }
         return $this->responseBody;
     }
 
