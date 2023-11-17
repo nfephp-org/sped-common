@@ -280,4 +280,19 @@ class DOMImproved extends DOMDocument
         }
         return $num;
     }
+
+    /**
+     * Adicona um atributo a uma tag
+     * @param DOMElement $node
+     * @param string $name
+     * @param string $value
+     * @return void
+     * @throws \DOMException
+     */
+    public function addAttribute(DOMElement &$node, string $name, string $value)
+    {
+        $att = $this->createAttribute($name);
+        $att->value = $value;
+        $node->appendChild($att);
+    }
 }
