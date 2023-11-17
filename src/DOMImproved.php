@@ -283,14 +283,17 @@ class DOMImproved extends DOMDocument
 
     /**
      * Adicona um atributo a uma tag
-     * @param DOMElement $node
+     * @param \DOMElement $node
      * @param string $name
-     * @param string $value
+     * @param string|null $value
      * @return void
      * @throws \DOMException
      */
-    public function addAttribute(DOMElement &$node, string $name, string $value)
+    public function addAttribute(\DOMElement &$node, string $name, string $value = null)
     {
+        if (is_null($value)) {
+            return;
+        }
         $att = $this->createAttribute($name);
         $att->value = $value;
         $node->appendChild($att);
