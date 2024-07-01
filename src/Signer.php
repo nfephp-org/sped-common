@@ -32,7 +32,7 @@ use DOMElement;
 
 class Signer
 {
-    const CANONICAL = [true,false,null,null];
+    const CANONICAL = [true, false, null, null];
 
     /**
      * Make Signature tag
@@ -174,6 +174,7 @@ class Signer
         $x509DataNode->appendChild($x509CertificateNode);
         return $dom;
     }
+
     /**
      * Remove old signature from document to replace it
      * @param string $content
@@ -196,6 +197,7 @@ class Signer
         }
         return $dom->saveXML();
     }
+
     /**
      * Verify if xml signature is valid
      * @param string $content
@@ -218,9 +220,10 @@ class Signer
     /**
      * Check if Signature tag already exists
      * @param string $content
+     * @param string|null $rootname
      * @return boolean
      */
-    public static function existsSignature($content)
+    public static function existsSignature($content, $rootname = null)
     {
         if (!Validator::isXML($content)) {
             throw SignerException::isNotXml();
@@ -229,8 +232,23 @@ class Signer
         $dom->formatOutput = false;
         $dom->preserveWhiteSpace = false;
         $dom->loadXML($content);
-        $signature = $dom->getElementsByTagName('Signature')->item(0);
-        return !empty($signature);
+
+        if (empty($rootname)) {
+            return !empty($dom->getElementsByTagName('Signature')->item(0));
+        }
+
+        $root = $dom->documentElement->getElementsByTagName($rootname)->item(0);
+        if ($dom->documentElement->tagName == $rootname) {
+            $root = $dom->documentElement;
+        }
+
+        foreach ($root->childNodes as $child) {
+            if ($child->nodeName == 'Signature') {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -256,7 +274,7 @@ class Signer
         $publicKey = PublicKey::createFromContent($certificateContent);
         $signInfoNode = self::canonize($signature->getElementsByTagName('SignedInfo')->item(0), $canonical);
         $signatureValue = $signature->getElementsByTagName('SignatureValue')->item(0)->nodeValue;
-        $decodedSignature = base64_decode(str_replace(array("\r", "\n"), '', $signatureValue));
+        $decodedSignature = base64_decode(str_replace(["\r", "\n"], '', $signatureValue));
         if (!$publicKey->verify($signInfoNode, $decodedSignature, $algorithm)) {
             throw SignerException::signatureComparisonFailed();
         }

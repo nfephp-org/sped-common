@@ -79,6 +79,30 @@ class SignerTest extends \PHPUnit\Framework\TestCase
         Signer::isSigned($xml);
     }
 
+    public function testExistsSignatureRootnode(): void
+    {
+        $content = '<a><b><c></c><Signature></Signature></b></a>';
+        $this->assertTrue(Signer::existsSignature($content));
+
+        $content = '<a><b><c></c></b><Signature></Signature></a>';
+        $this->assertTrue(Signer::existsSignature($content));
+
+        $content = '<a><b><c></c><Signature></Signature></b></a>';
+        $this->assertFalse(Signer::existsSignature($content, 'a'));
+
+        $content = '<a><b><c></c></b><Signature></Signature></a>';
+        $this->assertTrue(Signer::existsSignature($content, 'a'));
+
+        $content = '<a><b><c></c><Signature></Signature></b></a>';
+        $this->assertFalse(Signer::existsSignature($content, 'c'));
+
+        $content = '<a><b><c><Signature></Signature></c></b></a>';
+        $this->assertTrue(Signer::existsSignature($content, 'c'));
+
+        $content = '<a><b><c></c><Signature></Signature></b></a>';
+        $this->assertTrue(Signer::existsSignature($content, 'b'));
+    }
+
     /**
      * @covers Signer::existsSignature
      * @covers Signer::digestCheck
