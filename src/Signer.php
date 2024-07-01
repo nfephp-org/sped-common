@@ -74,8 +74,8 @@ class Signer
         if (empty($node) || empty($root)) {
             throw SignerException::tagNotFound($tagname);
         }
-        if (!self::existsSignature($content)) {
-            $dom = self::createSignature(
+        if (!static::existsSignature($content)) {
+            $dom = static::createSignature(
                 $certificate,
                 $dom,
                 $root,
@@ -100,7 +100,7 @@ class Signer
      * @param array $canonical parameters to format node for signature (opcional)
      * @return \DOMDocument
      */
-    private static function createSignature(
+    protected static function createSignature(
         Certificate $certificate,
         DOMDocument $dom,
         DOMNode $root,
@@ -123,7 +123,7 @@ class Signer
         $nsTransformMethod1 = 'http://www.w3.org/2000/09/xmldsig#enveloped-signature';
         $nsTransformMethod2 = 'http://www.w3.org/TR/2001/REC-xml-c14n-20010315';
         $idSigned = trim($node->getAttribute($mark));
-        $digestValue = self::makeDigest($node, $digestAlgorithm, $canonical);
+        $digestValue = static::makeDigest($node, $digestAlgorithm, $canonical);
         $signatureNode = $dom->createElementNS($nsDSIG, 'Signature');
         $root->appendChild($signatureNode);
         $signedInfoNode = $dom->createElement('SignedInfo');
@@ -153,7 +153,7 @@ class Signer
         $digestMethodNode->setAttribute('Algorithm', $nsDigestMethod);
         $digestValueNode = $dom->createElement('DigestValue', $digestValue);
         $referenceNode->appendChild($digestValueNode);
-        $c14n = self::canonize($signedInfoNode, $canonical);
+        $c14n = static::canonize($signedInfoNode, $canonical);
         $signature = $certificate->sign($c14n, $algorithm);
         $signatureValue = base64_encode($signature);
         $signatureValueNode = $dom->createElement('SignatureValue', $signatureValue);
@@ -181,7 +181,7 @@ class Signer
      */
     public static function removeSignature($content)
     {
-        if (!self::existsSignature($content)) {
+        if (!static::existsSignature($content)) {
             return $content;
         }
         $dom = new \DOMDocument('1.0', 'utf-8');
@@ -206,13 +206,13 @@ class Signer
      */
     public static function isSigned($content, $tagname = '', $canonical = self::CANONICAL)
     {
-        if (!self::existsSignature($content)) {
+        if (!static::existsSignature($content)) {
             return false;
         }
-        if (!self::digestCheck($content, $tagname, $canonical)) {
+        if (!static::digestCheck($content, $tagname, $canonical)) {
             return false;
         }
-        return self::signatureCheck($content, $canonical);
+        return static::signatureCheck($content, $canonical);
     }
 
     /**
@@ -254,7 +254,7 @@ class Signer
         }
         $certificateContent = $signature->getElementsByTagName('X509Certificate')->item(0)->nodeValue;
         $publicKey = PublicKey::createFromContent($certificateContent);
-        $signInfoNode = self::canonize($signature->getElementsByTagName('SignedInfo')->item(0), $canonical);
+        $signInfoNode = static::canonize($signature->getElementsByTagName('SignedInfo')->item(0), $canonical);
         $signatureValue = $signature->getElementsByTagName('SignatureValue')->item(0)->nodeValue;
         $decodedSignature = base64_decode(str_replace(array("\r", "\n"), '', $signatureValue));
         if (!$publicKey->verify($signInfoNode, $decodedSignature, $algorithm)) {
@@ -305,7 +305,7 @@ class Signer
         if ($sigURI == '') {
             $node->removeChild($signature);
         }
-        $calculatedDigest = self::makeDigest($node, $algorithm, $canonical);
+        $calculatedDigest = static::makeDigest($node, $algorithm, $canonical);
         $informedDigest = $signature->getElementsByTagName('DigestValue')->item(0)->nodeValue;
         if ($calculatedDigest != $informedDigest) {
             throw SignerException::digestComparisonFailed();
@@ -320,10 +320,10 @@ class Signer
      * @param array $canonical
      * @return string
      */
-    private static function makeDigest(DOMNode $node, $algorithm, $canonical = self::CANONICAL)
+    protected static function makeDigest(DOMNode $node, $algorithm, $canonical = self::CANONICAL)
     {
         //calcular o hash dos dados
-        $c14n = self::canonize($node, $canonical);
+        $c14n = static::canonize($node, $canonical);
         $hashValue = hash($algorithm, $c14n, true);
         return base64_encode($hashValue);
     }
@@ -334,7 +334,7 @@ class Signer
      * @param array $canonical
      * @return string
      */
-    private static function canonize(DOMNode $node, $canonical = self::CANONICAL)
+    protected static function canonize(DOMNode $node, $canonical = self::CANONICAL)
     {
         return $node->C14N(
             $canonical[0],
