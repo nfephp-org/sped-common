@@ -74,7 +74,7 @@ class Signer
         if (empty($node) || empty($root)) {
             throw SignerException::tagNotFound($tagname);
         }
-        if (!self::existsSignature($content)) {
+        if (!self::existsSignature($content, $rootname)) {
             $dom = self::createSignature(
                 $certificate,
                 $dom,

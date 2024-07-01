@@ -23,6 +23,16 @@ class SignerTest extends \PHPUnit\Framework\TestCase
         $xmlsign = Signer::sign($certificate, $content, 'infNFe', 'Id');
         $actual = Signer::isSigned($xmlsign);
         $this->assertTrue($actual);
+
+        $xmlsign = Signer::sign($certificate, '<a><b><c>Teste Assinar mesmo documento 2x</c></b></a>', 'b', 'Id', OPENSSL_ALGO_SHA1, Signer::CANONICAL, 'b');
+        $this->assertTrue(Signer::existsSignature($xmlsign, 'b'));
+
+        $xmlsign2x = Signer::sign($certificate, $xmlsign, 'b', 'Id', OPENSSL_ALGO_SHA1, Signer::CANONICAL, 'a');
+        $this->assertTrue(Signer::existsSignature($xmlsign2x, 'a'));
+
+        $dom = new \DOMDocument('1.0', 'utf-8');
+        $dom->loadXML($xmlsign2x);
+        $this->assertEquals(2, $dom->getElementsByTagName('Signature')->count());
     }
 
     /**
