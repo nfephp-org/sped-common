@@ -32,7 +32,7 @@ use DOMElement;
 
 class Signer
 {
-    const CANONICAL = [true, false, null, null];
+    const CANONICAL = [true,false,null,null];
 
     /**
      * Make Signature tag
