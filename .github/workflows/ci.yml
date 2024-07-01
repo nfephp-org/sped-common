@@ -26,7 +26,7 @@ jobs:
           extensions: mbstring, intl, mysql, zlib, dom, openssl, soap, json, simplexml, libxml
 
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Composer Install
         run: |
