@@ -20,7 +20,7 @@ class SignerMultiTest extends TestCase
         $xml .= '</a>';
 
         $xmlSignTagB = SignerMulti::sign($certificate, $xml, 'b', 'Id', OPENSSL_ALGO_SHA1, SignerMulti::CANONICAL, 'b');
-        $xmlsignTagA = SignerMulti::sign($certificate, $xmlSignTagB, 'b', 'Id', OPENSSL_ALGO_SHA1, SignerMulti::CANONICAL, 'a');
+        $xmlsignTagA = SignerMulti::sign($certificate, $xmlSignTagB, 'a', 'Id', OPENSSL_ALGO_SHA1, SignerMulti::CANONICAL, 'a');
 
         $dom = new \DOMDocument('1.0', 'utf-8');
         $dom->loadXML($xmlsignTagA);
