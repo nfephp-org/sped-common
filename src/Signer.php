@@ -305,6 +305,7 @@ class Signer
                 $xpath = new \DOMXPath($dom);
                 /** @var \DOMNodeList $entries */
                 $entries = $xpath->query('//@Id');
+                /** @var \DOMAttr $entry */
                 foreach ($entries as $entry) {
                     $tagname = $entry->ownerElement->nodeName;
                     break;
