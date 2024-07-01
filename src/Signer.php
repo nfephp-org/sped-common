@@ -32,7 +32,7 @@ use DOMElement;
 
 class Signer
 {
-    const CANONICAL = [true,false,null,null];
+    const CANONICAL = [true, false, null, null];
 
     /**
      * Make Signature tag
@@ -286,6 +286,7 @@ class Signer
             } else {
                 $xpath = new \DOMXPath($dom);
                 $entries = $xpath->query('//@Id');
+                /** @var \DOMAttr $entry */
                 foreach ($entries as $entry) {
                     $tagname = $entry->ownerElement->nodeName;
                     break;
