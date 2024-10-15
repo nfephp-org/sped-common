@@ -59,7 +59,7 @@ class Certificate implements SignatureInterface, VerificationInterface
     public static function readPfx($content, $password)
     {
         $certs = [];
-        if (!openssl_pkcs12_read($content, $certs, $password)) {
+        if (!pkcs12Read($content, $certs, $password)) {
             throw CertificateException::unableToRead();
         }
         $chain = '';
