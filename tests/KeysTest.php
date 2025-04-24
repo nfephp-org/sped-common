@@ -21,6 +21,21 @@ class KeysTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($key, '35170458716523000119550010000000121000123458');
     }
 
+    public function testBuildWithCnpjAlfa()
+    {
+        $cUF = '52';
+        $ano = '06';
+        $mes = '4';
+        $cnpj = '12ABC34501DE35';
+        $mod = '55';
+        $serie = '12';
+        $numero = '780';
+        $tpEmis = '1';
+        $codigo = '26730161';
+        $key = Keys::build($cUF, $ano, $mes, $cnpj, $mod, $serie, $numero, $tpEmis, $codigo);
+        $this->assertEquals($key, '52060412ABC34501DE35550120000007801267301610');
+    }
+
     public function testBuildWithCPF()
     {
         $cUF = 35;

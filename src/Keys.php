@@ -97,7 +97,7 @@ class Keys
         $weightedSum = 0;
         while ($iCount >= 0) {
             for ($mCount = 0; $mCount < 8 && $iCount >= 0; $mCount++) {
-                $sub = (int) $key[$iCount];
+                $sub = ord((string) $key[$iCount]) - 48;
                 $weightedSum +=  $sub * $multipliers[$mCount];
                 $iCount--;
             }
