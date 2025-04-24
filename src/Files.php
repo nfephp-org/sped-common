@@ -21,11 +21,15 @@ class Files
      * @param string $folder
      * @throws \Exception
      */
-    public function __construct(string $folder)
+    public function __construct(string $folder = '')
     {
-        if (!is_dir($folder)) {
-            if (!mkdir($folder, 0777, true)) {
-                throw new \Exception("Falhou ao tentar criar o path {$folder} (verifique as permissões de escrita).");
+        if (!empty($folder)) {
+            if (!is_dir($folder)) {
+                if (!mkdir($folder, 0777, true) && !is_dir($folder)) {
+                    throw new \Exception(
+                        "Falhou ao tentar criar o path {$folder} (verifique as permissões de escrita)."
+                    );
+                }
             }
         }
         $this->path = $folder;
@@ -93,7 +97,7 @@ class Files
             if (empty($folder)) {
                 $list = glob($this->path . "*.*");
             } else {
-                $list = glob($this->path . $folder . DIRECTORY_SEPARATOR . "*.*");
+                $list = glob($this->path . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . "*.*");
             }
             foreach ($list as $f) {
                 $new[] = [
