@@ -183,7 +183,7 @@ class DOMImproved extends DOMDocument
         $content = (string) $content;
         $content = trim($content);
         if ($obrigatorio || $content !== '' || $force) {
-            $temp = $this->createElement($name, $content);
+            $temp = $this->createElement($name, htmlspecialchars($content, ENT_QUOTES));
             $parent->appendChild($temp);
         }
     }
