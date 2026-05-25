@@ -50,7 +50,10 @@
     "autoload": {
         "psr-4": {
             "NFePHP\\Common\\": "src/"
-        }
+        },
+        "files": [
+            "functions_autoload.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
