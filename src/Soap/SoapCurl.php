@@ -16,14 +16,34 @@
 namespace NFePHP\Common\Soap;
 
 use CurlHandle;
-use NFePHP\Common\Soap\SoapBase;
-use NFePHP\Common\Soap\SoapInterface;
 use NFePHP\Common\Exception\SoapException;
 use NFePHP\Common\Validator;
 use NFePHP\Common\Certificate;
 
 class SoapCurl extends SoapBase implements SoapInterface
 {
+    /**
+     * Handle cURL persistente, nivel-processo. Mantido vivo entre instancias
+     * de SoapCurl (cada documento cria uma nova) para reaproveitar a conexao
+     * TCP/TLS e evitar refazer o handshake (~2.3s) a cada requisicao.
+     * Funciona em qualquer versao de PHP (nao depende de CURL_LOCK_DATA_CONNECT).
+     * @var CurlHandle|resource|null
+     */
+    private static $persistentCurl = null;
+
+    /**
+     * Timestamp (epoch) do ultimo uso do handle persistente.
+     * @var int
+     */
+    private static $lastUsedAt = 0;
+
+    /**
+     * Segundos de ociosidade apos os quais o handle e descartado e a conexao
+     * refeita (o SVRS fecha conexoes ociosas; reusar um socket morto causaria
+     * reset by peer). 30s.
+     */
+    private const IDLE_LIMIT = 30;
+
     /**
      * Constructor
      * @param Certificate $certificate
@@ -77,7 +97,18 @@ class SoapCurl extends SoapBase implements SoapInterface
         $this->requestHead = implode("\n", $parameters);
         $this->requestBody = $envelope;
         try {
-            $oCurl = curl_init();
+            // reutiliza o handle persistente do processo (mantem a conexao viva).
+            // se ficou ocioso demais, descarta para reconectar (evita socket morto).
+            if (self::$persistentCurl !== null
+                && (time() - self::$lastUsedAt) > self::IDLE_LIMIT
+            ) {
+                curl_close(self::$persistentCurl);
+                self::$persistentCurl = null;
+            }
+            if (self::$persistentCurl === null) {
+                self::$persistentCurl = curl_init();
+            }
+            $oCurl = self::$persistentCurl;
             $this->setCurlProxy($oCurl);
             curl_setopt($oCurl, CURLOPT_URL, $url);
             curl_setopt($oCurl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
@@ -85,6 +116,8 @@ class SoapCurl extends SoapBase implements SoapInterface
             curl_setopt($oCurl, CURLOPT_TIMEOUT, $this->soaptimeout + 20);
             curl_setopt($oCurl, CURLOPT_HEADER, 1);
             curl_setopt($oCurl, CURLOPT_HTTP_VERSION, $this->httpver);
+            // keep-alive ativo para manter a conexao ociosa aberta entre documentos
+            curl_setopt($oCurl, CURLOPT_TCP_KEEPALIVE, 1);
             curl_setopt($oCurl, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($oCurl, CURLOPT_SSL_VERIFYPEER, 0);
             if (!empty($this->security_level)) {
@@ -111,6 +144,7 @@ class SoapCurl extends SoapBase implements SoapInterface
                 curl_setopt($oCurl, CURLOPT_HTTPHEADER, $parameters);
             }
             $response = curl_exec($oCurl);
+            self::$lastUsedAt = time();
             $this->soaperror = curl_error($oCurl);
             $this->soaperror_code = curl_errno($oCurl);
             $ainfo = curl_getinfo($oCurl);
@@ -119,7 +153,12 @@ class SoapCurl extends SoapBase implements SoapInterface
             }
             $headsize = curl_getinfo($oCurl, CURLINFO_HEADER_SIZE);
             $httpcode = curl_getinfo($oCurl, CURLINFO_HTTP_CODE);
-            curl_close($oCurl);
+            // NAO fechar o handle: mantem a conexao TCP/TLS no pool para o proximo documento.
+            // em erro de transporte, descarta o handle para forcar reconexao limpa.
+            if ($this->soaperror_code !== 0) {
+                curl_close($oCurl);
+                self::$persistentCurl = null;
+            }
             $this->responseHead = trim(substr($response, 0, $headsize));
             $this->responseBody = trim(substr($response, $headsize));
             $this->saveDebugFiles(

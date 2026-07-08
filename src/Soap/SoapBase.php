@@ -524,9 +524,20 @@ abstract class SoapBase implements SoapInterface
         //clear dir cert
         $this->removeTemporarilyFiles();
         $this->certsdir = 'certs/';
-        $this->prifile = $this->randomName();
-        $this->pubfile = $this->randomName();
-        $this->certfile = $this->randomName();
+        // nomes deterministicos por certificado: mesmo cert => mesmo path.
+        // necessario para que o curl reaproveite a conexao TLS do pool
+        // (CURLOPT_SHARE), evitando refazer o handshake a cada documento.
+        // so e seguro com chave nao-encriptada (temppass vazio), que e o padrao.
+        if (! $this->encriptPrivateKey) {
+            $hash = sha1((string) $this->certificate->publicKey);
+            $this->prifile = $this->certsdir . $hash . '_pri.pem';
+            $this->pubfile = $this->certsdir . $hash . '_pub.pem';
+            $this->certfile = $this->certsdir . $hash . '_cert.pem';
+        } else {
+            $this->prifile = $this->randomName();
+            $this->pubfile = $this->randomName();
+            $this->certfile = $this->randomName();
+        }
         $ret = true;
         //load private key pem
         $private = $this->certificate->privateKey;
