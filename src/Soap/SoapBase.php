@@ -521,23 +521,26 @@ abstract class SoapBase implements SoapInterface
         if (empty($this->filesystem)) {
             $this->setTemporaryFolder();
         }
-        //clear dir cert
-        $this->removeTemporarilyFiles();
-        $this->certsdir = 'certs/';
-        // nomes deterministicos por certificado: mesmo cert => mesmo path.
-        // necessario para que o curl reaproveite a conexao TLS do pool
+
+        $this->certsdir = 'soap-certs/';
         // (CURLOPT_SHARE), evitando refazer o handshake a cada documento.
-        // so e seguro com chave nao-encriptada (temppass vazio), que e o padrao.
-        if (! $this->encriptPrivateKey) {
-            $hash = sha1((string) $this->certificate->publicKey);
-            $this->prifile = $this->certsdir . $hash . '_pri.pem';
-            $this->pubfile = $this->certsdir . $hash . '_pub.pem';
-            $this->certfile = $this->certsdir . $hash . '_cert.pem';
-        } else {
-            $this->prifile = $this->randomName();
-            $this->pubfile = $this->randomName();
-            $this->certfile = $this->randomName();
+        //Sempre com chave nao-encriptada (temppass vazio)
+        $this->prifile  = $this->deterministicName('_priv');
+        $this->pubfile  = $this->deterministicName('_pub');
+        $this->certfile = $this->deterministicName('_cert');
+
+        $fullCertsDir = $this->tempdir . $this->certsdir;
+        if (is_dir($fullCertsDir)) {
+            chmod($fullCertsDir, 0700);
         }
+
+        if ($this->filesystem->has($this->certfile)
+            && $this->filesystem->has($this->prifile)
+            && $this->filesystem->has($this->pubfile)
+        ) {
+            return;
+        }
+
         $ret = true;
         //load private key pem
         $private = $this->certificate->privateKey;
@@ -551,39 +554,29 @@ abstract class SoapBase implements SoapInterface
                 $this->temppass
             );
         }
-        $ret &= $this->filesystem->put(
-            $this->prifile,
-            $private
-        );
-        $ret &= $this->filesystem->put(
-            $this->pubfile,
-            $this->certificate->publicKey
-        );
-        $ret &= $this->filesystem->put(
-            $this->certfile,
-            $private . "{$this->certificate}"
-        );
+        $ret &= $this->atomicPut($this->prifile, $private);
+        $ret &= $this->atomicPut($this->pubfile, $this->certificate->publicKey);
+        $ret &= $this->atomicPut($this->certfile, $private . "{$this->certificate}");
+
         if (!$ret) {
             throw new RuntimeException(
                 'Unable to save temporary key files in folder.'
             );
         }
     }
-
-    /**
-     * Create a unique random file name
-     * @param integer $n
-     * @return string
-     */
-    protected function randomName($n = 10)
-    {
-        $name = $this->certsdir . Strings::randomString($n) . '.pem';
-        if (!$this->filesystem->has($name)) {
-            return $name;
+        /**
+         * Create a deterministic file name based on the certificate content
+         * @param string $suffix
+         * @return string
+         */
+        protected function deterministicName($suffix = '')
+        {
+            $identity = !empty($this->certificate->getCnpj())
+                ? $this->certificate->getCnpj()
+                : $this->certificate->getCpf();
+            $hash = hash('sha256', (string) $this->certificate);
+            return $this->certsdir . $identity . '_' . $hash . $suffix . '.pem';
         }
-        $this->randomName($n + 5);
-    }
-
     /**
      * Delete all files in folder
      * @return void
@@ -594,10 +587,7 @@ abstract class SoapBase implements SoapInterface
             if (empty($this->filesystem) || empty($this->certsdir)) {
                 return;
             }
-            //remove os certificados
-            $this->filesystem->delete($this->certfile);
-            $this->filesystem->delete($this->prifile);
-            $this->filesystem->delete($this->pubfile);
+
             //remove todos os arquivos antigos
             $contents = $this->filesystem->listContents($this->certsdir, true);
             $dt = new \DateTime();
@@ -605,6 +595,9 @@ abstract class SoapBase implements SoapInterface
             $tint->invert = 1;
             $tsLimit = $dt->add($tint)->getTimestamp();
             foreach ($contents as $item) {
+                if (preg_match('/_(priv|pub|cert)\.pem$/', $item['path'])) {
+                    continue;
+                }
                 if ($item['type'] == 'file') {
                     if ($this->filesystem->has($item['path'])) {
                         $timestamp = $this->filesystem->getTimestamp($item['path']);
@@ -650,5 +643,31 @@ abstract class SoapBase implements SoapInterface
                 'Unable to create debug files.'
             );
         }
+    }
+
+    /**
+     * Write a file atomically: write to a temp file, then rename into place
+     * @param string $path
+     * @param string $contents
+     * @return bool
+     */
+    protected function atomicPut($path, $contents)
+    {
+        $tempPath = $path . '.tmp-' . Strings::randomString(8);
+
+        if (!$this->filesystem->put($tempPath, $contents)) {
+            return false;
+        }
+
+        $fullTempPath = $this->tempdir . $tempPath;
+        $fullFinalPath = $this->tempdir . $path;
+
+        if (!rename($fullTempPath, $fullFinalPath)) {
+            $this->filesystem->delete($tempPath);
+            return false;
+        }
+        chmod($fullFinalPath, 0600);
+
+        return true;
     }
 }
