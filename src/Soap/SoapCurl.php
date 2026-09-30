@@ -119,7 +119,10 @@ class SoapCurl extends SoapBase implements SoapInterface
             }
             $headsize = curl_getinfo($oCurl, CURLINFO_HEADER_SIZE);
             $httpcode = curl_getinfo($oCurl, CURLINFO_HTTP_CODE);
-            curl_close($oCurl);
+            if (PHP_VERSION_ID < 80000) {
+                // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.curl_closeDeprecated
+                curl_close($oCurl);
+            }
             $this->responseHead = trim(substr($response, 0, $headsize));
             $this->responseBody = trim(substr($response, $headsize));
             $this->saveDebugFiles(
@@ -224,7 +227,10 @@ class SoapCurl extends SoapBase implements SoapInterface
             }
             $headsize = curl_getinfo($oCurl, CURLINFO_HEADER_SIZE);
             $httpcode = curl_getinfo($oCurl, CURLINFO_HTTP_CODE);
-            curl_close($oCurl);
+            if (PHP_VERSION_ID < 80000) {
+                // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.curl_closeDeprecated
+                curl_close($oCurl);
+            }
             $this->responseHead = trim(substr($response, 0, $headsize));
             $this->responseBody = trim(substr($response, $headsize));
         } catch (\Exception $e) {

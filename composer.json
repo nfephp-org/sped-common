@@ -45,7 +45,8 @@
         "phpunit/phpunit": "^9.3",
         "scrutinizer/ocular": "^1.8",
         "phpstan/phpstan": "^1.4",
-        "phpcompatibility/php-compatibility": "^9.3"
+        "phpcompatibility/php-compatibility": "^10.0@alpha",
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.0"
     },
     "autoload": {
         "psr-4": {
@@ -74,5 +75,10 @@
         "stan83": "phpstan analyse src/ -c phpstan83.neon",
         "stan84": "phpstan analyse src/ -c phpstan84.neon",
         "stan85": "phpstan analyse src/ -c phpstan85.neon"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }
