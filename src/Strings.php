@@ -74,18 +74,28 @@ class Strings
         if (empty($input)) {
             return $input;
         }
-        $input = str_replace(['<', '>'], '', $input);
-        $input = str_replace('&', ' & ', $input);
-        $input = str_replace("'", '', $input);
-        $input = str_replace('"', '', $input);
-        $input = preg_replace('/(?:\s\s+)/', ' ', $input);
+        if (str_contains($input, '&')) {
+            if (
+                !(str_contains($input, '&amp;') or
+                str_contains($input, '&lt;') or
+                str_contains($input, '&gt;') or
+                str_contains($input, '&quot;') or
+                str_contains($input, '&#39;'))
+            ) {
+                $input = str_replace('&', ' &amp; ', $input);
+            }
+        }
         //& isolated, less than, greater than, quotation marks and apostrophes
         //should be replaced by their html equivalent
         $input = str_replace(
-            ['&', '<', '>', '"', "'"],
-            ['&amp;', '&lt;', '&gt;', '&quot;', '&#39;'],
+            ['<', '>', '"', "'"],
+            ['&lt;', '&gt;', '&quot;', '&#39;'],
             $input
         );
+        $input = str_replace(['<', '>'], '', $input);
+        $input = str_replace("'", '', $input);
+        $input = str_replace('"', '', $input);
+        $input = preg_replace('/(?:\s\s+)/', ' ', $input);
         $input = self::normalize($input);
         return trim($input);
     }
@@ -255,5 +265,67 @@ class Strings
             $str .= $keyspace[rand(0, $max)];
         }
         return $str;
+    }
+
+    /**
+     * Converte os caracteres proibidos em XML para entidades, preservando as
+     * entidades já existentes na string (numéricas ou nomeadas).
+     *
+     * - Entidades XML predefinidas (&amp; &lt; &gt; &quot; &apos;) são mantidas.
+     * - Entidades numéricas válidas (&#39; &#x27;) são mantidas.
+     * - Entidades HTML nomeadas (&aacute; &nbsp; ...) não existem em XML e são
+     *   convertidas para a forma numérica.
+     * - "&" sem entidade válida, "<", ">", '"' e "'" são convertidos.
+     * - Caracteres de controle não permitidos pelo XML 1.0 são removidos, pois
+     *   nem como entidade numérica eles são aceitos.
+     */
+    protected static function xmlEntities(string $text): string
+    {
+        if (!mb_check_encoding($text, 'UTF-8')) {
+            $text = mb_convert_encoding($text, 'UTF-8', 'Windows-1252');
+        }
+        $text = preg_replace('/[^\x{9}\x{A}\x{D}\x{20}-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]/u', '', $text);
+        $pattern = '/&(?:#([0-9]+)|#[xX]([0-9a-fA-F]+)|([a-zA-Z][a-zA-Z0-9]*));|[&<>"\']/u';
+        return preg_replace_callback($pattern, static function (array $m): string {
+            $full = $m[0];
+            if (isset($m[1]) && $m[1] !== '') {
+                return self::isValidXmlCodePoint((int) $m[1]) ? $full : '&amp;' . substr($full, 1);
+            }
+            if (isset($m[2]) && $m[2] !== '') {
+                return self::isValidXmlCodePoint((int) hexdec($m[2])) ? $full : '&amp;' . substr($full, 1);
+            }
+            if (isset($m[3]) && $m[3] !== '') {
+                if (in_array($m[3], ['amp', 'lt', 'gt', 'quot', 'apos'], true)) {
+                    return $full;
+                }
+                $decoded = html_entity_decode($full, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                if ($decoded === $full) {
+                    return '&amp;' . substr($full, 1);
+                }
+                $out = '';
+                foreach (mb_str_split($decoded) as $char) {
+                    $out .= '&#' . mb_ord($char, 'UTF-8') . ';';
+                }
+                return $out;
+            }
+            $map = [
+                '&' => '&amp;',
+                '<' => '&lt;',
+                '>' => '&gt;',
+                '"' => '&quot;',
+                "'" => '&#39;',
+            ];
+            return $map[$full];
+        }, $text);
+    }
+
+    private static function isValidXmlCodePoint(int $cp): bool
+    {
+        return $cp === 0x9
+            || $cp === 0xA
+            || $cp === 0xD
+            || ($cp >= 0x20 && $cp <= 0xD7FF)
+            || ($cp >= 0xE000 && $cp <= 0xFFFD)
+            || ($cp >= 0x10000 && $cp <= 0x10FFFF);
     }
 }

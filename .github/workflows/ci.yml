@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4', '8.5']
+        php-version: ['8.0', '8.1', '8.2', '8.3', '8.4', '8.5']
 
     steps:
       - name: Setup PHP
@@ -34,11 +34,6 @@ jobs:
 
       - name: Check php code style
         run: composer phpcs
-
-      - name: Análises estáticas PHP 7.4
-        if: matrix.php-version == '7.4'
-        run: |
-          composer stan
 
       - name: Análises estáticas PHP 8.0
         if: matrix.php-version == '8.0'
