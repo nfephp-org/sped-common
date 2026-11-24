@@ -75,11 +75,13 @@ class Strings
             return $input;
         }
         if (str_contains($input, '&')) {
-            if (!(str_contains($input, '&amp;') or
+            if (
+                !(str_contains($input, '&amp;') or
                 str_contains($input, '&lt;') or
                 str_contains($input, '&gt;') or
                 str_contains($input, '&quot;') or
-                str_contains($input, '&#39;'))) {
+                str_contains($input, '&#39;'))
+            ) {
                 $input = str_replace('&', ' &amp; ', $input);
             }
         }
